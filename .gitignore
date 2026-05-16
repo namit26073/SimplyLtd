@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output (final stack TBD; cover common possibilities)
+dist/
+build/
+.next/
+.nuxt/
+.svelte-kit/
+.astro/
+.vercel/
+.netlify/
+.wrangler/
+.cloudflare/
+.cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Lockfiles — keep one, the agent picks
+# (we don't ignore lockfiles; first commit of the chosen one becomes canon)
+
+# Test output
+coverage/
+.nyc_output/
+
+# Asset processing intermediates (full-res source assets stay in assets-inbox/,
+# build pipeline outputs go to dist/ which is already ignored)
+*.psd
+*.ai
+*.sketch
