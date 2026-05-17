@@ -1,0 +1,167 @@
+---
+/**
+ * Hand-crafted schematic of Paddington Basin showing the two Simply Ltd
+ * pitches. Not cartographically precise — designed to communicate the
+ * geography clearly: a basin pool, the canal heading east, two pitch
+ * markers with the right relative positions, ~250m apart per spec.
+ *
+ * Pitches:
+ *   - Merchant Square (W2 1PW) — Falafel + Shawarma, north of basin
+ *   - Canal Side Walk (W2 1AS) — Burgers, south of canal, 250m east
+ */
+---
+
+<figure class="basin-map" role="figure" aria-labelledby="basin-map-title basin-map-desc">
+  <svg
+    viewBox="0 0 1600 900"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid meet"
+    class="basin-map__svg"
+    role="img"
+    aria-labelledby="basin-map-title basin-map-desc"
+  >
+    <title id="basin-map-title">Paddington Basin — Simply Ltd pitches</title>
+    <desc id="basin-map-desc">
+      A schematic of Paddington Basin in West London showing the two Simply Ltd
+      pitches: Merchant Square (Simply Falafel and Simply Shawarma) north of the
+      basin pool, and Canal Side Walk (Simply Burgers) about 250 metres east along
+      the canal.
+    </desc>
+
+    <!-- Ground -->
+    <rect width="1600" height="900" fill="var(--basin-bg, #F4EFE6)" />
+
+    <!-- Compass -->
+    <g class="basin-map__compass" transform="translate(1480, 110)">
+      <circle cx="0" cy="0" r="36" fill="none" stroke="var(--basin-ink-soft, #1a1a18)" stroke-width="2" />
+      <path d="M 0 -28 L 8 0 L 0 28 L -8 0 Z" fill="var(--basin-ink, #1A1A18)" />
+      <text x="0" y="-44" text-anchor="middle" font-family="Anton, sans-serif" font-size="22" fill="var(--basin-ink, #1A1A18)">N</text>
+    </g>
+
+    <!-- District blocks (soft context shapes for the surrounding development) -->
+    <g class="basin-map__districts" fill="var(--basin-soft, #7A7E78)" opacity="0.12">
+      <rect x="220" y="180" width="220" height="170" rx="12" />
+      <rect x="470" y="200" width="180" height="150" rx="12" />
+      <rect x="900" y="180" width="180" height="170" rx="12" />
+      <rect x="1110" y="190" width="160" height="160" rx="12" />
+      <rect x="220" y="600" width="180" height="180" rx="12" />
+      <rect x="430" y="620" width="220" height="160" rx="12" />
+      <rect x="1110" y="610" width="200" height="170" rx="12" />
+    </g>
+
+    <!-- Basin pool -->
+    <ellipse
+      cx="320"
+      cy="470"
+      rx="140"
+      ry="80"
+      fill="var(--basin-water, #7A7E78)"
+      opacity="0.45"
+    />
+    <text
+      x="320"
+      y="476"
+      text-anchor="middle"
+      font-family="Inter, sans-serif"
+      font-size="22"
+      font-weight="500"
+      letter-spacing="0.06em"
+      text-transform="uppercase"
+      fill="var(--basin-water-label, #1a1a18)"
+      opacity="0.55"
+    >
+      BASIN
+    </text>
+
+    <!-- Canal — gentle eastward curve from the basin -->
+    <path
+      d="M 460 470 C 700 470, 900 540, 1280 540"
+      stroke="var(--basin-water, #7A7E78)"
+      stroke-width="68"
+      stroke-linecap="round"
+      fill="none"
+      opacity="0.45"
+    />
+    <text
+      x="900"
+      y="588"
+      font-family="Inter, sans-serif"
+      font-size="20"
+      font-weight="500"
+      letter-spacing="0.06em"
+      fill="var(--basin-water-label, #1a1a18)"
+      opacity="0.55"
+    >
+      GRAND UNION CANAL →
+    </text>
+
+    <!-- 250m scale -->
+    <g class="basin-map__scale" transform="translate(120, 820)">
+      <line x1="0" y1="0" x2="200" y2="0" stroke="var(--basin-ink, #1a1a18)" stroke-width="3" />
+      <line x1="0" y1="-8" x2="0" y2="8" stroke="var(--basin-ink, #1a1a18)" stroke-width="3" />
+      <line x1="200" y1="-8" x2="200" y2="8" stroke="var(--basin-ink, #1a1a18)" stroke-width="3" />
+      <text x="100" y="-16" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="600" fill="var(--basin-ink, #1A1A18)">
+        ~ 250 m
+      </text>
+    </g>
+
+    <!-- Pitch 1: Merchant Square (Falafel + Shawarma) -->
+    <g class="basin-map__pitch" transform="translate(340, 340)">
+      <line x1="0" y1="0" x2="0" y2="100" stroke="var(--basin-ink, #1a1a18)" stroke-width="2" stroke-dasharray="4 4" opacity="0.4" />
+      <circle cx="0" cy="0" r="34" fill="#3F7A3A" />
+      <circle cx="0" cy="0" r="34" fill="none" stroke="#F4EFE6" stroke-width="6" opacity="0.9" />
+      <circle cx="0" cy="0" r="18" fill="#E8B83A" />
+      <text x="0" y="-58" text-anchor="middle" font-family="Anton, sans-serif" font-size="38" fill="var(--basin-ink, #1A1A18)" letter-spacing="-0.01em">
+        MERCHANT SQ
+      </text>
+      <text x="0" y="-30" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="600" letter-spacing="0.08em" fill="var(--basin-ink, #1A1A18)" opacity="0.7">
+        W2 1PW · FALAFEL + SHAWARMA
+      </text>
+    </g>
+
+    <!-- Pitch 2: Canal Side Walk (Burgers) -->
+    <g class="basin-map__pitch" transform="translate(1100, 660)">
+      <line x1="0" y1="0" x2="0" y2="-100" stroke="var(--basin-ink, #1a1a18)" stroke-width="2" stroke-dasharray="4 4" opacity="0.4" />
+      <circle cx="0" cy="0" r="34" fill="#C03020" />
+      <circle cx="0" cy="0" r="34" fill="none" stroke="#F4EFE6" stroke-width="6" opacity="0.9" />
+      <text x="0" y="62" text-anchor="middle" font-family="Anton, sans-serif" font-size="38" fill="var(--basin-ink, #1A1A18)" letter-spacing="-0.01em">
+        CANAL SIDE WALK
+      </text>
+      <text x="0" y="92" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="600" letter-spacing="0.08em" fill="var(--basin-ink, #1A1A18)" opacity="0.7">
+        W2 1AS · BURGERS
+      </text>
+    </g>
+  </svg>
+
+  <figcaption class="basin-map__caption t-caption">
+    Paddington Basin — three trucks, two pitches, ~250 m apart.
+  </figcaption>
+</figure>
+
+<style>
+  .basin-map {
+    margin: 0;
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    padding: var(--sp-3) var(--sp-3) 0;
+    --basin-bg: var(--color-paper);
+    --basin-ink: var(--color-ink);
+    --basin-ink-soft: color-mix(in srgb, var(--color-ink) 70%, transparent);
+    --basin-water: var(--color-canal);
+    --basin-water-label: var(--color-ink);
+    --basin-soft: var(--color-canal);
+  }
+
+  .basin-map__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .basin-map__caption {
+    color: var(--color-text-muted);
+    padding: var(--sp-3);
+    text-align: center;
+  }
+</style>

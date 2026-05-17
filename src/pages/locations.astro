@@ -1,0 +1,311 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import PaddingtonBasinMap from "../components/PaddingtonBasinMap.astro";
+
+const locations = await getCollection("locations");
+const brands = await getCollection("brands");
+
+// Build a brand-name lookup so each pitch card can list the brands by name.
+const brandNameBySlug = Object.fromEntries(
+  brands.map((b) => [b.data.slug, b.data.name]),
+);
+
+const orderedLocations = locations.sort((a, b) =>
+  a.data.slug === "merchant-square" ? -1 : b.data.slug === "merchant-square" ? 1 : 0,
+);
+---
+
+<Base
+  title="Locations"
+  description="Three Simply Ltd food trucks at Paddington Basin: Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk."
+>
+  <article class="locations-page">
+    <section class="locations-intro" aria-labelledby="locations-intro-heading">
+      <div class="locations-intro__inner">
+        <p class="t-caption locations-intro__kicker">Find us</p>
+        <h1 id="locations-intro-heading" class="t-display locations-intro__heading">
+          Three trucks. <br />Two pitches. <br />One canal.
+        </h1>
+        <p class="t-editorial t-editorial--italic locations-intro__dek">
+          We're on Paddington Basin every weekday. Falafel and Shawarma share Merchant Square;
+          Burgers is on Canal Side Walk, about 250 metres east.
+        </p>
+      </div>
+    </section>
+
+    <section class="locations-map" aria-label="Map of Paddington Basin">
+      <div class="locations-map__inner">
+        <PaddingtonBasinMap />
+      </div>
+    </section>
+
+    <section class="locations-list" aria-labelledby="locations-list-heading">
+      <div class="locations-list__inner">
+        <header class="locations-list__header">
+          <h2 id="locations-list-heading" class="t-display locations-list__heading">The pitches</h2>
+        </header>
+
+        <ul role="list" class="locations-list__grid">
+          {
+            orderedLocations.map((location) => {
+              const hoursEntries = (Object.entries(location.data.openingHours) as [string, string | undefined][])
+                .filter(([, v]) => Boolean(v));
+              const brandNames = location.data.brandsOnPitch
+                .map((slug) => brandNameBySlug[slug])
+                .filter(Boolean);
+              const accentBrand = location.data.brandsOnPitch[0];
+              return (
+                <li class="location-card" data-brand={accentBrand}>
+                  <header class="location-card__header">
+                    <p class="t-caption location-card__brands">{brandNames.join(" · ")}</p>
+                    <h3 class="t-display location-card__name">{location.data.name}</h3>
+                  </header>
+
+                  <address class="location-card__address t-body">
+                    {location.data.addressLines.map((line) => <span>{line}</span>)}
+                    <span class="location-card__postcode">{location.data.postcode}</span>
+                  </address>
+
+                  {hoursEntries.length > 0 && (
+                    <table class="location-card__hours">
+                      <caption class="t-caption">Opening hours</caption>
+                      <tbody>
+                        {hoursEntries.map(([day, range]) => (
+                          <tr>
+                            <th scope="row" class="t-caption location-card__hours-day">{day}</th>
+                            <td class="t-body">{range}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+
+                  {location.data.notes && (
+                    <p class="t-body location-card__notes">{location.data.notes}</p>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="locations-cta" aria-labelledby="locations-cta-heading">
+      <div class="locations-cta__inner">
+        <h2 id="locations-cta-heading" class="t-display locations-cta__heading">
+          Want us at your event instead?
+        </h2>
+        <p class="t-editorial t-editorial--italic locations-cta__dek">
+          We bring the trucks to weddings, corporate days, festivals, and private parties across
+          London and the south-east.
+        </p>
+        <a href="/catering/" class="locations-cta__link">
+          Catering enquiries
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  /* Intro */
+  .locations-intro {
+    padding: var(--sp-7) var(--page-gutter) var(--sp-5);
+    background: var(--color-cream);
+  }
+
+  .locations-intro__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .locations-intro__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-3);
+  }
+
+  .locations-intro__heading {
+    font-size: clamp(var(--fs-700), 9vw, var(--fs-800));
+    line-height: 0.92;
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .locations-intro__dek {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-400);
+    max-width: 48ch;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+
+  /* Map */
+  .locations-map {
+    padding: 0 var(--page-gutter) var(--sp-5);
+    background: var(--color-cream);
+  }
+
+  .locations-map__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  /* List */
+  .locations-list {
+    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .locations-list__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .locations-list__header {
+    margin-bottom: var(--sp-5);
+  }
+
+  .locations-list__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 1;
+  }
+
+  .locations-list__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  @media (min-width: 720px) {
+    .locations-list__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .location-card {
+    padding: var(--sp-5);
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    border-left: 4px solid var(--color-accent, var(--color-ink));
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .location-card__header {
+    margin-bottom: var(--sp-1);
+  }
+
+  .location-card__brands {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .location-card__name {
+    font-size: var(--fs-600);
+    line-height: 1;
+  }
+
+  .location-card__address {
+    font-style: normal;
+    font-size: var(--fs-300);
+    line-height: var(--lh-snug);
+  }
+
+  .location-card__address span {
+    display: block;
+  }
+
+  .location-card__postcode {
+    font-family: var(--ff-display-stack);
+    text-transform: uppercase;
+    font-size: var(--fs-500);
+    margin-top: var(--sp-1);
+  }
+
+  .location-card__hours {
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .location-card__hours caption {
+    text-align: left;
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .location-card__hours-day {
+    padding-right: var(--sp-4);
+    padding-block: var(--sp-1);
+    color: var(--color-text-muted);
+    font-weight: var(--fw-strong);
+    text-transform: capitalize;
+  }
+
+  .location-card__hours td {
+    padding-block: var(--sp-1);
+  }
+
+  .location-card__notes {
+    color: var(--color-text-muted);
+    font-size: var(--fs-200);
+    max-width: 40ch;
+  }
+
+  /* Bottom CTA */
+  .locations-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: var(--sp-7) var(--page-gutter);
+  }
+
+  .locations-cta__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .locations-cta__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  .locations-cta__dek {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-400);
+    max-width: 44ch;
+    margin-inline: auto;
+    color: color-mix(in srgb, var(--color-cream) 80%, transparent);
+  }
+
+  .locations-cta__link {
+    margin-top: var(--sp-5);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-5);
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .locations-cta__link:hover,
+  .locations-cta__link:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .locations-cta :focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 3px;
+  }
+</style>
