@@ -1,0 +1,204 @@
+---
+const navItems = [
+  { label: "Catering", href: "/catering/" },
+  { label: "Franchising", href: "/franchising/" },
+  { label: "Locations", href: "/locations/" },
+  { label: "About", href: "/about/" },
+] as const;
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="/" class="site-header__brand" aria-label="Simply Ltd — home">
+      <span class="t-display site-header__wordmark">SIMPLY.</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul role="list" class="site-header__nav-list site-header__nav-list--desktop">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="site-header__nav-link"
+                aria-current={currentPath.startsWith(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <details class="site-header__menu">
+        <summary class="site-header__menu-trigger" aria-label="Open navigation menu">
+          <span class="site-header__menu-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </summary>
+        <ul role="list" class="site-header__nav-list site-header__nav-list--mobile">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="site-header__nav-link site-header__nav-link--mobile"
+                  aria-current={currentPath.startsWith(item.href) ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--color-cream);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .site-header__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--sp-3) var(--page-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+
+  .site-header__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .site-header__wordmark {
+    font-size: var(--fs-500);
+    letter-spacing: var(--ls-display-tight);
+    line-height: 1;
+  }
+
+  .site-header__nav {
+    display: contents;
+  }
+
+  .site-header__nav-list {
+    display: flex;
+    gap: var(--sp-5);
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-header__nav-list--desktop {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .site-header__nav-list--desktop {
+      display: flex;
+    }
+
+    .site-header__menu {
+      display: none;
+    }
+  }
+
+  .site-header__nav-link {
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    color: var(--color-ink);
+    padding-block: var(--sp-1);
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .site-header__nav-link:hover,
+  .site-header__nav-link:focus-visible {
+    border-bottom-color: var(--color-ink);
+  }
+
+  .site-header__nav-link[aria-current="page"] {
+    border-bottom-color: var(--color-ink);
+  }
+
+  /* Mobile menu — details/summary, CSS only */
+  .site-header__menu {
+    position: relative;
+  }
+
+  .site-header__menu-trigger {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--sp-2);
+    margin-right: calc(var(--sp-2) * -1);
+    background: transparent;
+    border-radius: var(--r-sm);
+  }
+
+  .site-header__menu-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-header__menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 24px;
+    height: 18px;
+  }
+
+  .site-header__menu-icon span {
+    display: block;
+    height: 2px;
+    background: var(--color-ink);
+    border-radius: 1px;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .site-header__menu[open] .site-header__menu-icon span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .site-header__menu[open] .site-header__menu-icon span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header__menu[open] .site-header__menu-icon span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .site-header__nav-list--mobile {
+    position: absolute;
+    top: calc(100% + var(--sp-2));
+    right: 0;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--r-md);
+    padding: var(--sp-3);
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-width: 200px;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-ink) 10%, transparent);
+    z-index: var(--z-nav);
+  }
+
+  .site-header__nav-link--mobile {
+    display: block;
+    padding-block: var(--sp-2);
+  }
+</style>

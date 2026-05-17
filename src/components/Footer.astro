@@ -1,0 +1,214 @@
+---
+const year = new Date().getFullYear();
+const siteEmail = "info@simplyltd.co.uk";
+const instagramUrl = "https://www.instagram.com/simplyltd/";
+
+const pitches = [
+  {
+    name: "Merchant Square",
+    brands: "Simply Falafel · Simply Shawarma",
+    address: "Merchant Square, Paddington Basin, London W2 1PW",
+  },
+  {
+    name: "Canal Side Walk",
+    brands: "Simply Burgers",
+    address: "Canal Side Walk, Paddington Basin, London W2 1AS",
+  },
+] as const;
+
+const linkGroups = [
+  {
+    heading: "Visit",
+    items: [
+      { label: "Locations", href: "/locations/" },
+      { label: "About", href: "/about/" },
+    ],
+  },
+  {
+    heading: "Work with us",
+    items: [
+      { label: "Catering enquiries", href: "/catering/" },
+      { label: "Franchising", href: "/franchising/" },
+    ],
+  },
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <section class="site-footer__brand-col">
+      <a href="/" class="site-footer__brand" aria-label="Simply Ltd — home">
+        <span class="t-display site-footer__wordmark">SIMPLY.</span>
+      </a>
+      <p class="t-editorial t-editorial--italic site-footer__tagline">
+        Street food. Paddington Basin. Since 2019.
+      </p>
+    </section>
+
+    <section class="site-footer__col" aria-labelledby="footer-find">
+      <h2 id="footer-find" class="t-caption site-footer__col-heading">Find us</h2>
+      <ul role="list" class="site-footer__pitches">
+        {
+          pitches.map((p) => (
+            <li>
+              <p class="site-footer__pitch-brands">{p.brands}</p>
+              <address class="site-footer__pitch-address">{p.address}</address>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      linkGroups.map((group) => (
+        <section class="site-footer__col" aria-labelledby={`footer-${group.heading.toLowerCase().replace(/ /g, "-")}`}>
+          <h2
+            id={`footer-${group.heading.toLowerCase().replace(/ /g, "-")}`}
+            class="t-caption site-footer__col-heading"
+          >
+            {group.heading}
+          </h2>
+          <ul role="list" class="site-footer__link-list">
+            {group.items.map((item) => (
+              <li>
+                <a href={item.href} class="site-footer__link">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <section class="site-footer__col" aria-labelledby="footer-talk">
+      <h2 id="footer-talk" class="t-caption site-footer__col-heading">Talk to us</h2>
+      <ul role="list" class="site-footer__link-list">
+        <li>
+          <a href={`mailto:${siteEmail}`} class="site-footer__link">{siteEmail}</a>
+        </li>
+        <li>
+          <a
+            href={instagramUrl}
+            class="site-footer__link"
+            rel="noopener me"
+            aria-label="Simply Ltd on Instagram"
+          >
+            Instagram
+          </a>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="site-footer__legal">
+    <p class="t-caption">&copy; {year} Simply Ltd · UK</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    margin-top: var(--sp-8);
+  }
+
+  .site-footer__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--sp-7) var(--page-gutter) var(--sp-6);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+
+  @media (min-width: 720px) {
+    .site-footer__inner {
+      grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+      gap: var(--sp-5);
+    }
+  }
+
+  .site-footer__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+  }
+
+  .site-footer__wordmark {
+    font-size: var(--fs-700);
+    letter-spacing: var(--ls-display-tight);
+    line-height: 1;
+  }
+
+  .site-footer__tagline {
+    margin-top: var(--sp-3);
+    color: color-mix(in srgb, var(--color-cream) 80%, transparent);
+    font-size: var(--fs-400);
+    max-width: 32ch;
+  }
+
+  .site-footer__col-heading {
+    color: color-mix(in srgb, var(--color-cream) 60%, transparent);
+    margin-bottom: var(--sp-3);
+  }
+
+  .site-footer__pitches {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .site-footer__pitch-brands {
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-300);
+    line-height: var(--lh-snug);
+    margin-bottom: var(--sp-1);
+  }
+
+  .site-footer__pitch-address {
+    font-style: normal;
+    font-size: var(--fs-200);
+    line-height: var(--lh-normal);
+    color: color-mix(in srgb, var(--color-cream) 75%, transparent);
+  }
+
+  .site-footer__link-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .site-footer__link {
+    color: var(--color-cream);
+    text-decoration: none;
+    font-size: var(--fs-300);
+    line-height: var(--lh-snug);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .site-footer__link:hover,
+  .site-footer__link:focus-visible {
+    border-bottom-color: currentColor;
+  }
+
+  .site-footer__legal {
+    border-top: 1px solid color-mix(in srgb, var(--color-cream) 12%, transparent);
+    padding: var(--sp-4) var(--page-gutter);
+  }
+
+  .site-footer__legal .t-caption {
+    color: color-mix(in srgb, var(--color-cream) 55%, transparent);
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  /* Footer-scoped focus indicator — light outline on dark bg */
+  .site-footer :focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 3px;
+  }
+</style>

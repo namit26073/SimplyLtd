@@ -1,6 +1,8 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/app.css";
 
 interface Props {
@@ -9,6 +11,8 @@ interface Props {
   ogImage?: string;
   brand?: "falafel" | "shawarma" | "lebanese" | "burgers" | "pasta";
   noindex?: boolean;
+  /** Hide site chrome (header + footer). Used by the design-system review page. */
+  bare?: boolean;
 }
 
 const {
@@ -17,6 +21,7 @@ const {
   ogImage = "/og-default.jpg",
   brand,
   noindex = false,
+  bare = false,
 } = Astro.props;
 
 const pageTitle = title.endsWith("Simply Ltd") ? title : `${title} · Simply Ltd`;
@@ -49,6 +54,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <ClientRouter />
   </head>
   <body>
+    {!bare && <Header />}
     <slot />
+    {!bare && <Footer />}
   </body>
 </html>
