@@ -1,0 +1,12 @@
+dist/
+.astro/
+node_modules/
+coverage/
+.playwright-mcp/
+.chrome-devtools-mcp/
+package-lock.json
+*.png
+*.jpg
+*.jpeg
+*.mp4
+assets-inbox/current-site-extract/

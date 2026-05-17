@@ -1,6 +1,31 @@
 # Simply Ltd — fresh build
 
-A parallel website rebuild for Simply Ltd (UK food-truck group, 5 sub-brands, Paddington Basin London). This workspace is intentionally separate from the existing build at `../SimplyLtdWebsite/` so a fresh Claude Code session can approach the design from scratch without inheriting decisions that have been rejected.
+A parallel website rebuild for Simply Ltd (UK food-truck group, 5 sub-brands, 3 confirmed trucks at Paddington Basin London). This workspace is intentionally separate from the existing build at `../SimplyLtdWebsite/` so a fresh Claude Code session can approach the design from scratch without inheriting decisions that have been rejected.
+
+**Stack (locked 2026-05-17):** Astro 6, Cloudflare Pages, Cloudflare Pages Functions, Resend, Turnstile, Zod, bespoke CSS. See [docs/decisions/0001-stack.md](docs/decisions/0001-stack.md).
+
+## Develop
+
+```sh
+npm install
+npm run dev          # http://localhost:4321
+```
+
+## Verify
+
+```sh
+npm run check        # astro check (TypeScript + content collections)
+npm run lint         # eslint
+npm run format:check # prettier
+npm run test         # vitest
+npm run build        # production build to dist/
+```
+
+Before committing:
+
+```sh
+npm run precommit    # lint:fix + format + check
+```
 
 ## For the human reader
 
