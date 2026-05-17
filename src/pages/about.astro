@@ -1,0 +1,398 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="About"
+  description="Simply Ltd — the story of how a single falafel truck on Paddington Basin became a fleet."
+>
+  <article class="about">
+    {/* Hero ----------------------------------------------------------------- */}
+    <section class="about-hero" aria-labelledby="about-hero-heading">
+      <div class="about-hero__inner">
+        <p class="t-caption about-hero__kicker">About Simply Ltd</p>
+        <h1 id="about-hero-heading" class="t-display about-hero__heading">
+          A single falafel truck. <br />Now a fleet on the canal.
+        </h1>
+        <p class="t-editorial t-editorial--italic about-hero__dek">
+          We've been on Paddington Basin since 2019. What started with one wrap has grown into three
+          trucks, multiple concepts, and a queue that doesn't stop. The standards haven't moved.
+        </p>
+      </div>
+    </section>
+
+    {/* Origin story --------------------------------------------------------- */}
+    <section class="origin" aria-labelledby="origin-heading">
+      <div class="origin__inner">
+        <header class="origin__header">
+          <p class="t-caption">The story</p>
+          <h2 id="origin-heading" class="t-display origin__heading">How it grew.</h2>
+        </header>
+
+        <div class="t-prose origin__prose">
+          <p>
+            Our journey began in 2019 with a single food truck: <strong>Simply Falafel</strong>.
+            Built from a love of Levantine street food and a stubborn belief that quality matters,
+            it found its audience quickly. The queue grew before the marketing did.
+          </p>
+
+          <p>
+            By 2021 the response had outgrown the menu. We added <strong>Simply Shawarma</strong>,
+            bringing bold traditional shawarma flavours to the canal. The same team, the same
+            standards, a different cuisine. Two queues on Merchant Square.
+          </p>
+
+          <p>
+            In 2023 we combined the best of both into <strong>Simply Lebanese</strong> for catered
+            events — a complete Levantine offering for tables that wanted the whole spread. It runs
+            off-rota now, primarily for catering, but it's still the most-requested package we do.
+          </p>
+
+          <p>
+            Then came the burger. <strong>Simply Burgers</strong> launched because people kept
+            asking us for one. Smash burgers, lacy crispy edges, melted American, soft brioche,
+            dialled-in sauce. It sits on Canal Side Walk, 250 metres east of the other trucks.
+          </p>
+
+          <p>
+            We're now three operating trucks across two pitches on Paddington Basin. The standards
+            are the same on every menu: fresh, on the truck, every day.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* Values --------------------------------------------------------------- */}
+    <section class="values" aria-labelledby="values-heading">
+      <div class="values__inner">
+        <header class="values__header">
+          <p class="t-caption">What we believe</p>
+          <h2 id="values-heading" class="t-display values__heading">Three things, on every menu.</h2>
+        </header>
+
+        <ol role="list" class="values__list">
+          <li class="value">
+            <p class="t-display value__numeral" aria-hidden="true">01</p>
+            <h3 class="t-display value__title">Quality</h3>
+            <p class="t-body value__body">
+              Real ingredients, properly handled. Marinades go in early. Doughs proved long. Sauces
+              from scratch.
+            </p>
+          </li>
+          <li class="value">
+            <p class="t-display value__numeral" aria-hidden="true">02</p>
+            <h3 class="t-display value__title">Simplicity</h3>
+            <p class="t-body value__body">
+              Small menus, done well. We'd rather make one wrap brilliantly than ten things
+              passably.
+            </p>
+          </li>
+          <li class="value">
+            <p class="t-display value__numeral" aria-hidden="true">03</p>
+            <h3 class="t-display value__title">Consistency</h3>
+            <p class="t-body value__body">
+              Monday's burger is Friday's burger. Trip after trip, that's the only way the queue
+              stays.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    {/* Fleet links ---------------------------------------------------------- */}
+    <section class="fleet" aria-labelledby="fleet-heading">
+      <div class="fleet__inner">
+        <header class="fleet__header">
+          <p class="t-caption">Three concepts, one parent</p>
+          <h2 id="fleet-heading" class="t-display fleet__heading">Meet the fleet.</h2>
+        </header>
+
+        <ul role="list" class="fleet__grid">
+          <li data-brand="falafel" class="fleet__item">
+            <a href="/falafel/" class="fleet__link">
+              <p class="t-caption">Simply</p>
+              <h3 class="t-display fleet__wordmark">Falafel</h3>
+              <p class="t-editorial t-editorial--italic fleet__dek">Vegan Levantine. Where it all started.</p>
+              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
+            </a>
+          </li>
+          <li data-brand="shawarma" class="fleet__item">
+            <a href="/shawarma/" class="fleet__link">
+              <p class="t-caption">Simply</p>
+              <h3 class="t-display fleet__wordmark">Shawarma</h3>
+              <p class="t-editorial t-editorial--italic fleet__dek">Bold, traditional, late-night fast.</p>
+              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
+            </a>
+          </li>
+          <li data-brand="burgers" class="fleet__item">
+            <a href="/burgers/" class="fleet__link">
+              <p class="t-caption">Simply</p>
+              <h3 class="t-display fleet__wordmark">Burgers</h3>
+              <p class="t-editorial t-editorial--italic fleet__dek">Smash burgers, no compromise.</p>
+              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    {/* CTA ------------------------------------------------------------------ */}
+    <section class="about-cta" aria-labelledby="about-cta-heading">
+      <div class="about-cta__inner">
+        <h2 id="about-cta-heading" class="t-display about-cta__heading">
+          Work with us.
+        </h2>
+        <p class="t-editorial t-editorial--italic about-cta__dek">
+          Catering enquiries, franchising opportunities, or just say hello.
+        </p>
+        <div class="about-cta__links">
+          <a href="/catering/" class="about-cta__link about-cta__link--primary">
+            Catering enquiries
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="/franchising/" class="about-cta__link about-cta__link--secondary">
+            Franchising
+          </a>
+        </div>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  /* Hero */
+  .about-hero {
+    padding: var(--sp-7) var(--page-gutter) var(--sp-6);
+    background: var(--color-cream);
+  }
+  .about-hero__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  .about-hero__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-3);
+  }
+  .about-hero__heading {
+    font-size: clamp(var(--fs-700), 9vw, var(--fs-800));
+    line-height: 0.92;
+    letter-spacing: var(--ls-display-tight);
+  }
+  .about-hero__dek {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-400);
+    max-width: 56ch;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+
+  /* Origin */
+  .origin {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+  .origin__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+  @media (min-width: 900px) {
+    .origin__inner {
+      grid-template-columns: 1fr 2fr;
+      gap: var(--sp-7);
+    }
+  }
+  .origin__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 1;
+  }
+  .origin__prose {
+    max-width: var(--measure-prose);
+  }
+  .origin__prose strong {
+    font-weight: var(--fw-strong);
+  }
+
+  /* Values */
+  .values {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-paper);
+    border-top: 1px solid var(--color-line);
+  }
+  .values__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  .values__header {
+    margin-bottom: var(--sp-5);
+  }
+  .values__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 1;
+    margin-top: var(--sp-2);
+  }
+  .values__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .values__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .value {
+    padding: var(--sp-4);
+    background: var(--color-cream);
+    border-radius: var(--r-md);
+  }
+  .value__numeral {
+    font-size: var(--fs-700);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+  .value__title {
+    font-size: var(--fs-500);
+    margin-top: var(--sp-2);
+    line-height: 1;
+  }
+  .value__body {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Fleet (re-uses cross-links pattern from brand pages) */
+  .fleet {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+  .fleet__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  .fleet__header {
+    margin-bottom: var(--sp-5);
+  }
+  .fleet__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 1;
+    margin-top: var(--sp-2);
+  }
+  .fleet__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  @media (min-width: 720px) {
+    .fleet__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .fleet__item {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .fleet__item:has(.fleet__link:hover),
+  .fleet__item:has(.fleet__link:focus-visible) {
+    transform: translateY(-3px);
+  }
+  .fleet__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-5);
+    text-decoration: none;
+    color: inherit;
+    min-height: 240px;
+  }
+  .fleet__link :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  .fleet__wordmark {
+    font-size: var(--fs-700);
+    line-height: 0.92;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-display-tight);
+  }
+  .fleet__dek {
+    font-size: var(--fs-300);
+    opacity: 0.9;
+    margin-top: var(--sp-1);
+  }
+  .fleet__arrow {
+    margin-top: auto;
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    padding-top: var(--sp-3);
+  }
+
+  /* About CTA (re-uses locations bottom-cta pattern) */
+  .about-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: var(--sp-7) var(--page-gutter);
+  }
+  .about-cta__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    text-align: center;
+  }
+  .about-cta__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 1;
+  }
+  .about-cta__dek {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-400);
+    color: color-mix(in srgb, var(--color-cream) 80%, transparent);
+  }
+  .about-cta__links {
+    margin-top: var(--sp-5);
+    display: flex;
+    justify-content: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .about-cta__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .about-cta__link--primary {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+  .about-cta__link--secondary {
+    background: transparent;
+    color: var(--color-cream);
+    border: 1.5px solid var(--color-cream);
+  }
+  .about-cta__link:hover,
+  .about-cta__link:focus-visible {
+    transform: translateY(-1px);
+  }
+  .about-cta :focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 3px;
+  }
+</style>

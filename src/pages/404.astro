@@ -1,0 +1,102 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Page not found" description="That page doesn't exist on Simply Ltd." noindex>
+  <main class="not-found">
+    <div class="not-found__inner">
+      <p class="t-display not-found__code" aria-hidden="true">404</p>
+      <h1 class="t-display not-found__heading">Off the menu.</h1>
+      <p class="t-editorial t-editorial--italic not-found__dek">
+        That page doesn't exist — or it's just gone for a smoke. Try one of these instead.
+      </p>
+
+      <ul role="list" class="not-found__links">
+        <li>
+          <a href="/" class="not-found__link">
+            Homepage <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a href="/locations/" class="not-found__link">
+            Find a truck <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a href="/catering/" class="not-found__link">
+            Catering enquiries <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a href="/about/" class="not-found__link">
+            About Simply Ltd <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .not-found {
+    padding: var(--sp-8) var(--page-gutter);
+    background: var(--color-cream);
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+  }
+
+  .not-found__inner {
+    max-width: 56ch;
+    text-align: center;
+  }
+
+  .not-found__code {
+    font-size: clamp(var(--fs-800), 18vw, var(--fs-900));
+    line-height: 1;
+    color: var(--color-text-muted);
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .not-found__heading {
+    font-size: clamp(var(--fs-700), 9vw, var(--fs-800));
+    line-height: 1;
+    margin-top: var(--sp-3);
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .not-found__dek {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-400);
+    color: color-mix(in srgb, var(--color-ink) 78%, transparent);
+  }
+
+  .not-found__links {
+    margin-top: var(--sp-5);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+
+  .not-found__link {
+    color: var(--color-ink);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-bottom: 2px solid var(--color-ink);
+    padding-bottom: var(--sp-1);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+
+  .not-found__link:hover,
+  .not-found__link:focus-visible {
+    gap: var(--sp-3);
+  }
+</style>
