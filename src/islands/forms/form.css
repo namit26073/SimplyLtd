@@ -44,7 +44,7 @@
 }
 
 .form__required {
-  color: var(--color-canal);
+  color: var(--color-text-muted);
   margin-left: 2px;
 }
 

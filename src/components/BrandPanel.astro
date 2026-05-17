@@ -78,12 +78,15 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     max-width: 36rem;
   }
 
+  /* Eyebrows on brand-coloured grounds — opacity was failing AA on Falafel
+     and Burgers (3.07:1). Switch to full-opacity accent-contrast colour;
+     visual hierarchy comes from type size/case, not lightening. */
   .panel__index {
-    opacity: 0.7;
+    color: var(--color-accent-contrast);
   }
 
   .panel__concept {
-    opacity: 0.7;
+    color: var(--color-accent-contrast);
     margin-top: var(--sp-3);
   }
 
@@ -130,7 +133,7 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
 
   .panel__meta li {
     padding: var(--sp-1) var(--sp-3);
-    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
     border-radius: var(--r-pill);
   }
 

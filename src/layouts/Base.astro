@@ -54,8 +54,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <ClientRouter />
   </head>
   <body>
+    {!bare && <a href="#main" class="visually-hidden-focusable">Skip to content</a>}
     {!bare && <Header />}
-    <slot />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
     {!bare && <Footer />}
   </body>
 </html>

@@ -82,28 +82,35 @@ const hasVideo = Boolean(brand.behindCounterVideo);
         </header>
 
         <div class="behind-counter__body">
-          <div class="behind-counter__media">
+          <figure class="behind-counter__media">
             {
               hasVideo ? (
-                <video
-                  class="behind-counter__video"
-                  src={brand.behindCounterVideo}
-                  controls
-                  preload="metadata"
-                  playsinline
-                  aria-label={`Behind the counter at ${brand.name}`}
-                >
-                  Your browser doesn't support inline video. Visit us at the truck instead.
-                </video>
+                <>
+                  <video
+                    class="behind-counter__video"
+                    src={brand.behindCounterVideo}
+                    controls
+                    muted
+                    preload="metadata"
+                    playsinline
+                    aria-describedby="behind-counter-copy"
+                  >
+                    Your browser doesn't support inline video. Visit us at the truck instead.
+                  </video>
+                  <figcaption class="visually-hidden">
+                    Silent kitchen B-roll showing prep and service inside the {brand.name} truck.
+                    A text description of the kitchen follows.
+                  </figcaption>
+                </>
               ) : (
-                <div class="behind-counter__media-placeholder">
-                  <span class="t-caption">Behind-the-counter still · {brand.name}</span>
+                <div class="behind-counter__media-placeholder" role="img" aria-label={`Placeholder for behind-the-counter still — ${brand.name}`}>
+                  <span class="t-caption">Behind the counter</span>
                 </div>
               )
             }
-          </div>
+          </figure>
 
-          <div class="behind-counter__copy">
+          <div class="behind-counter__copy" id="behind-counter-copy">
             <p class="t-body">
               The {wordmark.toLowerCase()} kitchen is small. Two or three people, one prep bench, one
               service window. That's the operating discipline — everything fresh, everything to
@@ -225,7 +232,7 @@ const hasVideo = Boolean(brand.behindCounterVideo);
   }
 
   .brand-hero__concept {
-    opacity: 0.7;
+    color: var(--color-accent-contrast);
     margin-bottom: var(--sp-1);
   }
 
@@ -251,7 +258,7 @@ const hasVideo = Boolean(brand.behindCounterVideo);
 
   .brand-hero__meta li {
     padding: var(--sp-1) var(--sp-3);
-    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
     border-radius: var(--r-pill);
   }
 
@@ -379,6 +386,7 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     overflow: hidden;
     display: grid;
     place-items: center;
+    margin: 0;
   }
 
   .behind-counter__video {
@@ -387,15 +395,19 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     object-fit: cover;
   }
 
+  /* Brand-tinted placeholder so the slot reads as part of the brand identity
+     rather than a void. Renders denser hatch + brand-mix ground. */
   .behind-counter__media-placeholder {
-    color: var(--color-text-muted);
-    background-image: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-canal) 12%, transparent) 0,
-      color-mix(in srgb, var(--color-canal) 12%, transparent) 12px,
-      transparent 12px,
-      transparent 24px
-    );
+    color: var(--color-accent);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-accent) 22%, transparent) 0,
+        color-mix(in srgb, var(--color-accent) 22%, transparent) 14px,
+        transparent 14px,
+        transparent 32px
+      ),
+      color-mix(in srgb, var(--color-accent, var(--color-canal)) 10%, var(--color-paper));
     width: 100%;
     height: 100%;
     display: grid;
@@ -403,11 +415,14 @@ const hasVideo = Boolean(brand.behindCounterVideo);
   }
 
   .behind-counter__media-placeholder .t-caption {
-    background: var(--color-cream);
-    padding: var(--sp-1) var(--sp-3);
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    padding: var(--sp-2) var(--sp-4);
     border-radius: var(--r-pill);
-    border: 1px solid var(--color-line);
+    font-size: var(--fs-200);
   }
+
+  /* .visually-hidden lives globally in src/styles/reset.css */
 
   .behind-counter__copy {
     display: flex;
@@ -596,7 +611,7 @@ const hasVideo = Boolean(brand.behindCounterVideo);
 
   .cross-links__dek {
     font-size: var(--fs-300);
-    opacity: 0.85;
+    color: var(--color-accent-contrast);
     margin-top: var(--sp-1);
   }
 
