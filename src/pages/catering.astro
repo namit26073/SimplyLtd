@@ -1,0 +1,465 @@
+---
+import Base from "../layouts/Base.astro";
+import Catering from "../islands/forms/Catering.tsx";
+---
+
+<Base
+  title="Catering"
+  description="Simply Ltd catering — weddings, corporate, festivals, private parties. Three food-truck concepts, one team, on-site cooking across London and the south-east."
+>
+  <article class="catering-page">
+    {/* Hero ----------------------------------------------------------------- */}
+    <section class="catering-hero" aria-labelledby="catering-hero-heading">
+      <div class="catering-hero__inner">
+        <div class="catering-hero__copy">
+          <p class="t-caption catering-hero__kicker">Catering enquiries</p>
+          <h1 id="catering-hero-heading" class="t-display catering-hero__heading">
+            Bring street food <br />to your event.
+          </h1>
+          <p class="t-editorial t-editorial--italic catering-hero__dek">
+            Weddings, corporate days, festivals, private parties. We bring the trucks, the team,
+            and the queue that doesn't stop.
+          </p>
+          <a href="#enquire" class="catering-hero__cta">
+            Enquire below
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <div class="catering-hero__image-zone" aria-hidden="true">
+          <div class="catering-hero__image-placeholder">
+            <span class="t-caption">Catering scene</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Why us --------------------------------------------------------------- */}
+    <section class="why" aria-labelledby="why-heading">
+      <div class="why__inner">
+        <header class="why__header">
+          <p class="t-caption">Why book Simply</p>
+          <h2 id="why-heading" class="t-display why__heading">
+            Three concepts, one team.
+          </h2>
+        </header>
+
+        <ol role="list" class="why__list">
+          <li class="reason">
+            <p class="t-display reason__numeral" aria-hidden="true">01</p>
+            <h3 class="t-display reason__title">On-site cooking, always.</h3>
+            <p class="t-body reason__body">
+              Nothing pre-plated. Wraps off the grill, burgers off the smash. Your guests watch it
+              come together.
+            </p>
+          </li>
+          <li class="reason">
+            <p class="t-display reason__numeral" aria-hidden="true">02</p>
+            <h3 class="t-display reason__title">A range of cuisines.</h3>
+            <p class="t-body reason__body">
+              Falafel, shawarma, the full Lebanese spread, smash burgers. Pick one concept or
+              combine them for variety.
+            </p>
+          </li>
+          <li class="reason">
+            <p class="t-display reason__numeral" aria-hidden="true">03</p>
+            <h3 class="t-display reason__title">An experienced team.</h3>
+            <p class="t-body reason__body">
+              The crew that runs the trucks every day runs your event. Hospitality is a habit, not
+              a training course.
+            </p>
+          </li>
+          <li class="reason">
+            <p class="t-display reason__numeral" aria-hidden="true">04</p>
+            <h3 class="t-display reason__title">Simple logistics.</h3>
+            <p class="t-body reason__body">
+              We bring the truck or set up a stall. Power and water requirements documented up
+              front; allergens covered; insurance in order.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    {/* Event types ---------------------------------------------------------- */}
+    <section class="events" aria-labelledby="events-heading">
+      <div class="events__inner">
+        <header class="events__header">
+          <p class="t-caption">Events we cover</p>
+          <h2 id="events-heading" class="t-display events__heading">
+            We've fed all of these.
+          </h2>
+        </header>
+
+        <ul role="list" class="events__grid">
+          <li class="event-tile" data-brand="falafel">
+            <h3 class="t-display event-tile__name">Weddings</h3>
+            <p class="t-body event-tile__body">
+              Full-service catering for receptions, ceremonies, and the wind-down. Late-night
+              street-food refresh is a popular add-on.
+            </p>
+          </li>
+          <li class="event-tile" data-brand="shawarma">
+            <h3 class="t-display event-tile__name">Corporate</h3>
+            <p class="t-body event-tile__body">
+              Office lunches, launch days, away-days, holiday parties. We work with corporate
+              procurement and HR teams across London.
+            </p>
+          </li>
+          <li class="event-tile" data-brand="burgers">
+            <h3 class="t-display event-tile__name">Festivals</h3>
+            <p class="t-body event-tile__body">
+              Multi-day pitches, weekend rotations, and one-off festival appearances. We bring our
+              own setup and clear up after.
+            </p>
+          </li>
+          <li class="event-tile">
+            <h3 class="t-display event-tile__name">Private</h3>
+            <p class="t-body event-tile__body">
+              Birthdays, anniversaries, garden parties. The smallest event we cater is usually
+              ~20 guests — under that, we'll point you somewhere better.
+            </p>
+          </li>
+          <li class="event-tile">
+            <h3 class="t-display event-tile__name">Something else</h3>
+            <p class="t-body event-tile__body">
+              Filming, photoshoots, brand activations, residencies. Tell us what you're planning.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    {/* How it works --------------------------------------------------------- */}
+    <section class="process" aria-labelledby="process-heading">
+      <div class="process__inner">
+        <header class="process__header">
+          <p class="t-caption">How it works</p>
+          <h2 id="process-heading" class="t-display process__heading">From enquiry to event day.</h2>
+        </header>
+
+        <ol role="list" class="process__steps">
+          <li class="step">
+            <p class="t-display step__index" aria-hidden="true">1</p>
+            <h3 class="t-display step__title">You send the form below</h3>
+            <p class="t-body step__body">
+              Date, location, guest count, vibe. The more you can tell us, the faster we can
+              quote.
+            </p>
+          </li>
+          <li class="step">
+            <p class="t-display step__index" aria-hidden="true">2</p>
+            <h3 class="t-display step__title">We reply within two working days</h3>
+            <p class="t-body step__body">
+              Quote, menu options, and any questions. Most enquiries are turned around same-week
+              for events 8+ weeks out.
+            </p>
+          </li>
+          <li class="step">
+            <p class="t-display step__index" aria-hidden="true">3</p>
+            <h3 class="t-display step__title">We finalise the menu together</h3>
+            <p class="t-body step__body">
+              Dietary requirements, special requests, branding. Allergens are documented in
+              writing for every event.
+            </p>
+          </li>
+          <li class="step">
+            <p class="t-display step__index" aria-hidden="true">4</p>
+            <h3 class="t-display step__title">Event day, we turn up early</h3>
+            <p class="t-body step__body">
+              Set up, prep, serve, pack down. You watch the queue not move because everything is
+              running properly.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    {/* Lead time / coverage ------------------------------------------------- */}
+    <section class="logistics" aria-labelledby="logistics-heading">
+      <div class="logistics__inner">
+        <header>
+          <p class="t-caption">Lead time + coverage</p>
+          <h2 id="logistics-heading" class="t-display logistics__heading">A few practical notes.</h2>
+        </header>
+
+        <div class="logistics__grid">
+          <div class="logistics__item">
+            <h3 class="t-caption logistics__label">Lead time</h3>
+            <p class="t-body">
+              Ideally 4+ weeks. We can sometimes turn around last-minute enquiries (under 14 days) —
+              call us if you're in that window.
+            </p>
+          </div>
+          <div class="logistics__item">
+            <h3 class="t-caption logistics__label">Coverage</h3>
+            <p class="t-body">
+              London and the south-east as standard. We've travelled further for the right event;
+              ask if you're outside the M25.
+            </p>
+          </div>
+          <div class="logistics__item">
+            <h3 class="t-caption logistics__label">Minimum size</h3>
+            <p class="t-body">
+              We cater 10 guests and up. Under that, you're better off coming to a truck.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Form ----------------------------------------------------------------- */}
+    <section id="enquire" class="enquire" aria-labelledby="enquire-heading">
+      <div class="enquire__inner">
+        <header class="enquire__header">
+          <p class="t-caption">Enquire</p>
+          <h2 id="enquire-heading" class="t-display enquire__heading">
+            Tell us about your event.
+          </h2>
+          <p class="t-editorial t-editorial--italic enquire__dek">
+            We reply within two working days. For events in the next two weeks, give us a call
+            instead.
+          </p>
+        </header>
+
+        <Catering client:visible />
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  /* Hero */
+  .catering-hero {
+    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
+    background: var(--color-cream);
+  }
+  .catering-hero__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .catering-hero__inner {
+      grid-template-columns: 1.05fr 1fr;
+      gap: var(--sp-7);
+    }
+  }
+  .catering-hero__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-3);
+  }
+  .catering-hero__heading {
+    font-size: clamp(var(--fs-700), 9vw, var(--fs-800));
+    line-height: 0.92;
+    letter-spacing: var(--ls-display-tight);
+  }
+  .catering-hero__dek {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-400);
+    max-width: 38ch;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+  .catering-hero__cta {
+    margin-top: var(--sp-5);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .catering-hero__cta:hover,
+  .catering-hero__cta:focus-visible {
+    transform: translateY(-1px);
+  }
+  .catering-hero__image-zone {
+    aspect-ratio: 4 / 5;
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .catering-hero__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-canal) 12%, transparent) 0,
+      color-mix(in srgb, var(--color-canal) 12%, transparent) 12px,
+      transparent 12px,
+      transparent 24px
+    );
+  }
+  .catering-hero__image-placeholder .t-caption {
+    background: var(--color-cream);
+    color: var(--color-text-muted);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--r-pill);
+    border: 1px solid var(--color-line);
+  }
+
+  /* Shared section frame */
+  .why, .events, .process, .logistics, .enquire {
+    padding: var(--sp-7) var(--page-gutter);
+    border-top: 1px solid var(--color-line);
+  }
+  .why { background: var(--color-cream); }
+  .events { background: var(--color-paper); }
+  .process { background: var(--color-cream); }
+  .logistics { background: var(--color-paper); }
+  .enquire { background: var(--color-cream); }
+  .why__inner, .events__inner, .process__inner, .logistics__inner, .enquire__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  .why__header, .events__header, .process__header, .enquire__header {
+    margin-bottom: var(--sp-5);
+  }
+
+  .why__heading, .events__heading, .process__heading, .logistics__heading, .enquire__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 1;
+    margin-top: var(--sp-2);
+  }
+
+  /* Why list */
+  .why__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .why__list { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1080px) {
+    .why__list { grid-template-columns: repeat(4, 1fr); }
+  }
+  .reason {
+    padding: var(--sp-4);
+    background: var(--color-paper);
+    border-radius: var(--r-md);
+  }
+  .reason__numeral {
+    font-size: var(--fs-700);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+  .reason__title {
+    font-size: var(--fs-500);
+    margin-top: var(--sp-2);
+    line-height: 1;
+  }
+  .reason__body {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Event tiles */
+  .events__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  @media (min-width: 720px) {
+    .events__grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+  }
+  .event-tile {
+    padding: var(--sp-4);
+    background: var(--color-accent, var(--color-cream));
+    color: var(--color-accent-contrast, var(--color-ink));
+    border-radius: var(--r-md);
+    border: 1px solid var(--color-line);
+  }
+  .event-tile[data-brand] {
+    border-color: transparent;
+  }
+  .event-tile__name {
+    font-size: var(--fs-500);
+    line-height: 1;
+  }
+  .event-tile__body {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Process steps */
+  .process__steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+    counter-reset: step;
+  }
+  @media (min-width: 720px) {
+    .process__steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1080px) {
+    .process__steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .step__index {
+    font-size: var(--fs-800);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+  .step__title {
+    font-size: var(--fs-500);
+    line-height: 1;
+  }
+  .step__body {
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Logistics */
+  .logistics__grid {
+    margin-top: var(--sp-4);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .logistics__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .logistics__item {
+    padding: var(--sp-4);
+    background: var(--color-cream);
+    border-radius: var(--r-md);
+  }
+  .logistics__label {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  /* Enquire */
+  .enquire__dek {
+    margin-top: var(--sp-3);
+    max-width: 50ch;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+</style>
