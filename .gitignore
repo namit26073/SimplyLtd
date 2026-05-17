@@ -42,6 +42,11 @@ pnpm-debug.log*
 # Test output
 coverage/
 .nyc_output/
+.vitest-cache/
+
+# Agent / MCP scratch
+.playwright-mcp/
+.chrome-devtools-mcp/
 
 # Asset processing intermediates (full-res source assets stay in assets-inbox/,
 # build pipeline outputs go to dist/ which is already ignored)
