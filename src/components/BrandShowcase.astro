@@ -1,0 +1,83 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import BrandPanel from "./BrandPanel.astro";
+
+const allBrands = await getCollection("brands");
+const visibleBrands = allBrands
+  .filter((b) => b.data.visible)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const brandsWithPitches = await Promise.all(
+  visibleBrands.map(async (entry) => {
+    const pitch = entry.data.primaryPitchSlug
+      ? await getEntry("locations", entry.data.primaryPitchSlug)
+      : null;
+    return { brand: entry.data, pitch: pitch?.data ?? null };
+  }),
+);
+---
+
+<section id="brand-showcase" class="showcase" aria-labelledby="showcase-heading">
+  <header class="showcase__header">
+    <p class="t-caption showcase__kicker">The fleet</p>
+    <h2 id="showcase-heading" class="t-display showcase__heading">
+      Three concepts. <br />One canal.
+    </h2>
+    <p class="t-editorial t-editorial--italic showcase__intro">
+      Each truck is its own kitchen, its own queue, its own thing. The standards are shared. The
+      menus aren't.
+    </p>
+  </header>
+
+  <div class="showcase__panels" role="list" aria-label="Sub-brands">
+    {
+      brandsWithPitches.map(({ brand, pitch }, idx) => (
+        <div role="listitem" class="showcase__panel-wrap">
+          <BrandPanel brand={brand} pitch={pitch} index={idx} total={brandsWithPitches.length} />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .showcase {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .showcase__header {
+    max-width: var(--page-max);
+    margin: 0 auto var(--sp-6);
+  }
+
+  .showcase__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .showcase__heading {
+    font-size: clamp(var(--fs-700), 8vw, var(--fs-800));
+    line-height: 0.94;
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .showcase__intro {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-400);
+    max-width: 42ch;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+
+  .showcase__panels {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  /* On large screens, the panels still stack vertically but each pins
+     briefly as it enters view (animation-timeline: view()). */
+</style>

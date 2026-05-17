@@ -1,0 +1,201 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  brand: CollectionEntry<"brands">["data"];
+  pitch: CollectionEntry<"locations">["data"] | null;
+  index: number;
+  total: number;
+}
+
+const { brand, pitch, index, total } = Astro.props;
+
+const wordmark = brand.name.replace(/^Simply\s+/i, "");
+const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+---
+
+<article class="panel" data-brand={brand.slug} aria-labelledby={`panel-${brand.slug}-heading`}>
+  <div class="panel__inner">
+    <div class="panel__copy">
+      <p class="t-caption panel__index" aria-hidden="true">{indexLabel}</p>
+      <p class="t-caption panel__concept">Simply</p>
+      <h3 id={`panel-${brand.slug}-heading`} class="t-display panel__wordmark">{wordmark}</h3>
+
+      <p class="t-editorial t-editorial--italic panel__dek">{brand.introDek}</p>
+
+      <ul role="list" class="panel__meta">
+        {pitch && <li class="t-caption">{pitch.name} · {pitch.postcode}</li>}
+        {brand.dietary?.map((tag) => <li class="t-caption">{tag}</li>)}
+      </ul>
+
+      <a href={`/${brand.slug}/`} class="panel__cta">
+        See {brand.name}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="panel__image-zone" aria-hidden="true">
+      {/* Cutout slot — when src/assets/placeholders/showcase-<slug>.png lands,
+          swap this placeholder for an <Image /> tag. */}
+      <div class="panel__image-placeholder">
+        <span class="t-caption">Cutout · {brand.name}</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .panel {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  .panel__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 70vh;
+    padding: var(--sp-5) var(--sp-5) var(--sp-6);
+    gap: var(--sp-4);
+  }
+
+  @media (min-width: 900px) {
+    .panel__inner {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+      padding: var(--sp-7);
+      min-height: 80vh;
+      gap: var(--sp-6);
+    }
+  }
+
+  .panel__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    max-width: 36rem;
+  }
+
+  .panel__index {
+    opacity: 0.7;
+  }
+
+  .panel__concept {
+    opacity: 0.7;
+    margin-top: var(--sp-3);
+  }
+
+  .panel__wordmark {
+    font-size: clamp(var(--fs-800), 18vw, var(--fs-900));
+    line-height: 0.86;
+    letter-spacing: var(--ls-display-tight);
+    margin-top: calc(-1 * var(--sp-2));
+    text-transform: uppercase;
+    /* On entry, wordmark fades in and translates */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: panel-wordmark-in var(--dur-slow) var(--ease-out) forwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+
+  @supports not (animation-timeline: view()) {
+    .panel__wordmark {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+
+  @keyframes panel-wordmark-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel__dek {
+    font-size: clamp(var(--fs-400), 2.6vw, var(--fs-500));
+    max-width: 32ch;
+    margin-top: var(--sp-3);
+  }
+
+  .panel__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-3);
+    margin-top: var(--sp-3);
+    align-items: center;
+  }
+
+  .panel__meta li {
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: var(--r-pill);
+  }
+
+  .panel__cta {
+    margin-top: var(--sp-4);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    align-self: flex-start;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--color-accent-contrast);
+    color: var(--color-accent);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .panel__cta:hover,
+  .panel__cta:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .panel__image-zone {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 480px;
+    justify-self: center;
+  }
+
+  @media (min-width: 900px) {
+    .panel__image-zone {
+      justify-self: end;
+    }
+  }
+
+  .panel__image-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: color-mix(in srgb, currentColor 60%, transparent);
+    background-image:
+      radial-gradient(
+        circle at center,
+        color-mix(in srgb, currentColor 12%, transparent),
+        transparent 60%
+      );
+  }
+
+  .panel__image-placeholder .t-caption {
+    background: color-mix(in srgb, var(--color-accent-contrast) 92%, transparent);
+    color: var(--color-accent);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--r-pill);
+  }
+
+  /* Focus outline scoped to this panel — uses the contrast colour */
+  .panel :focus-visible {
+    outline: 2px solid var(--color-accent-contrast);
+    outline-offset: 3px;
+  }
+</style>
