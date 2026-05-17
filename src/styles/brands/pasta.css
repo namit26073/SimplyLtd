@@ -1,0 +1,5 @@
+[data-brand="pasta"] {
+  --color-accent: #e07a2a;
+  --color-accent-contrast: var(--color-ink);
+  --color-accent-soft: color-mix(in srgb, #e07a2a 18%, var(--color-cream));
+}

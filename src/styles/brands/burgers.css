@@ -1,0 +1,5 @@
+[data-brand="burgers"] {
+  --color-accent: #c03020;
+  --color-accent-contrast: var(--color-cream);
+  --color-accent-soft: color-mix(in srgb, #c03020 12%, var(--color-cream));
+}

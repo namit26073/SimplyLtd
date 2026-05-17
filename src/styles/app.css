@@ -1,0 +1,15 @@
+/* Global entry. Imported once from src/layouts/Base.astro.
+   Order matters — tokens before reset before typography before brands. */
+
+@layer tokens, reset, base, components, utilities, overrides;
+
+@import "./tokens.css" layer(tokens);
+@import "./reset.css" layer(reset);
+@import "./typography.css" layer(base);
+@import "./transitions.css" layer(base);
+
+@import "./brands/falafel.css" layer(components);
+@import "./brands/shawarma.css" layer(components);
+@import "./brands/lebanese.css" layer(components);
+@import "./brands/burgers.css" layer(components);
+@import "./brands/pasta.css" layer(components);

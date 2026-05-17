@@ -1,20 +1,16 @@
 ---
-// Slice 0 placeholder. Replaced in Slice 4 (homepage hero).
-const title = "Simply Ltd";
+import Base from "../layouts/Base.astro";
 ---
 
-<!doctype html>
-<html lang="en-GB">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content="Simply Ltd — UK food-truck group, Paddington Basin." />
-  </head>
-  <body>
-    <main>
-      <h1>Simply Ltd</h1>
-      <p>Bootstrap page. The real homepage ships in Slice 4.</p>
-    </main>
-  </body>
-</html>
+<Base title="Simply Ltd">
+  <main style="padding: var(--sp-7) var(--page-gutter);">
+    <p class="t-caption" style="color: var(--color-canal);">Bootstrap · Slice 1 in place</p>
+    <h1 class="t-display" style="font-size: var(--fs-800); margin-top: var(--sp-2);">Simply Ltd</h1>
+    <p class="t-editorial t-editorial--italic" style="font-size: var(--fs-500); margin-top: var(--sp-3); max-width: var(--measure-prose);">
+      Street food from Paddington Basin. The real homepage ships in Slice 4 — once we've picked the photography together.
+    </p>
+    <p class="t-body" style="margin-top: var(--sp-4);">
+      Internal review: <a href="/internal/design-system">/internal/design-system</a>
+    </p>
+  </main>
+</Base>

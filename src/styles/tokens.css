@@ -1,0 +1,104 @@
+/* Design tokens. Component CSS references these — never literal values. */
+
+:root {
+  /* Parent palette (ADR 0004) */
+  --color-cream: #f4efe6;
+  --color-ink: #1a1a18;
+  --color-canal: #7a7e78;
+  --color-text-muted: #5e625c; /* AA-compliant on cream (5.13:1); use for captions / metadata text */
+  --color-line: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  --color-paper: color-mix(in srgb, var(--color-cream) 65%, white);
+
+  /* Default accent — overridden by [data-brand] (ADR 0004). On the parent
+     site (no brand context), accent falls back to ink for restraint. */
+  --color-accent: var(--color-ink);
+  --color-accent-contrast: var(--color-cream);
+
+  /* Type scale — modular 1.25, base 17px (ADR 0003) */
+  --fs-100: 0.75rem; /* 12px — caption */
+  --fs-200: 0.875rem; /* 14px — small */
+  --fs-300: 1.0625rem; /* 17px — body, base */
+  --fs-400: 1.25rem; /* 21px — lede */
+  --fs-500: 1.5625rem; /* 27px — section sub */
+  --fs-600: 1.953rem; /* 33px — section h2 */
+  --fs-700: 2.441rem; /* 41px — page h1 mobile */
+  --fs-800: 3.815rem; /* 65px — hero h1 mobile */
+  --fs-900: 7.451rem; /* 127px — showcase wordmark */
+
+  /* Font families — bound to Astro Fonts API outputs */
+  --ff-display-stack: var(--ff-display), system-ui, sans-serif;
+  --ff-editorial-stack: var(--ff-editorial), Georgia, serif;
+  --ff-body-stack: var(--ff-body), system-ui, sans-serif;
+
+  /* Type weights */
+  --fw-body: 400;
+  --fw-strong: 600;
+  --fw-display: 400; /* Anton ships single weight */
+  --fw-editorial-light: 300;
+  --fw-editorial: 400;
+  --fw-editorial-bold: 600;
+
+  /* Type metrics */
+  --lh-tight: 1;
+  --lh-snug: 1.1;
+  --lh-normal: 1.4;
+  --lh-relaxed: 1.6;
+  --ls-display-tight: -0.01em;
+  --ls-display-loose: 0.04em;
+  --ls-caption: 0.08em;
+
+  /* Space scale — modular 1.5, base 8px */
+  --sp-0: 0.25rem; /* 4 */
+  --sp-1: 0.5rem; /* 8 */
+  --sp-2: 0.75rem; /* 12 */
+  --sp-3: 1rem; /* 16 */
+  --sp-4: 1.5rem; /* 24 */
+  --sp-5: 2.25rem; /* 36 */
+  --sp-6: 3.375rem; /* 54 */
+  --sp-7: 5rem; /* 80 */
+  --sp-8: 7.5rem; /* 120 */
+  --sp-9: 11rem; /* 176 */
+
+  /* Layout */
+  --measure-prose: 65ch;
+  --measure-tight: 50ch;
+  --page-gutter: clamp(1.25rem, 4vw, 3rem);
+  --page-max: 84rem; /* ~1344px outer */
+
+  /* Motion (ADR 0007) */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 700ms;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* Z layers */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-nav: 100;
+  --z-modal: 1000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

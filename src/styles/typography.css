@@ -1,0 +1,85 @@
+/* Typography — bindings + prose. */
+
+body {
+  font-family: var(--ff-body-stack);
+  font-size: var(--fs-300);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-normal);
+  color: var(--color-ink);
+  background: var(--color-cream);
+}
+
+/* Display — Anton, condensed grotesque, single weight */
+.t-display {
+  font-family: var(--ff-display-stack);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display-tight);
+  text-transform: uppercase;
+}
+
+/* Editorial — Fraunces, serif with italic */
+.t-editorial {
+  font-family: var(--ff-editorial-stack);
+  font-weight: var(--fw-editorial);
+  line-height: var(--lh-snug);
+}
+
+.t-editorial--italic {
+  font-style: italic;
+}
+
+/* Body */
+.t-body {
+  font-family: var(--ff-body-stack);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-relaxed);
+}
+
+/* Small caps caption — used for metadata strips */
+.t-caption {
+  font-family: var(--ff-body-stack);
+  font-size: var(--fs-100);
+  font-weight: var(--fw-strong);
+  letter-spacing: var(--ls-caption);
+  text-transform: uppercase;
+  line-height: var(--lh-normal);
+}
+
+/* Prose container — for About / longform copy */
+.t-prose {
+  max-width: var(--measure-prose);
+  font-size: var(--fs-300);
+  line-height: var(--lh-relaxed);
+}
+
+.t-prose > * + * {
+  margin-top: var(--sp-3);
+}
+
+.t-prose h2 {
+  margin-top: var(--sp-6);
+  font-family: var(--ff-display-stack);
+  font-size: var(--fs-600);
+  letter-spacing: var(--ls-display-tight);
+  text-transform: uppercase;
+}
+
+.t-prose h3 {
+  margin-top: var(--sp-5);
+  font-family: var(--ff-editorial-stack);
+  font-size: var(--fs-500);
+  font-weight: var(--fw-editorial-bold);
+}
+
+.t-prose a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.t-prose a:hover,
+.t-prose a:focus-visible {
+  text-decoration-thickness: 2px;
+}

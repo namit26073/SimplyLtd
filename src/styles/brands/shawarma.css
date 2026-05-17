@@ -1,0 +1,5 @@
+[data-brand="shawarma"] {
+  --color-accent: #e8b83a;
+  --color-accent-contrast: var(--color-ink);
+  --color-accent-soft: color-mix(in srgb, #e8b83a 18%, var(--color-cream));
+}

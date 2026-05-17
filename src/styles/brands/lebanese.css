@@ -1,0 +1,5 @@
+[data-brand="lebanese"] {
+  --color-accent: #a6342e;
+  --color-accent-contrast: var(--color-cream);
+  --color-accent-soft: color-mix(in srgb, #a6342e 12%, var(--color-cream));
+}

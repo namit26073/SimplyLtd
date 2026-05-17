@@ -1,0 +1,54 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { Font } from "astro:assets";
+import "../styles/app.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  brand?: "falafel" | "shawarma" | "lebanese" | "burgers" | "pasta";
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = "Simply Ltd — street food from Paddington Basin. Catering, franchising, and three trucks on the canal.",
+  ogImage = "/og-default.jpg",
+  brand,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title.endsWith("Simply Ltd") ? title : `${title} · Simply Ltd`;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en-GB" data-brand={brand}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Simply Ltd" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--ff-display" preload />
+    <Font cssVariable="--ff-editorial" />
+    <Font cssVariable="--ff-body" preload />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

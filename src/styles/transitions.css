@@ -1,0 +1,17 @@
+/* View Transition names. Used by ClientRouter for cross-page choreography.
+   Only elements that *genuinely transition* get a name — overuse leaks. */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out);
+}
+
+/* Brand wordmark — transitions from showcase panel into sub-brand hero. */
+.vt-brand-wordmark {
+  view-transition-name: var(--vt-brand-wordmark, none);
+}

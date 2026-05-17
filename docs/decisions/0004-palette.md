@@ -9,8 +9,10 @@
 
 - `--color-cream` — warm cream surface, `#F4EFE6`
 - `--color-ink` — off-black text + display, `#1A1A18`
-- `--color-canal` — cool neutral grey for restraint, `#7A7E78`
+- `--color-canal` — cool neutral grey **for fills only** (caveat: pair with ink for any text on canal — see note below), `#7A7E78`
+- `--color-text-muted` — AA-safe muted text colour for captions + metadata, `#5E625C` (5.13:1 on cream)
 - `--color-line` — `color-mix(in srgb, var(--color-ink) 8%, transparent)`
+- `--color-paper` — `color-mix(in srgb, var(--color-cream) 65%, white)` for inner surfaces
 
 **Brand accents** (each scoped to `[data-brand="<slug>"]`; starting hex from logo halos, locked in Slice 1):
 
@@ -32,3 +34,5 @@
 
 - Photography overlay floor: any text-on-photo block uses ≥30% black gradient overlay (or matched text-shadow) guaranteeing 4.5:1 contrast. Accessibility-auditor verifies.
 - Per Q3 (locked), Lebanese and Pasta brands are `visible: false` in v1; their accent tokens still exist in the schema so flipping them on later is a one-line change.
+- **Canal grey is fill-only.** `#7A7E78` on cream is 3.6:1 — fails small-text AA. The accessibility-auditor caught this in Slice 1 review. Use `--color-text-muted` for any muted body text instead. Canal can still be used as a background fill (with ink-on-canal for text overlays, which clears 5.84:1).
+- **Falafel accent margin:** `#3F7A3A` on cream is 4.52:1 — passes AA but with very little headroom. When used as text-on-photo in the Falafel sub-brand page (Slice 6), supply an overlay or text-shadow to widen the margin.

@@ -1,0 +1,303 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const brands = [
+  { slug: "falafel", name: "Simply Falafel", hex: "#3F7A3A" },
+  { slug: "shawarma", name: "Simply Shawarma", hex: "#E8B83A" },
+  { slug: "lebanese", name: "Simply Lebanese", hex: "#A6342E" },
+  { slug: "burgers", name: "Simply Burgers", hex: "#C03020" },
+  { slug: "pasta", name: "Simply Pasta", hex: "#E07A2A" },
+] as const;
+
+const typeScale = [
+  { token: "--fs-100", label: "Caption", size: "12px" },
+  { token: "--fs-200", label: "Small", size: "14px" },
+  { token: "--fs-300", label: "Body / base", size: "17px" },
+  { token: "--fs-400", label: "Lede", size: "21px" },
+  { token: "--fs-500", label: "Section sub", size: "27px" },
+  { token: "--fs-600", label: "Section h2", size: "33px" },
+  { token: "--fs-700", label: "Page h1 mobile", size: "41px" },
+  { token: "--fs-800", label: "Hero h1 mobile", size: "65px" },
+  { token: "--fs-900", label: "Showcase wordmark", size: "127px" },
+] as const;
+
+const spaceScale = [
+  { token: "--sp-0", value: "4" },
+  { token: "--sp-1", value: "8" },
+  { token: "--sp-2", value: "12" },
+  { token: "--sp-3", value: "16" },
+  { token: "--sp-4", value: "24" },
+  { token: "--sp-5", value: "36" },
+  { token: "--sp-6", value: "54" },
+  { token: "--sp-7", value: "80" },
+  { token: "--sp-8", value: "120" },
+  { token: "--sp-9", value: "176" },
+] as const;
+---
+
+<Base title="Design system" noindex>
+  <main class="ds">
+    <header class="ds__header">
+      <p class="t-caption">Internal · Slice 1 review</p>
+      <h1 class="t-display ds__title">Design system</h1>
+      <p class="t-editorial ds__intro">
+        Tokens, type, and brand accents. Lock the values you see here before any visual slice ships.
+      </p>
+    </header>
+
+    <section class="ds__section" aria-labelledby="parent-palette">
+      <h2 id="parent-palette" class="t-display ds__h2">Parent palette</h2>
+      <div class="ds__swatches">
+        <article class="ds__swatch" style="--bg: var(--color-cream); --fg: var(--color-ink);">
+          <div class="ds__swatch-chip"></div>
+          <p class="t-caption">--color-cream</p>
+          <p class="t-body">#F4EFE6</p>
+        </article>
+        <article class="ds__swatch" style="--bg: var(--color-ink); --fg: var(--color-cream);">
+          <div class="ds__swatch-chip"></div>
+          <p class="t-caption">--color-ink</p>
+          <p class="t-body">#1A1A18</p>
+        </article>
+        <article class="ds__swatch" style="--bg: var(--color-canal); --fg: var(--color-ink);">
+          <div class="ds__swatch-chip"></div>
+          <p class="t-caption">--color-canal</p>
+          <p class="t-body">#7A7E78 · pair with ink for AA text</p>
+        </article>
+        <article style="--bg: var(--color-text-muted); --fg: var(--color-cream);" class="ds__swatch">
+          <div class="ds__swatch-chip"></div>
+          <p class="t-caption">--color-text-muted</p>
+          <p class="t-body">#5E625C · captions, metadata</p>
+        </article>
+        <article class="ds__swatch" style="--bg: var(--color-paper); --fg: var(--color-ink);">
+          <div class="ds__swatch-chip"></div>
+          <p class="t-caption">--color-paper</p>
+          <p class="t-body">paper (cream + white)</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="ds__section" aria-labelledby="brand-accents">
+      <h2 id="brand-accents" class="t-display ds__h2">Brand accents</h2>
+      <div class="ds__swatches">
+        {
+          brands.map((b) => (
+            <article
+              data-brand={b.slug}
+              class="ds__swatch ds__swatch--brand"
+              style="--bg: var(--color-accent); --fg: var(--color-accent-contrast);"
+            >
+              <div class="ds__swatch-chip"></div>
+              <p class="t-caption">{b.name}</p>
+              <p class="t-body">{b.hex}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="ds__section" aria-labelledby="typography">
+      <h2 id="typography" class="t-display ds__h2">Typography</h2>
+
+      <div class="ds__type-row">
+        <p class="t-caption">Display · Anton</p>
+        <p class="t-display" style="font-size: var(--fs-800);">Street food.</p>
+        <p class="t-display" style="font-size: var(--fs-600);">Paddington Basin since 2019.</p>
+      </div>
+
+      <div class="ds__type-row">
+        <p class="t-caption">Editorial · Fraunces</p>
+        <p class="t-editorial t-editorial--italic" style="font-size: var(--fs-500);">
+          From a single falafel truck in 2019 to a fleet on the canal — fresh, fast, and on the
+          basin every day.
+        </p>
+      </div>
+
+      <div class="ds__type-row">
+        <p class="t-caption">Body · Inter</p>
+        <p class="t-body" style="max-width: var(--measure-prose);">
+          Built from a genuine love of food and a passion for sharing authentic flavours, Simply
+          Falafel quickly gained a loyal following and proved that quality, simplicity, and
+          consistency matter.
+        </p>
+      </div>
+
+      <h3 class="t-display ds__h3">Type scale</h3>
+      <ul class="ds__type-scale" role="list">
+        {
+          typeScale.map((t) => (
+            <li class="ds__type-scale-row">
+              <span class="t-caption" style="min-width: 8rem;">
+                {t.token}
+              </span>
+              <span class="t-caption" style="min-width: 10rem;">
+                {t.label} · {t.size}
+              </span>
+              <span class="t-display" style={`font-size: var(${t.token});`}>
+                Aa
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="ds__section" aria-labelledby="space">
+      <h2 id="space" class="t-display ds__h2">Space scale</h2>
+      <ul class="ds__space" role="list">
+        {
+          spaceScale.map((s) => (
+            <li class="ds__space-row">
+              <span class="t-caption" style="min-width: 5rem;">
+                {s.token}
+              </span>
+              <span class="t-caption" style="min-width: 4rem;">
+                {s.value}px
+              </span>
+              <div class="ds__space-bar" style={`width: var(${s.token});`} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="ds__section" aria-labelledby="motion">
+      <h2 id="motion" class="t-display ds__h2">Motion sample</h2>
+      <p class="t-body">
+        Hover the chip to trigger the hero-load motion in miniature (letter-spacing tightens over
+        700&nbsp;ms). When <code>prefers-reduced-motion</code> is set, this collapses to a no-op.
+      </p>
+      <button type="button" class="ds__motion-chip" aria-label="Preview hero-load letter-spacing motion">
+        <span class="ds__motion-chip-text">SIMPLY.</span>
+      </button>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .ds {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--sp-7) var(--page-gutter) var(--sp-8);
+  }
+
+  .ds__header {
+    margin-bottom: var(--sp-7);
+  }
+
+  .ds__title {
+    font-size: var(--fs-800);
+    margin-top: var(--sp-2);
+  }
+
+  .ds__intro {
+    margin-top: var(--sp-3);
+    max-width: var(--measure-prose);
+    color: var(--color-text-muted);
+    font-size: var(--fs-400);
+  }
+
+  .ds__section {
+    border-top: 1px solid var(--color-line);
+    padding-block: var(--sp-6) var(--sp-7);
+  }
+
+  .ds__h2 {
+    font-size: var(--fs-700);
+    margin-bottom: var(--sp-5);
+  }
+
+  .ds__h3 {
+    font-size: var(--fs-500);
+    margin-top: var(--sp-6);
+    margin-bottom: var(--sp-3);
+  }
+
+  .ds__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--sp-3);
+  }
+
+  .ds__swatch {
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: var(--r-md);
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .ds__swatch-chip {
+    height: 88px;
+    border-radius: var(--r-sm);
+    background: currentColor;
+    opacity: 0.15;
+  }
+
+  .ds__type-row {
+    margin-bottom: var(--sp-5);
+  }
+
+  .ds__type-row .t-caption {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .ds__type-scale {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .ds__type-scale-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+
+  .ds__type-scale-row .t-caption {
+    color: var(--color-text-muted);
+  }
+
+  .ds__space {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .ds__space-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+
+  .ds__space-row .t-caption {
+    color: var(--color-text-muted);
+  }
+
+  .ds__space-bar {
+    height: 16px;
+    background: var(--color-ink);
+    border-radius: var(--r-sm);
+  }
+
+  .ds__motion-chip {
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-5);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    font-family: var(--ff-display-stack);
+    font-size: var(--fs-500);
+    letter-spacing: var(--ls-display-loose);
+    transition: letter-spacing var(--dur-slow) var(--ease-out);
+  }
+
+  .ds__motion-chip:hover,
+  .ds__motion-chip:focus-visible {
+    letter-spacing: var(--ls-display-tight);
+  }
+</style>
