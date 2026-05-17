@@ -1,8 +1,8 @@
 ---
 /**
- * Homepage hero — type-led composition. Cutout food image slot is reserved
- * via the .hero__image-slot block; when Namit's home-hero asset lands, swap
- * the placeholder for the <Image /> tag.
+ * Homepage hero — type-led, with a free-floating cutout zone (not a boxed
+ * image slot). The cutout placeholder is a soft positioned shape; when the
+ * real PNG lands, swap the shape for an <Image /> tag in the same zone.
  */
 ---
 
@@ -31,10 +31,13 @@
       </div>
     </div>
 
-    <div class="hero__image-slot" aria-hidden="true">
-      <div class="hero__image-placeholder">
-        <span class="t-caption hero__image-placeholder-label">Cutout food image</span>
-      </div>
+    {/* Free-floating cutout zone. The shape placeholders below stand in for
+        the eventual food PNGs — sized and positioned to suggest the final
+        composition. When real cutouts arrive: drop the .hero__shape elements,
+        add <Image src={...} class="hero__cutout hero__cutout--main" /> etc. */}
+    <div class="hero__art" aria-hidden="true">
+      <span class="hero__shape hero__shape--main"></span>
+      <span class="hero__shape hero__shape--accent"></span>
     </div>
   </div>
 </section>
@@ -43,6 +46,7 @@
   .hero {
     padding: var(--sp-6) var(--page-gutter) var(--sp-7);
     background: var(--color-cream);
+    overflow: hidden; /* shapes may bleed off the right edge */
   }
 
   .hero__inner {
@@ -51,7 +55,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--sp-5);
-    align-items: center;
+    position: relative;
   }
 
   @media (min-width: 900px) {
@@ -59,9 +63,16 @@
       padding: var(--sp-7) var(--page-gutter) var(--sp-8);
     }
     .hero__inner {
-      grid-template-columns: 1.05fr 1fr;
-      gap: var(--sp-7);
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--sp-6);
+      align-items: center;
+      min-height: 62vh;
     }
+  }
+
+  .hero__copy {
+    position: relative;
+    z-index: 1;
   }
 
   .hero__kicker {
@@ -81,7 +92,9 @@
   }
 
   .hero__heading-line--accent {
-    color: var(--color-canal);
+    /* Deep canal-green — passes AA on cream (~6.4:1) where the original
+       `--color-canal` grey was ~3.6:1 and read as "disabled" text. */
+    color: #3a5d3f;
   }
 
   /* Hero load animation: letter-spacing tightens, lines reveal */
@@ -174,48 +187,76 @@
     transform: translateX(3px);
   }
 
-  /* Image slot — placeholder while asset gate is open */
-  .hero__image-slot {
-    aspect-ratio: 4 / 5;
-    background: var(--color-paper);
-    border-radius: var(--r-lg);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    position: relative;
+  /* Cutout zone — no border-radius, no card, no labelled rectangle. The
+     shapes below are positioned absolutely; when an <Image /> replaces them
+     it inherits the same anchor points. Hidden on mobile: the shape becomes
+     a parked blob with no room to "float," and the type-led hero stands on
+     its own. When a real cutout PNG arrives it can be placed inline with a
+     deliberate mobile size. */
+  .hero__art {
+    display: none;
   }
 
-  .hero__image-placeholder {
+  @media (min-width: 900px) {
+    .hero__art {
+      display: block;
+      position: relative;
+      height: 100%;
+    }
+  }
+
+  .hero__shape {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background-image:
-      linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--color-canal) 12%, transparent) 0,
-        color-mix(in srgb, var(--color-canal) 12%, transparent) 12px,
-        transparent 12px,
-        transparent 24px
+    display: block;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0;
+    animation: fade-up var(--dur-slow) var(--ease-out) 880ms forwards;
+  }
+
+  /* Main shape — the food-cutout zone. Sized to dominate the column;
+     bleeds slightly off the right edge to break the grid. */
+  .hero__shape--main {
+    width: clamp(280px, 56vw, 560px);
+    aspect-ratio: 1;
+    right: -8%;
+    top: 50%;
+    transform: translateY(-50%);
+    background:
+      radial-gradient(
+        ellipse at 45% 45%,
+        color-mix(in srgb, #3f7a3a 22%, transparent) 0%,
+        color-mix(in srgb, #3f7a3a 12%, transparent) 45%,
+        transparent 72%
       );
   }
 
-  .hero__image-placeholder-label {
-    background: var(--color-cream);
-    color: var(--color-text-muted);
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
-    border: 1px solid var(--color-line);
+  /* Accent shape — a smaller "side item" hint, off-axis. */
+  .hero__shape--accent {
+    width: clamp(110px, 22vw, 200px);
+    aspect-ratio: 1;
+    right: 38%;
+    bottom: 6%;
+    background:
+      radial-gradient(
+        ellipse at 50% 50%,
+        color-mix(in srgb, #e8b83a 26%, transparent) 0%,
+        color-mix(in srgb, #e8b83a 14%, transparent) 50%,
+        transparent 75%
+      );
+    animation-delay: 1040ms;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero__heading-line,
     .hero__dek,
-    .hero__ctas {
+    .hero__ctas,
+    .hero__shape {
       animation: none;
       opacity: 1;
       transform: none;
       letter-spacing: var(--ls-display-tight);
     }
+    .hero__shape--main { transform: translateY(-50%); }
   }
 </style>

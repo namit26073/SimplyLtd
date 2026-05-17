@@ -48,6 +48,9 @@ coverage/
 .playwright-mcp/
 .chrome-devtools-mcp/
 
+# Design-review screenshot artefacts (local-only; regenerated each pass)
+.audit/
+
 # Asset processing intermediates (full-res source assets stay in assets-inbox/,
 # build pipeline outputs go to dist/ which is already ignored)
 *.psd

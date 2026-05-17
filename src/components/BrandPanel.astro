@@ -34,13 +34,11 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
       </a>
     </div>
 
-    <div class="panel__image-zone" aria-hidden="true">
-      {/* Cutout slot — when src/assets/placeholders/showcase-<slug>.png lands,
-          swap this placeholder for an <Image /> tag. */}
-      <div class="panel__image-placeholder">
-        <span class="t-caption">Cutout · {brand.name}</span>
-      </div>
-    </div>
+    {/* Cutout zone — bleeds off the bottom-right corner of the panel. The
+        shape is a soft wash standing in for the eventual brand cutout PNG.
+        When the real asset lands, replace the .panel__shape with an
+        <Image /> element at the same anchor (bottom: -10%, right: -8%). */}
+    <span class="panel__shape" aria-hidden="true"></span>
   </div>
 </article>
 
@@ -51,9 +49,11 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     border-radius: var(--r-lg);
     overflow: hidden;
     scroll-snap-align: start;
+    position: relative;
   }
 
   .panel__inner {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     min-height: 70vh;
@@ -63,24 +63,23 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
 
   @media (min-width: 900px) {
     .panel__inner {
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: 1.4fr 1fr;
       align-items: center;
       padding: var(--sp-7);
-      min-height: 80vh;
+      min-height: 78vh;
       gap: var(--sp-6);
     }
   }
 
   .panel__copy {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: var(--sp-3);
-    max-width: 36rem;
+    max-width: 40rem;
   }
 
-  /* Eyebrows on brand-coloured grounds — opacity was failing AA on Falafel
-     and Burgers (3.07:1). Switch to full-opacity accent-contrast colour;
-     visual hierarchy comes from type size/case, not lightening. */
   .panel__index {
     color: var(--color-accent-contrast);
   }
@@ -96,7 +95,6 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     letter-spacing: var(--ls-display-tight);
     margin-top: calc(-1 * var(--sp-2));
     text-transform: uppercase;
-    /* On entry, wordmark fades in and translates */
     opacity: 0;
     transform: translateY(20px);
     animation: panel-wordmark-in var(--dur-slow) var(--ease-out) forwards;
@@ -161,42 +159,36 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     transform: translateY(-1px);
   }
 
-  .panel__image-zone {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    width: 100%;
-    max-width: 480px;
-    justify-self: center;
-  }
-
-  @media (min-width: 900px) {
-    .panel__image-zone {
-      justify-self: end;
-    }
-  }
-
-  .panel__image-placeholder {
+  /* Cutout shape — sized to a real food-cutout footprint (portrait, ~300-
+     400px), anchored in the bottom-right of the panel with a small bleed.
+     Replaces the previous design-reviewer-flagged "giant disc behind type."
+     When the real PNG arrives, swap for <Image /> at the same anchor. */
+  .panel__shape {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: color-mix(in srgb, currentColor 60%, transparent);
-    background-image:
+    display: block;
+    pointer-events: none;
+    border-radius: 48% 52% 50% 50%; /* faintly organic */
+    width: clamp(220px, 48vw, 320px);
+    aspect-ratio: 4 / 5;
+    right: -6%;
+    bottom: -8%;
+    background:
       radial-gradient(
-        circle at center,
-        color-mix(in srgb, currentColor 12%, transparent),
-        transparent 60%
+        ellipse at 50% 50%,
+        color-mix(in srgb, var(--color-accent-contrast) 30%, transparent) 0%,
+        color-mix(in srgb, var(--color-accent-contrast) 12%, transparent) 38%,
+        transparent 68%
       );
   }
 
-  .panel__image-placeholder .t-caption {
-    background: color-mix(in srgb, var(--color-accent-contrast) 92%, transparent);
-    color: var(--color-accent);
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
+  @media (min-width: 900px) {
+    .panel__shape {
+      width: clamp(300px, 32%, 460px);
+      right: 4%;
+      bottom: 4%;
+    }
   }
 
-  /* Focus outline scoped to this panel — uses the contrast colour */
   .panel :focus-visible {
     outline: 2px solid var(--color-accent-contrast);
     outline-offset: 3px;

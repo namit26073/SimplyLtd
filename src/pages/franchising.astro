@@ -25,10 +25,9 @@ import Franchising from "../islands/forms/Franchising.tsx";
             <span aria-hidden="true">↓</span>
           </a>
         </div>
-        <div class="franchise-hero__image-zone" aria-hidden="true">
-          <div class="franchise-hero__image-placeholder">
-            <span class="t-caption">Franchising hero</span>
-          </div>
+        <div class="franchise-hero__art" aria-hidden="true">
+          <span class="franchise-hero__shape franchise-hero__shape--main"></span>
+          <span class="franchise-hero__shape franchise-hero__shape--accent"></span>
         </div>
       </div>
     </section>
@@ -216,6 +215,7 @@ import Franchising from "../islands/forms/Franchising.tsx";
     padding: var(--sp-6) var(--page-gutter) var(--sp-7);
     background: var(--color-ink);
     color: var(--color-cream);
+    overflow: hidden;
   }
   .franchise-hero__inner {
     max-width: var(--page-max);
@@ -224,12 +224,18 @@ import Franchising from "../islands/forms/Franchising.tsx";
     grid-template-columns: 1fr;
     gap: var(--sp-5);
     align-items: center;
+    position: relative;
   }
   @media (min-width: 900px) {
     .franchise-hero__inner {
-      grid-template-columns: 1.05fr 1fr;
-      gap: var(--sp-7);
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--sp-6);
+      min-height: 58vh;
     }
+  }
+  .franchise-hero__copy {
+    position: relative;
+    z-index: 1;
   }
   .franchise-hero__kicker {
     color: color-mix(in srgb, var(--color-cream) 60%, transparent);
@@ -269,26 +275,50 @@ import Franchising from "../islands/forms/Franchising.tsx";
     outline: 2px solid var(--color-cream);
     outline-offset: 3px;
   }
-  .franchise-hero__image-zone {
-    aspect-ratio: 4 / 5;
-    background: color-mix(in srgb, var(--color-cream) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-cream) 18%, transparent);
-    border-radius: var(--r-lg);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
+  /* Cutout zone — hidden on mobile; revealed on desktop. Swap for <Image />
+     when asset lands. */
+  .franchise-hero__art {
+    display: none;
   }
-  .franchise-hero__image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
+  @media (min-width: 900px) {
+    .franchise-hero__art {
+      display: block;
+      position: relative;
+      height: 100%;
+    }
   }
-  .franchise-hero__image-placeholder .t-caption {
-    background: color-mix(in srgb, var(--color-cream) 12%, transparent);
-    color: color-mix(in srgb, var(--color-cream) 75%, transparent);
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
+  .franchise-hero__shape {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    border-radius: 50%;
+  }
+  .franchise-hero__shape--main {
+    width: clamp(280px, 56vw, 540px);
+    aspect-ratio: 1;
+    right: -10%;
+    top: 50%;
+    transform: translateY(-50%);
+    background:
+      radial-gradient(
+        ellipse at 45% 45%,
+        color-mix(in srgb, #e8b83a 22%, transparent) 0%,
+        color-mix(in srgb, #e8b83a 12%, transparent) 50%,
+        transparent 75%
+      );
+  }
+  .franchise-hero__shape--accent {
+    width: clamp(110px, 22vw, 200px);
+    aspect-ratio: 1;
+    right: 36%;
+    bottom: 10%;
+    background:
+      radial-gradient(
+        ellipse at 50% 50%,
+        color-mix(in srgb, #c03020 26%, transparent) 0%,
+        color-mix(in srgb, #c03020 14%, transparent) 50%,
+        transparent 75%
+      );
   }
 
   /* Shared frame */

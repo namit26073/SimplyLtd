@@ -1,47 +1,61 @@
 ---
 /**
- * Four-card grid below the hero. Each card is a conversion path.
- * Per Phase 1 §4 — structural lift from Pasta Evangelists, mapped to
- * Simply Ltd's audience priorities.
+ * Editorial grid below the hero. Four routes, four sizes:
+ *   Catering   — feature block, largest area (audience #1, revenue)
+ *   Franchising — secondary feature (audience #2, growth)
+ *   Menu       — small companion to franchising
+ *   Locations  — wide horizontal strip (panoramic image will fit)
  *
- * Image slots are placeholders until the asset gate closes.
+ * Each tile is a brand-coloured ground with a floating shape placeholder
+ * standing in for the eventual food / scene cutout. No card-top rectangles.
  */
+
 type Card = {
+  slot: "catering" | "franchising" | "locations" | "menu";
   eyebrow: string;
   heading: string;
   body: string;
   cta: { label: string; href: string };
   accent: "ink" | "falafel" | "shawarma" | "burgers";
+  shapeHex: string; /* used for the placeholder shape colour */
 };
 
 const cards: Card[] = [
   {
+    slot: "catering",
     eyebrow: "Catering",
     heading: "Bring street food to your event.",
     body: "Weddings, festivals, corporate, private. We bring the trucks, the team, and the queue that doesn't stop.",
     cta: { label: "Get a quote", href: "/catering/" },
     accent: "ink",
+    shapeHex: "#e8b83a", /* warm — implies the food shot */
   },
   {
+    slot: "franchising",
     eyebrow: "Franchising",
     heading: "Run a Simply truck of your own.",
     body: "Three concepts on the canal, more in the wings. One operating model, six years of pitch-tested practice.",
     cta: { label: "See how it works", href: "/franchising/" },
     accent: "burgers",
+    shapeHex: "#f4efe6", /* cream — implies the truck/scene shot */
   },
   {
-    eyebrow: "Locations",
-    heading: "Find your nearest pitch on the basin.",
-    body: "Three trucks on Paddington Basin. Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk.",
-    cta: { label: "See the map", href: "/locations/" },
-    accent: "falafel",
-  },
-  {
+    slot: "menu",
     eyebrow: "Our brands",
     heading: "What we cook.",
     body: "Falafel, Shawarma, Burgers — each its own concept, each with its own kitchen.",
     cta: { label: "Explore the fleet", href: "#brand-showcase" },
     accent: "shawarma",
+    shapeHex: "#3f7a3a", /* falafel green — implies the cross-brand food shot */
+  },
+  {
+    slot: "locations",
+    eyebrow: "Locations",
+    heading: "Find your nearest pitch on the basin.",
+    body: "Three trucks on Paddington Basin. Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk.",
+    cta: { label: "See the map", href: "/locations/" },
+    accent: "falafel",
+    shapeHex: "#f4efe6", /* cream — implies the panoramic canal scene */
   },
 ];
 ---
@@ -56,11 +70,11 @@ const cards: Card[] = [
     <ul role="list" class="wte__grid">
       {
         cards.map((card) => (
-          <li class="wte__card" data-brand={card.accent === "ink" ? undefined : card.accent}>
+          <li
+            class={`wte__card wte__card--${card.slot}`}
+            data-brand={card.accent === "ink" ? undefined : card.accent}
+          >
             <article class="wte__card-inner">
-              <div class="wte__image-slot" aria-hidden="true">
-                <span class="t-caption wte__image-label">{card.eyebrow}</span>
-              </div>
               <div class="wte__copy">
                 <p class="t-caption wte__eyebrow">{card.eyebrow}</p>
                 <h3 class="t-display wte__card-heading">{card.heading}</h3>
@@ -70,6 +84,11 @@ const cards: Card[] = [
                   <span aria-hidden="true">→</span>
                 </a>
               </div>
+              <span
+                class="wte__shape"
+                style={`--shape-hex: ${card.shapeHex}`}
+                aria-hidden="true"
+              ></span>
             </article>
           </li>
         ))
@@ -105,29 +124,43 @@ const cards: Card[] = [
     line-height: 0.96;
   }
 
+  /* Asymmetric editorial grid.
+     Mobile: stacks with varied min-heights.
+     Desktop: 2-column grid with catering dominant, locations as a wide strip. */
   .wte__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--sp-4);
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 900px) {
     .wte__grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1.45fr 1fr;
+      grid-template-rows: minmax(260px, auto) minmax(260px, auto) minmax(200px, auto);
+      grid-template-areas:
+        "catering franchising"
+        "catering menu"
+        "locations locations";
+      gap: var(--sp-4);
     }
   }
 
-  @media (min-width: 1080px) {
-    .wte__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
+  .wte__card--catering { grid-area: catering; }
+  .wte__card--franchising { grid-area: franchising; }
+  .wte__card--menu { grid-area: menu; }
+  .wte__card--locations { grid-area: locations; }
 
   .wte__card {
-    background: var(--color-paper);
-    border-radius: var(--r-lg);
+    position: relative;
     overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--color-accent, var(--color-ink));
+    color: var(--color-accent-contrast, var(--color-cream));
     transition: transform var(--dur-base) var(--ease-out);
+    /* Stretch to fill the grid cell so spans (catering = 2 rows) match the
+       combined height of the adjacent stack (franchising + menu). */
+    height: 100%;
+    align-self: stretch;
   }
 
   .wte__card:has(.wte__cta:hover),
@@ -136,44 +169,52 @@ const cards: Card[] = [
   }
 
   .wte__card-inner {
+    position: relative;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: space-between;
+    padding: var(--sp-5);
+    min-height: 260px;
   }
 
-  .wte__image-slot {
-    aspect-ratio: 4 / 3;
-    background: var(--color-accent, var(--color-canal));
-    color: var(--color-accent-contrast, var(--color-cream));
-    display: grid;
-    place-items: center;
-    background-image:
-      linear-gradient(
-        135deg,
-        color-mix(in srgb, currentColor 10%, transparent) 0,
-        color-mix(in srgb, currentColor 10%, transparent) 12px,
-        transparent 12px,
-        transparent 24px
-      );
+  /* Catering — feature size, more breathing room */
+  .wte__card--catering .wte__card-inner {
+    min-height: 360px;
+    padding: var(--sp-6) var(--sp-6) var(--sp-5);
   }
 
-  .wte__image-label {
-    background: color-mix(in srgb, var(--color-cream) 90%, transparent);
-    color: var(--color-text-muted);
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
+  @media (min-width: 900px) {
+    .wte__card--catering .wte__card-inner {
+      padding: var(--sp-7);
+    }
+  }
+
+  /* Locations — wide horizontal strip on desktop */
+  @media (min-width: 900px) {
+    .wte__card--locations .wte__card-inner {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--sp-5);
+      padding: var(--sp-5) var(--sp-6);
+    }
+    .wte__card--locations .wte__copy {
+      max-width: 56ch;
+    }
   }
 
   .wte__copy {
-    padding: var(--sp-4);
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: var(--sp-2);
-    flex: 1;
+    max-width: 38ch;
   }
 
   .wte__eyebrow {
-    color: var(--color-text-muted);
+    color: var(--color-accent-contrast);
+    opacity: 1;
   }
 
   .wte__card-heading {
@@ -182,16 +223,21 @@ const cards: Card[] = [
     letter-spacing: var(--ls-display-tight);
   }
 
+  /* Catering gets a larger heading to match its larger area */
+  .wte__card--catering .wte__card-heading {
+    font-size: clamp(var(--fs-500), 4vw, var(--fs-700));
+  }
+
   .wte__body {
     font-size: var(--fs-300);
     line-height: var(--lh-relaxed);
-    color: color-mix(in srgb, var(--color-ink) 78%, transparent);
-    flex: 1;
+    color: var(--color-accent-contrast);
+    max-width: 36ch;
   }
 
   .wte__cta {
     margin-top: var(--sp-3);
-    color: var(--color-ink);
+    color: var(--color-accent-contrast);
     font-family: var(--ff-body-stack);
     font-weight: var(--fw-strong);
     font-size: var(--fs-200);
@@ -201,7 +247,7 @@ const cards: Card[] = [
     display: inline-flex;
     align-items: center;
     gap: var(--sp-2);
-    border-bottom: 2px solid var(--color-ink);
+    border-bottom: 2px solid var(--color-accent-contrast);
     padding-bottom: var(--sp-1);
     align-self: flex-start;
     transition: gap var(--dur-fast) var(--ease-out);
@@ -210,5 +256,67 @@ const cards: Card[] = [
   .wte__cta:hover,
   .wte__cta:focus-visible {
     gap: var(--sp-3);
+  }
+
+  /* Free-floating shape — placeholder for the eventual cutout. Sized and
+     positioned differently per slot so the page reads as a varied editorial
+     composition rather than a uniform grid. */
+  .wte__shape {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse at 45% 45%,
+        color-mix(in srgb, var(--shape-hex) 38%, transparent) 0%,
+        color-mix(in srgb, var(--shape-hex) 20%, transparent) 50%,
+        transparent 75%
+      );
+  }
+
+  /* Catering — large shape, bottom-right, partial bleed */
+  .wte__card--catering .wte__shape {
+    width: clamp(220px, 60%, 480px);
+    aspect-ratio: 1;
+    right: -8%;
+    bottom: -12%;
+  }
+
+  /* Franchising — medium shape, off the right edge */
+  .wte__card--franchising .wte__shape {
+    width: clamp(180px, 70%, 280px);
+    aspect-ratio: 1;
+    right: -14%;
+    top: 20%;
+  }
+
+  /* Menu — smaller shape, off the top-right */
+  .wte__card--menu .wte__shape {
+    width: clamp(140px, 55%, 220px);
+    aspect-ratio: 1;
+    right: -10%;
+    top: -18%;
+  }
+
+  /* Locations — wide ellipse on the right of the strip */
+  .wte__card--locations .wte__shape {
+    width: clamp(180px, 38%, 360px);
+    aspect-ratio: 1;
+    right: -6%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (max-width: 899px) {
+    /* On mobile each shape sits in the lower-right corner of its tile */
+    .wte__shape {
+      right: -10%;
+      bottom: -14%;
+      top: auto;
+      transform: none;
+      width: clamp(160px, 45%, 280px);
+      aspect-ratio: 1;
+    }
   }
 </style>

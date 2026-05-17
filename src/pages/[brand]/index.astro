@@ -63,11 +63,7 @@ const hasVideo = Boolean(brand.behindCounterVideo);
           </div>
         </div>
 
-        <div class="brand-hero__image-zone" aria-hidden="true">
-          <div class="brand-hero__image-placeholder">
-            <span class="t-caption">{brand.name} cutout</span>
-          </div>
-        </div>
+        <span class="brand-hero__shape" aria-hidden="true"></span>
       </div>
     </section>
 
@@ -209,6 +205,8 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     background: var(--color-accent);
     color: var(--color-accent-contrast);
     padding: var(--sp-6) var(--page-gutter) var(--sp-7);
+    overflow: hidden;
+    position: relative;
   }
 
   .brand-hero__inner {
@@ -218,6 +216,13 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     grid-template-columns: 1fr;
     gap: var(--sp-5);
     align-items: center;
+    position: relative;
+  }
+
+  .brand-hero__copy {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
   }
 
   @media (min-width: 900px) {
@@ -226,8 +231,8 @@ const hasVideo = Boolean(brand.behindCounterVideo);
       min-height: 80vh;
     }
     .brand-hero__inner {
-      grid-template-columns: 1.2fr 1fr;
-      gap: var(--sp-7);
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--sp-6);
     }
   }
 
@@ -300,37 +305,33 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     transform: translateY(-1px);
   }
 
-  .brand-hero__image-zone {
-    position: relative;
+  /* Cutout shape — portrait food-cutout footprint anchored bottom-right of
+     the hero panel. Smaller and softer than the previous "disc behind type"
+     pass; swap for <Image /> when asset lands. */
+  .brand-hero__shape {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    border-radius: 48% 52% 50% 50%;
+    width: clamp(240px, 56vw, 360px);
     aspect-ratio: 4 / 5;
-    width: 100%;
-    max-width: 480px;
-    justify-self: center;
+    right: -8%;
+    bottom: -10%;
+    background:
+      radial-gradient(
+        ellipse at 50% 50%,
+        color-mix(in srgb, var(--color-accent-contrast) 28%, transparent) 0%,
+        color-mix(in srgb, var(--color-accent-contrast) 12%, transparent) 38%,
+        transparent 68%
+      );
   }
 
   @media (min-width: 900px) {
-    .brand-hero__image-zone {
-      justify-self: end;
+    .brand-hero__shape {
+      width: clamp(320px, 34%, 500px);
+      right: 4%;
+      bottom: 6%;
     }
-  }
-
-  .brand-hero__image-placeholder {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background-image: radial-gradient(
-      circle at center,
-      color-mix(in srgb, currentColor 12%, transparent),
-      transparent 60%
-    );
-  }
-
-  .brand-hero__image-placeholder .t-caption {
-    background: color-mix(in srgb, var(--color-accent-contrast) 92%, transparent);
-    color: var(--color-accent);
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
   }
 
   /* Focus outline on accent ground */
