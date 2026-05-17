@@ -1,0 +1,612 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths = (async () => {
+  const brands = await getCollection("brands");
+  return brands
+    .filter((b) => b.data.visible)
+    .map((entry) => ({
+      params: { brand: entry.data.slug },
+      props: { entry },
+    }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const brand = entry.data;
+const wordmark = brand.name.replace(/^Simply\s+/i, "");
+
+const pitch = brand.primaryPitchSlug
+  ? (await getEntry("locations", brand.primaryPitchSlug))?.data ?? null
+  : null;
+
+const allBrands = await getCollection("brands");
+const otherBrands = allBrands
+  .filter((b) => b.data.visible && b.data.slug !== brand.slug)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((b) => b.data);
+
+const hoursEntries = pitch
+  ? (Object.entries(pitch.openingHours) as [string, string | undefined][]).filter(
+      ([, v]) => Boolean(v),
+    )
+  : [];
+
+const hasVideo = Boolean(brand.behindCounterVideo);
+---
+
+<Base title={brand.name} description={brand.tagline} brand={brand.slug}>
+  <article class="brand-page">
+    {/* Hero ------------------------------------------------------------------ */}
+    <section class="brand-hero" aria-labelledby="brand-hero-heading">
+      <div class="brand-hero__inner">
+        <div class="brand-hero__copy">
+          <p class="t-caption brand-hero__concept">Simply</p>
+          <h1 id="brand-hero-heading" class="t-display brand-hero__wordmark">{wordmark}</h1>
+          <p class="t-editorial t-editorial--italic brand-hero__dek">{brand.introDek}</p>
+
+          <ul role="list" class="brand-hero__meta">
+            {pitch && <li class="t-caption">{pitch.name} · {pitch.postcode}</li>}
+            <li class="t-caption">{brand.cuisine}</li>
+            {brand.dietary?.map((tag) => <li class="t-caption">{tag}</li>)}
+          </ul>
+
+          <div class="brand-hero__ctas">
+            <a href="/catering/" class="brand-hero__cta brand-hero__cta--primary">
+              Hire {brand.name} for your event
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/locations/" class="brand-hero__cta brand-hero__cta--secondary">
+              Find us
+            </a>
+          </div>
+        </div>
+
+        <div class="brand-hero__image-zone" aria-hidden="true">
+          <div class="brand-hero__image-placeholder">
+            <span class="t-caption">{brand.name} cutout</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Behind the counter ---------------------------------------------------- */}
+    <section class="behind-counter" aria-labelledby="behind-counter-heading">
+      <div class="behind-counter__inner">
+        <header class="behind-counter__header">
+          <p class="t-caption behind-counter__kicker">Behind the counter</p>
+          <h2 id="behind-counter-heading" class="t-display behind-counter__heading">
+            Everything is prepared on the truck.
+          </h2>
+        </header>
+
+        <div class="behind-counter__body">
+          <div class="behind-counter__media">
+            {
+              hasVideo ? (
+                <video
+                  class="behind-counter__video"
+                  src={brand.behindCounterVideo}
+                  controls
+                  preload="metadata"
+                  playsinline
+                  aria-label={`Behind the counter at ${brand.name}`}
+                >
+                  Your browser doesn't support inline video. Visit us at the truck instead.
+                </video>
+              ) : (
+                <div class="behind-counter__media-placeholder">
+                  <span class="t-caption">Behind-the-counter still · {brand.name}</span>
+                </div>
+              )
+            }
+          </div>
+
+          <div class="behind-counter__copy">
+            <p class="t-body">
+              The {wordmark.toLowerCase()} kitchen is small. Two or three people, one prep bench, one
+              service window. That's the operating discipline — everything fresh, everything to
+              order, everything from the same team that's been doing it since 2019.
+            </p>
+            <p class="t-body">
+              The menu stays small on purpose: a few things, done properly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Pitch card ----------------------------------------------------------- */}
+    {
+      pitch && (
+        <section class="pitch" aria-labelledby="pitch-heading">
+          <div class="pitch__inner">
+            <header class="pitch__header">
+              <p class="t-caption pitch__kicker">Find us</p>
+              <h2 id="pitch-heading" class="t-display pitch__heading">
+                {pitch.name}
+              </h2>
+            </header>
+
+            <div class="pitch__body">
+              <address class="pitch__address t-body">
+                {pitch.addressLines.map((line) => <span>{line}</span>)}
+                <span class="pitch__postcode">{pitch.postcode}</span>
+              </address>
+
+              {hoursEntries.length > 0 && (
+                <table class="pitch__hours">
+                  <caption class="t-caption pitch__hours-caption">Opening hours</caption>
+                  <tbody>
+                    {hoursEntries.map(([day, range]) => (
+                      <tr>
+                        <th scope="row" class="t-caption pitch__hours-day">
+                          {day}
+                        </th>
+                        <td class="t-body">{range}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+
+              {pitch.notes && <p class="t-body pitch__notes">{pitch.notes}</p>}
+
+              <a href="/locations/" class="pitch__cta">
+                See all locations
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* Cross-links ---------------------------------------------------------- */}
+    {
+      otherBrands.length > 0 && (
+        <section class="cross-links" aria-labelledby="cross-links-heading">
+          <div class="cross-links__inner">
+            <header class="cross-links__header">
+              <p class="t-caption">The rest of the fleet</p>
+              <h2 id="cross-links-heading" class="t-display cross-links__heading">
+                While you're here.
+              </h2>
+            </header>
+
+            <ul role="list" class="cross-links__grid">
+              {otherBrands.map((other) => (
+                <li class="cross-links__item" data-brand={other.slug}>
+                  <a href={`/${other.slug}/`} class="cross-links__link">
+                    <p class="t-caption">Simply</p>
+                    <h3 class="t-display cross-links__wordmark">{other.name.replace(/^Simply\s+/i, "")}</h3>
+                    <p class="t-editorial t-editorial--italic cross-links__dek">{other.tagline}</p>
+                    <span class="cross-links__arrow" aria-hidden="true">
+                      Visit →
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  /* ---------- Brand hero ---------- */
+  .brand-hero {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
+  }
+
+  .brand-hero__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .brand-hero {
+      padding: var(--sp-7) var(--page-gutter) var(--sp-8);
+      min-height: 80vh;
+    }
+    .brand-hero__inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-7);
+    }
+  }
+
+  .brand-hero__concept {
+    opacity: 0.7;
+    margin-bottom: var(--sp-1);
+  }
+
+  .brand-hero__wordmark {
+    font-size: clamp(var(--fs-800), 18vw, var(--fs-900));
+    line-height: 0.86;
+    letter-spacing: var(--ls-display-tight);
+    margin-bottom: var(--sp-4);
+    text-transform: uppercase;
+  }
+
+  .brand-hero__dek {
+    font-size: clamp(var(--fs-400), 2.6vw, var(--fs-500));
+    max-width: 38ch;
+  }
+
+  .brand-hero__meta {
+    margin-top: var(--sp-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .brand-hero__meta li {
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: var(--r-pill);
+  }
+
+  .brand-hero__ctas {
+    margin-top: var(--sp-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+
+  .brand-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .brand-hero__cta--primary {
+    background: var(--color-accent-contrast);
+    color: var(--color-accent);
+  }
+
+  .brand-hero__cta--secondary {
+    background: transparent;
+    color: var(--color-accent-contrast);
+    border: 1.5px solid var(--color-accent-contrast);
+  }
+
+  .brand-hero__cta:hover,
+  .brand-hero__cta:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .brand-hero__image-zone {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 480px;
+    justify-self: center;
+  }
+
+  @media (min-width: 900px) {
+    .brand-hero__image-zone {
+      justify-self: end;
+    }
+  }
+
+  .brand-hero__image-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-image: radial-gradient(
+      circle at center,
+      color-mix(in srgb, currentColor 12%, transparent),
+      transparent 60%
+    );
+  }
+
+  .brand-hero__image-placeholder .t-caption {
+    background: color-mix(in srgb, var(--color-accent-contrast) 92%, transparent);
+    color: var(--color-accent);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--r-pill);
+  }
+
+  /* Focus outline on accent ground */
+  .brand-hero :focus-visible {
+    outline: 2px solid var(--color-accent-contrast);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Behind the counter ---------- */
+  .behind-counter {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+  }
+
+  .behind-counter__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .behind-counter__header {
+    margin-bottom: var(--sp-5);
+    max-width: var(--measure-prose);
+  }
+
+  .behind-counter__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .behind-counter__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 1;
+  }
+
+  .behind-counter__body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .behind-counter__body {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-6);
+    }
+  }
+
+  .behind-counter__media {
+    aspect-ratio: 4 / 5;
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .behind-counter__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .behind-counter__media-placeholder {
+    color: var(--color-text-muted);
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-canal) 12%, transparent) 0,
+      color-mix(in srgb, var(--color-canal) 12%, transparent) 12px,
+      transparent 12px,
+      transparent 24px
+    );
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+  }
+
+  .behind-counter__media-placeholder .t-caption {
+    background: var(--color-cream);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--r-pill);
+    border: 1px solid var(--color-line);
+  }
+
+  .behind-counter__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .behind-counter__copy p {
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* ---------- Pitch card ---------- */
+  .pitch {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-paper);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .pitch__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+
+  @media (min-width: 720px) {
+    .pitch__inner {
+      grid-template-columns: 1fr 2fr;
+      gap: var(--sp-7);
+    }
+  }
+
+  .pitch__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .pitch__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 1;
+  }
+
+  .pitch__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .pitch__address {
+    font-style: normal;
+    font-size: var(--fs-400);
+    line-height: var(--lh-snug);
+  }
+
+  .pitch__address span {
+    display: block;
+  }
+
+  .pitch__postcode {
+    font-family: var(--ff-display-stack);
+    text-transform: uppercase;
+    font-size: var(--fs-500);
+    margin-top: var(--sp-1);
+  }
+
+  .pitch__hours {
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .pitch__hours-caption {
+    text-align: left;
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .pitch__hours-day {
+    padding-right: var(--sp-4);
+    padding-block: var(--sp-1);
+    color: var(--color-text-muted);
+    font-weight: var(--fw-strong);
+    text-transform: capitalize;
+  }
+
+  .pitch__hours td {
+    padding-block: var(--sp-1);
+  }
+
+  .pitch__notes {
+    color: var(--color-text-muted);
+    font-size: var(--fs-200);
+    max-width: 40ch;
+  }
+
+  .pitch__cta {
+    align-self: flex-start;
+    color: var(--color-ink);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-bottom: 2px solid var(--color-ink);
+    padding-bottom: var(--sp-1);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+
+  .pitch__cta:hover,
+  .pitch__cta:focus-visible {
+    gap: var(--sp-3);
+  }
+
+  /* ---------- Cross-links ---------- */
+  .cross-links {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .cross-links__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .cross-links__header {
+    margin-bottom: var(--sp-5);
+  }
+
+  .cross-links__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 1;
+    margin-top: var(--sp-2);
+  }
+
+  .cross-links__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+
+  @media (min-width: 720px) {
+    .cross-links__grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+  }
+
+  .cross-links__item {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .cross-links__item:has(.cross-links__link:hover),
+  .cross-links__item:has(.cross-links__link:focus-visible) {
+    transform: translateY(-3px);
+  }
+
+  .cross-links__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    text-decoration: none;
+    color: inherit;
+    min-height: 220px;
+  }
+
+  .cross-links__link :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  .cross-links__wordmark {
+    font-size: var(--fs-700);
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  .cross-links__dek {
+    font-size: var(--fs-300);
+    opacity: 0.85;
+    margin-top: var(--sp-1);
+  }
+
+  .cross-links__arrow {
+    margin-top: auto;
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    padding-top: var(--sp-3);
+  }
+</style>
