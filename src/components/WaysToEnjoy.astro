@@ -1,0 +1,214 @@
+---
+/**
+ * Four-card grid below the hero. Each card is a conversion path.
+ * Per Phase 1 §4 — structural lift from Pasta Evangelists, mapped to
+ * Simply Ltd's audience priorities.
+ *
+ * Image slots are placeholders until the asset gate closes.
+ */
+type Card = {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  cta: { label: string; href: string };
+  accent: "ink" | "falafel" | "shawarma" | "burgers";
+};
+
+const cards: Card[] = [
+  {
+    eyebrow: "Catering",
+    heading: "Bring street food to your event.",
+    body: "Weddings, festivals, corporate, private. We bring the trucks, the team, and the queue that doesn't stop.",
+    cta: { label: "Get a quote", href: "/catering/" },
+    accent: "ink",
+  },
+  {
+    eyebrow: "Franchising",
+    heading: "Run a Simply truck of your own.",
+    body: "Five proven concepts, one operating model. We're looking for partners who like a queue.",
+    cta: { label: "See how it works", href: "/franchising/" },
+    accent: "burgers",
+  },
+  {
+    eyebrow: "Locations",
+    heading: "Find your nearest pitch on the basin.",
+    body: "Three trucks on Paddington Basin. Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk.",
+    cta: { label: "See the map", href: "/locations/" },
+    accent: "falafel",
+  },
+  {
+    eyebrow: "Our brands",
+    heading: "What we cook.",
+    body: "Falafel, Shawarma, Burgers — each its own concept, each with its own kitchen.",
+    cta: { label: "Explore the fleet", href: "#brand-showcase" },
+    accent: "shawarma",
+  },
+];
+---
+
+<section class="wte" aria-labelledby="wte-heading">
+  <div class="wte__inner">
+    <header class="wte__header">
+      <p class="t-caption wte__kicker">Four ways to enjoy Simply</p>
+      <h2 id="wte-heading" class="t-display wte__heading">Choose your queue.</h2>
+    </header>
+
+    <ul role="list" class="wte__grid">
+      {
+        cards.map((card) => (
+          <li class="wte__card" data-brand={card.accent === "ink" ? undefined : card.accent}>
+            <article class="wte__card-inner">
+              <div class="wte__image-slot" aria-hidden="true">
+                <span class="t-caption wte__image-label">{card.eyebrow}</span>
+              </div>
+              <div class="wte__copy">
+                <p class="t-caption wte__eyebrow">{card.eyebrow}</p>
+                <h3 class="t-display wte__card-heading">{card.heading}</h3>
+                <p class="t-body wte__body">{card.body}</p>
+                <a href={card.cta.href} class="wte__cta">
+                  {card.cta.label}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .wte {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .wte__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .wte__header {
+    margin-bottom: var(--sp-6);
+    max-width: var(--measure-prose);
+  }
+
+  .wte__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .wte__heading {
+    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    line-height: 0.96;
+  }
+
+  .wte__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  @media (min-width: 640px) {
+    .wte__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .wte__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .wte__card {
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .wte__card:has(.wte__cta:hover),
+  .wte__card:has(.wte__cta:focus-visible) {
+    transform: translateY(-3px);
+  }
+
+  .wte__card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .wte__image-slot {
+    aspect-ratio: 4 / 3;
+    background: var(--color-accent, var(--color-canal));
+    color: var(--color-accent-contrast, var(--color-cream));
+    display: grid;
+    place-items: center;
+    background-image:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, currentColor 10%, transparent) 0,
+        color-mix(in srgb, currentColor 10%, transparent) 12px,
+        transparent 12px,
+        transparent 24px
+      );
+  }
+
+  .wte__image-label {
+    background: color-mix(in srgb, var(--color-cream) 90%, transparent);
+    color: var(--color-text-muted);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--r-pill);
+  }
+
+  .wte__copy {
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    flex: 1;
+  }
+
+  .wte__eyebrow {
+    color: var(--color-text-muted);
+  }
+
+  .wte__card-heading {
+    font-size: var(--fs-500);
+    line-height: 1;
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .wte__body {
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+    color: color-mix(in srgb, var(--color-ink) 78%, transparent);
+    flex: 1;
+  }
+
+  .wte__cta {
+    margin-top: var(--sp-3);
+    color: var(--color-ink);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    border-bottom: 2px solid var(--color-ink);
+    padding-bottom: var(--sp-1);
+    align-self: flex-start;
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+
+  .wte__cta:hover,
+  .wte__cta:focus-visible {
+    gap: var(--sp-3);
+  }
+</style>

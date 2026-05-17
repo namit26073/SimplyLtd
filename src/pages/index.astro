@@ -1,16 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import WaysToEnjoy from "../components/WaysToEnjoy.astro";
+import BrandShowcase from "../components/BrandShowcase.astro";
 ---
 
 <Base title="Simply Ltd">
-  <main style="padding: var(--sp-7) var(--page-gutter);">
-    <p class="t-caption" style="color: var(--color-canal);">Bootstrap · Slice 1 in place</p>
-    <h1 class="t-display" style="font-size: var(--fs-800); margin-top: var(--sp-2);">Simply Ltd</h1>
-    <p class="t-editorial t-editorial--italic" style="font-size: var(--fs-500); margin-top: var(--sp-3); max-width: var(--measure-prose);">
-      Street food from Paddington Basin. The real homepage ships in Slice 4 — once we've picked the photography together.
-    </p>
-    <p class="t-body" style="margin-top: var(--sp-4);">
-      Internal review: <a href="/internal/design-system">/internal/design-system</a>
-    </p>
-  </main>
+  <Hero />
+  <WaysToEnjoy />
+  <BrandShowcase />
 </Base>
