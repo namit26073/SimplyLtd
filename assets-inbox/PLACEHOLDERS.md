@@ -57,6 +57,17 @@ Then, when the owner provides real photography:
 - **⚠ Perf debt:** MP4 is 5.7 MB — well above the 2 MB sub-budget in `.claude/rules/performance.md`. **Re-encode required** before Cloudflare Pages cutover: target H.264 ~1.8 MB + WebM ~1.5 MB at 1280×720, 24fps, CRF 26-28. Needs ffmpeg locally (currently unavailable on this machine).
 - **Used on:** `/` homepage hero (full-bleed, type overlay)
 
+### `franchising-hero` — franchising page hero photograph (full-bleed)
+
+- **File:** `src/assets/placeholders/franchising-hero.jpg` (2400×1560 landscape JPEG, 253 KB source)
+- **Source:** Pexels photo 32897258 — operator framed through truck service window at night, warm interior glow, dark blue truck exterior
+- **URL:** https://www.pexels.com/photo/32897258/
+- **Licence:** Pexels licence — free for commercial, no attribution required
+- **Treatment:** Full-bleed background, type overlay on darkened gradient mask (same pattern as homepage + catering)
+- **Why placeholder:** No owner franchisee photography yet. Documentary-tone shot communicates "this is real work, and it's yours" — operator-as-owner POV.
+- **Swap plan:** Replace with first-franchisee portrait when Simply Ltd onboards a franchisee (timeline TBD per Namit/owner).
+- **Used on:** `/franchising/` page hero
+
 ### `catering-hero` — catering page hero photograph (full-bleed)
 
 - **File:** `src/assets/placeholders/catering-hero.jpg` (2000×2999 portrait JPEG, 354 KB source — Astro Image emits responsive AVIF/WebP)

@@ -1,5 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
+import { Image } from "astro:assets";
+import franchiseHero from "../assets/placeholders/franchising-hero.jpg";
 import Franchising from "../islands/forms/Franchising.tsx";
 ---
 
@@ -8,27 +10,35 @@ import Franchising from "../islands/forms/Franchising.tsx";
   description="Run a Simply truck of your own — three proven concepts, one operating model, six years of pitch-tested experience to work from. Apply to franchise Simply Ltd."
 >
   <article class="franchising-page">
-    {/* Hero ----------------------------------------------------------------- */}
+    {/* Hero — full-bleed photo, type overlay -------------------------------- */}
     <section class="franchise-hero" aria-labelledby="franchise-hero-heading">
-      <div class="franchise-hero__inner">
-        <div class="franchise-hero__copy">
-          <p class="t-caption franchise-hero__kicker">Franchising</p>
-          <h1 id="franchise-hero-heading" class="t-display franchise-hero__heading">
-            Run a Simply truck <br />of your own.
-          </h1>
-          <p class="t-editorial t-editorial--italic franchise-hero__dek">
-            Three proven concepts. One operating model. Six years of pitch-tested street-food
-            experience to work from. We're looking for partners who like a queue.
-          </p>
-          <a href="#enquire" class="franchise-hero__cta">
-            Apply below
-            <span aria-hidden="true">↓</span>
-          </a>
-        </div>
-        <div class="franchise-hero__art" aria-hidden="true">
-          <span class="franchise-hero__shape franchise-hero__shape--main"></span>
-          <span class="franchise-hero__shape franchise-hero__shape--accent"></span>
-        </div>
+      <div class="franchise-hero__bg" aria-hidden="true">
+        <Image
+          src={franchiseHero}
+          alt=""
+          class="franchise-hero__photo"
+          widths={[640, 1024, 1440, 1920, 2400]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          quality={75}
+        />
+        <div class="franchise-hero__mask"></div>
+      </div>
+
+      <div class="franchise-hero__content">
+        <p class="t-caption franchise-hero__kicker">Franchising</p>
+        <h1 id="franchise-hero-heading" class="t-display franchise-hero__heading">
+          Run a Simply truck of your own.
+        </h1>
+        <p class="t-editorial t-editorial--italic franchise-hero__dek">
+          Three proven concepts. One operating model. Six years of pitch-tested street-food
+          experience to work from. We're looking for partners who like a queue.
+        </p>
+        <a href="#enquire" class="franchise-hero__cta">
+          Apply below
+          <span aria-hidden="true">↓</span>
+        </a>
       </div>
     </section>
 
@@ -210,47 +220,91 @@ import Franchising from "../islands/forms/Franchising.tsx";
 </Base>
 
 <style>
-  /* Hero (mirrors catering-hero) */
+  /* Hero — full-bleed photo, type overlay (same pattern as homepage + catering) */
   .franchise-hero {
-    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     background: var(--color-ink);
     color: var(--color-cream);
-    overflow: hidden;
-  }
-  .franchise-hero__inner {
-    max-width: var(--page-max);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-5);
-    align-items: center;
-    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: flex-end;
   }
   @media (min-width: 900px) {
-    .franchise-hero__inner {
-      grid-template-columns: 1.15fr 1fr;
-      gap: var(--sp-6);
-      min-height: 58vh;
+    .franchise-hero {
+      min-height: 86vh;
+      align-items: center;
     }
   }
-  .franchise-hero__copy {
-    position: relative;
+  .franchise-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .franchise-hero__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 50%;
+  }
+  .franchise-hero__mask {
+    position: absolute;
+    inset: 0;
     z-index: 1;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-ink) 30%, transparent) 0%,
+        color-mix(in srgb, var(--color-ink) 45%, transparent) 40%,
+        color-mix(in srgb, var(--color-ink) 80%, transparent) 80%,
+        color-mix(in srgb, var(--color-ink) 92%, transparent) 100%
+      );
+  }
+  @media (min-width: 900px) {
+    .franchise-hero__mask {
+      background:
+        linear-gradient(
+          100deg,
+          color-mix(in srgb, var(--color-ink) 88%, transparent) 0%,
+          color-mix(in srgb, var(--color-ink) 62%, transparent) 40%,
+          color-mix(in srgb, var(--color-ink) 18%, transparent) 80%,
+          transparent 100%
+        );
+    }
+  }
+  .franchise-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--sp-7) var(--page-gutter) var(--sp-6);
+  }
+  @media (min-width: 900px) {
+    .franchise-hero__content {
+      padding: var(--sp-7) var(--page-gutter);
+    }
+    .franchise-hero__content > * { max-width: 22ch; }
+    .franchise-hero__dek { max-width: 38ch; }
+    .franchise-hero__cta { max-width: none; }
   }
   .franchise-hero__kicker {
-    color: color-mix(in srgb, var(--color-cream) 60%, transparent);
+    color: color-mix(in srgb, var(--color-cream) 75%, transparent);
     margin-bottom: var(--sp-3);
   }
   .franchise-hero__heading {
-    font-size: clamp(var(--fs-700), 9vw, var(--fs-800));
+    font-size: clamp(var(--fs-700), 8vw, var(--fs-900));
     line-height: 0.92;
     letter-spacing: var(--ls-display-tight);
+    color: var(--color-cream);
   }
   .franchise-hero__dek {
     margin-top: var(--sp-4);
     font-size: var(--fs-400);
-    max-width: 38ch;
-    color: color-mix(in srgb, var(--color-cream) 85%, transparent);
+    color: color-mix(in srgb, var(--color-cream) 90%, transparent);
   }
   .franchise-hero__cta {
     margin-top: var(--sp-5);
@@ -270,55 +324,13 @@ import Franchising from "../islands/forms/Franchising.tsx";
     transition: transform var(--dur-fast) var(--ease-out);
   }
   .franchise-hero__cta:hover,
-  .franchise-hero__cta:focus-visible { transform: translateY(-1px); }
+  .franchise-hero__cta:focus-visible {
+    transform: translateY(-1px);
+    background: #fff;
+  }
   .franchise-hero :focus-visible {
     outline: 2px solid var(--color-cream);
     outline-offset: 3px;
-  }
-  /* Cutout zone — hidden on mobile; revealed on desktop. Swap for <Image />
-     when asset lands. */
-  .franchise-hero__art {
-    display: none;
-  }
-  @media (min-width: 900px) {
-    .franchise-hero__art {
-      display: block;
-      position: relative;
-      height: 100%;
-    }
-  }
-  .franchise-hero__shape {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    border-radius: 50%;
-  }
-  .franchise-hero__shape--main {
-    width: clamp(280px, 56vw, 540px);
-    aspect-ratio: 1;
-    right: -10%;
-    top: 50%;
-    transform: translateY(-50%);
-    background:
-      radial-gradient(
-        ellipse at 45% 45%,
-        color-mix(in srgb, #e8b83a 22%, transparent) 0%,
-        color-mix(in srgb, #e8b83a 12%, transparent) 50%,
-        transparent 75%
-      );
-  }
-  .franchise-hero__shape--accent {
-    width: clamp(110px, 22vw, 200px);
-    aspect-ratio: 1;
-    right: 36%;
-    bottom: 10%;
-    background:
-      radial-gradient(
-        ellipse at 50% 50%,
-        color-mix(in srgb, #c03020 26%, transparent) 0%,
-        color-mix(in srgb, #c03020 14%, transparent) 50%,
-        transparent 75%
-      );
   }
 
   /* Shared frame */
