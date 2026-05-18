@@ -43,9 +43,17 @@ Then, when the owner provides real photography:
 3. Verify alt text still matches (real photo may differ from placeholder content).
 4. Run the design-reviewer subagent on every page using the swapped image.
 
-## Active placeholders (none yet)
+## Active placeholders
 
-_The agent populates this section as placeholders are added._
+### `home-hero` — homepage hero photograph
+
+- **File:** `src/assets/placeholders/home-hero.jpg` (2000×3000 portrait JPEG, 467 KB source — Astro Image emits responsive AVIF/WebP)
+- **Source:** Pexels photo by Engin Akyurt — "Brown and White Food on White Ceramic Plate"
+- **URL:** https://www.pexels.com/photo/brown-and-white-food-on-white-ceramic-plate-6275226/
+- **Licence:** Pexels licence — free for commercial use, no attribution required ([pexels.com/license](https://www.pexels.com/license/))
+- **Why placeholder:** No owner-provided food photography yet. This shot reads as "Apple/Adidas-quality food ad" — moody dark-green backdrop, oval bowl of falafel + scattered pita rounds. Matches Simply Falafel's origin-brand story.
+- **Swap plan:** Replace with owner-commissioned falafel photography when available (target: 2026-07 photoshoot per Namit). Same file path so component swap is one-line.
+- **Used on:** `/` homepage hero (split layout: copy left, photo right desktop; photo top, copy below mobile)
 
 ## What the owner already provided
 
