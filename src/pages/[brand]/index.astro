@@ -1,5 +1,6 @@
 ---
 import { getCollection, getEntry } from "astro:content";
+import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import type { GetStaticPaths } from "astro";
 
@@ -34,6 +35,7 @@ const hoursEntries = pitch
   : [];
 
 const hasVideo = Boolean(brand.behindCounterVideo);
+const hasBehindImage = !hasVideo && Boolean(brand.behindCounterImage);
 ---
 
 <Base title={brand.name} description={brand.tagline} brand={brand.slug}>
@@ -97,6 +99,21 @@ const hasVideo = Boolean(brand.behindCounterVideo);
                     Silent kitchen B-roll showing prep and service inside the {brand.name} truck.
                     A text description of the kitchen follows.
                   </figcaption>
+                </>
+              ) : hasBehindImage && brand.behindCounterImage ? (
+                <>
+                  <Image
+                    src={brand.behindCounterImage}
+                    alt={brand.behindCounterAlt ?? ""}
+                    class="behind-counter__image"
+                    widths={[640, 1024, 1440, 1920]}
+                    sizes="(min-width: 900px) 60vw, 100vw"
+                    loading="lazy"
+                    quality={78}
+                  />
+                  {brand.behindCounterAlt && (
+                    <figcaption class="visually-hidden">{brand.behindCounterAlt}</figcaption>
+                  )}
                 </>
               ) : (
                 <div class="behind-counter__media-placeholder" role="img" aria-label={`Placeholder for behind-the-counter still — ${brand.name}`}>
@@ -390,7 +407,8 @@ const hasVideo = Boolean(brand.behindCounterVideo);
     margin: 0;
   }
 
-  .behind-counter__video {
+  .behind-counter__video,
+  .behind-counter__image {
     width: 100%;
     height: 100%;
     object-fit: cover;

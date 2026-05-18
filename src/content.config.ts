@@ -20,6 +20,8 @@ const brands = defineCollection({
       primaryPitchSlug: z.enum(["merchant-square", "canal-side-walk"]).optional(),
       heroImage: image().optional(),
       behindCounterVideo: z.string().optional(),
+      behindCounterImage: image().optional(),
+      behindCounterAlt: z.string().optional(),
       dietary: z.array(z.enum(dietaryTags)).optional(),
       order: z.number().int().default(0),
     }),

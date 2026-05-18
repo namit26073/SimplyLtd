@@ -57,6 +57,17 @@ Then, when the owner provides real photography:
 - **⚠ Perf debt:** MP4 is 5.7 MB — well above the 2 MB sub-budget in `.claude/rules/performance.md`. **Re-encode required** before Cloudflare Pages cutover: target H.264 ~1.8 MB + WebM ~1.5 MB at 1280×720, 24fps, CRF 26-28. Needs ffmpeg locally (currently unavailable on this machine).
 - **Used on:** `/` homepage hero (full-bleed, type overlay)
 
+### `burgers-behind-counter` — /burgers/ behind-the-counter still
+
+- **File:** `src/assets/placeholders/burgers-behind-counter.jpg` (2000×3555 portrait JPEG, 247 KB source)
+- **Source:** Pexels photo 36727276 — six smash patties cooking on commercial flat-top, steam rising, dark commercial-kitchen background
+- **URL:** https://www.pexels.com/photo/36727276/
+- **Licence:** Pexels licence — free for commercial, no attribution required
+- **Treatment:** Sits in the `behind-counter__media` slot (4:5 aspect, object-fit cover). Schema field `behindCounterImage` on the brand content collection; renders via Astro `<Image />` when no `behindCounterVideo` is set.
+- **Why placeholder:** No owner-shot Burgers truck footage yet (Falafel + Shawarma have owner videos; Burgers doesn't). This photo communicates "real volume / mid-service" rather than a styled food shot.
+- **Swap plan:** Replace with owner Burgers truck video when shot. Same `behindCounterImage` field can be removed once `behindCounterVideo` lands on burgers.md.
+- **Used on:** `/burgers/` behind-the-counter section
+
 ### `franchising-hero` — franchising page hero photograph (full-bleed)
 
 - **File:** `src/assets/placeholders/franchising-hero.jpg` (2400×1560 landscape JPEG, 253 KB source)
