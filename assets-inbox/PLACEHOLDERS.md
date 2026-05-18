@@ -57,6 +57,17 @@ Then, when the owner provides real photography:
 - **⚠ Perf debt:** MP4 is 5.7 MB — well above the 2 MB sub-budget in `.claude/rules/performance.md`. **Re-encode required** before Cloudflare Pages cutover: target H.264 ~1.8 MB + WebM ~1.5 MB at 1280×720, 24fps, CRF 26-28. Needs ffmpeg locally (currently unavailable on this machine).
 - **Used on:** `/` homepage hero (full-bleed, type overlay)
 
+### `wte-*` — Homepage WaysToEnjoy tiles (4)
+
+Each tile = brand-coloured ground + full-bleed photo + brand-tinted gradient mask. Photo shows visibly on one side of the tile; the brand colour anchors the type side. Replaces the prior floating-shape placeholders.
+
+- **`wte-catering`** = `catering-hero.jpg` (Pexels 25388878 kebab stall) — reuses the catering page hero so the tile previews the page it links to
+- **`wte-franchising`** = `franchising-hero.jpg` (Pexels 32897258 operator at night) — same reuse pattern
+- **`wte-menu`** = `src/assets/placeholders/wte-menu.jpg` (Pexels 6275114 — falafel + hummus flatlay on warm orange backdrop). Communicates Levantine range / "what we cook"
+- **`wte-locations`** = `src/assets/placeholders/wte-locations.jpg` (Pexels 9828325 — Paddington Basin at dusk with glass towers + moored boats). Picked by content-researcher from a 6-candidate shortlist as the only literal-Paddington shot.
+
+All Pexels licence — free for commercial, no attribution required. Swap one at a time as owner photography lands.
+
 ### `burgers-behind-counter` — /burgers/ behind-the-counter still
 
 - **File:** `src/assets/placeholders/burgers-behind-counter.jpg` (2000×3555 portrait JPEG, 247 KB source)

@@ -1,23 +1,30 @@
 ---
 /**
- * Editorial grid below the hero. Four routes, four sizes:
- *   Catering   — feature block, largest area (audience #1, revenue)
- *   Franchising — secondary feature (audience #2, growth)
- *   Menu       — small companion to franchising
- *   Locations  — wide horizontal strip (panoramic image will fit)
+ * Editorial grid below the hero. Four routes, four sizes.
+ * Each tile is a brand-coloured ground with a feathered photo blending in
+ * from one corner (CSS mask-image radial-gradient — no hard photo edges,
+ * the photo "blooms" out of the brand colour rather than sitting on top).
  *
- * Each tile is a brand-coloured ground with a floating shape placeholder
- * standing in for the eventual food / scene cutout. No card-top rectangles.
+ * Photos reuse the hero placeholders for catering + franchising (the tile
+ * previews the page it links to). Menu uses a separate food-spread shot;
+ * Locations is a Paddington-Basin / canal placeholder until owner photos.
  */
 
+import { Image } from "astro:assets";
+import cateringHero from "../assets/placeholders/catering-hero.jpg";
+import franchiseHero from "../assets/placeholders/franchising-hero.jpg";
+import wteMenu from "../assets/placeholders/wte-menu.jpg";
+import wteLocations from "../assets/placeholders/wte-locations.jpg";
+
+type Slot = "catering" | "franchising" | "locations" | "menu";
+
 type Card = {
-  slot: "catering" | "franchising" | "locations" | "menu";
+  slot: Slot;
   eyebrow: string;
   heading: string;
   body: string;
   cta: { label: string; href: string };
   accent: "ink" | "falafel" | "shawarma" | "burgers";
-  shapeHex: string; /* used for the placeholder shape colour */
 };
 
 const cards: Card[] = [
@@ -28,7 +35,6 @@ const cards: Card[] = [
     body: "Weddings, festivals, corporate, private. We bring the trucks, the team, and the queue that doesn't stop.",
     cta: { label: "Get a quote", href: "/catering/" },
     accent: "ink",
-    shapeHex: "#e8b83a", /* warm — implies the food shot */
   },
   {
     slot: "franchising",
@@ -37,7 +43,6 @@ const cards: Card[] = [
     body: "Three concepts on the canal, more in the wings. One operating model, six years of pitch-tested practice.",
     cta: { label: "See how it works", href: "/franchising/" },
     accent: "burgers",
-    shapeHex: "#f4efe6", /* cream — implies the truck/scene shot */
   },
   {
     slot: "menu",
@@ -46,7 +51,6 @@ const cards: Card[] = [
     body: "Falafel, Shawarma, Burgers — each its own concept, each with its own kitchen.",
     cta: { label: "Explore the fleet", href: "#brand-showcase" },
     accent: "shawarma",
-    shapeHex: "#3f7a3a", /* falafel green — implies the cross-brand food shot */
   },
   {
     slot: "locations",
@@ -55,9 +59,16 @@ const cards: Card[] = [
     body: "Three trucks on Paddington Basin. Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk.",
     cta: { label: "See the map", href: "/locations/" },
     accent: "falafel",
-    shapeHex: "#f4efe6", /* cream — implies the panoramic canal scene */
   },
 ];
+
+const photoFor = (slot: Slot) => {
+  if (slot === "catering") return cateringHero;
+  if (slot === "franchising") return franchiseHero;
+  if (slot === "menu") return wteMenu;
+  if (slot === "locations") return wteLocations;
+  return null;
+};
 ---
 
 <section class="wte" aria-labelledby="wte-heading">
@@ -69,29 +80,38 @@ const cards: Card[] = [
 
     <ul role="list" class="wte__grid">
       {
-        cards.map((card) => (
-          <li
-            class={`wte__card wte__card--${card.slot}`}
-            data-brand={card.accent === "ink" ? undefined : card.accent}
-          >
-            <article class="wte__card-inner">
-              <div class="wte__copy">
-                <p class="t-caption wte__eyebrow">{card.eyebrow}</p>
-                <h3 class="t-display wte__card-heading">{card.heading}</h3>
-                <p class="t-body wte__body">{card.body}</p>
-                <a href={card.cta.href} class="wte__cta">
-                  {card.cta.label}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-              <span
-                class="wte__shape"
-                style={`--shape-hex: ${card.shapeHex}`}
-                aria-hidden="true"
-              ></span>
-            </article>
-          </li>
-        ))
+        cards.map((card) => {
+          const photo = photoFor(card.slot);
+          return (
+            <li
+              class={`wte__card wte__card--${card.slot}`}
+              data-brand={card.accent === "ink" ? undefined : card.accent}
+            >
+              {photo ? (
+                <Image
+                  src={photo}
+                  alt=""
+                  class="wte__photo"
+                  widths={[480, 768, 1024, 1440]}
+                  sizes="(min-width: 900px) 50vw, 100vw"
+                  loading="lazy"
+                  quality={72}
+                />
+              ) : null}
+              <article class="wte__card-inner">
+                <div class="wte__copy">
+                  <p class="t-caption wte__eyebrow">{card.eyebrow}</p>
+                  <h3 class="t-display wte__card-heading">{card.heading}</h3>
+                  <p class="t-body wte__body">{card.body}</p>
+                  <a href={card.cta.href} class="wte__cta">
+                    {card.cta.label}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </article>
+            </li>
+          );
+        })
       }
     </ul>
   </div>
@@ -124,9 +144,7 @@ const cards: Card[] = [
     line-height: 0.96;
   }
 
-  /* Asymmetric editorial grid.
-     Mobile: stacks with varied min-heights.
-     Desktop: 2-column grid with catering dominant, locations as a wide strip. */
+  /* Asymmetric editorial grid */
   .wte__grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -157,10 +175,9 @@ const cards: Card[] = [
     background: var(--color-accent, var(--color-ink));
     color: var(--color-accent-contrast, var(--color-cream));
     transition: transform var(--dur-base) var(--ease-out);
-    /* Stretch to fill the grid cell so spans (catering = 2 rows) match the
-       combined height of the adjacent stack (franchising + menu). */
     height: 100%;
     align-self: stretch;
+    isolation: isolate;
   }
 
   .wte__card:has(.wte__cta:hover),
@@ -168,8 +185,76 @@ const cards: Card[] = [
     transform: translateY(-3px);
   }
 
+  /* Photo — full-bleed background. Brand-coloured gradient mask sits ABOVE
+     the photo (pseudo-element below) to give text a high-contrast anchor on
+     one side while the photo bleeds visibly on the other. Pattern matches
+     the hero treatment scaled to a card.
+     :global() pierces Astro Image's scope so .wte__photo styles land on
+     the rendered <img>. */
+  :global(.wte__photo) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Brand-coloured tint gradient — anchors the type side, fades to reveal
+     the photo on the opposite side. Direction varies by tile shape. */
+  .wte__card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    /* Mobile default: vertical mask — brand colour anchors top where type
+       sits, photo reveals at bottom. */
+    background: linear-gradient(
+      180deg,
+      var(--color-accent, var(--color-ink)) 0%,
+      var(--color-accent, var(--color-ink)) 30%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 55%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 90%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
+    );
+  }
+
+  @media (min-width: 900px) {
+    /* Desktop tiles in the right column (franchising / menu / locations
+       strip): horizontal mask — copy left, photo right. */
+    .wte__card--franchising::before,
+    .wte__card--menu::before,
+    .wte__card--locations::before {
+      background: linear-gradient(
+        100deg,
+        var(--color-accent, var(--color-ink)) 0%,
+        var(--color-accent, var(--color-ink)) 35%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 75%, transparent) 60%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 20%, transparent) 92%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
+      );
+    }
+
+    /* Catering tile is tall (spans 2 rows) — diagonal mask reveals photo at
+       the bottom-right where the eye lands after reading the copy. */
+    .wte__card--catering::before {
+      background: linear-gradient(
+        160deg,
+        var(--color-accent, var(--color-ink)) 0%,
+        var(--color-accent, var(--color-ink)) 32%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 78%, transparent) 58%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 25%, transparent) 90%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
+      );
+    }
+  }
+
   .wte__card-inner {
     position: relative;
+    z-index: 2; /* sits above .wte__card::before (z-index 1) brand-tint mask */
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -223,7 +308,6 @@ const cards: Card[] = [
     letter-spacing: var(--ls-display-tight);
   }
 
-  /* Catering gets a larger heading to match its larger area */
   .wte__card--catering .wte__card-heading {
     font-size: clamp(var(--fs-500), 4vw, var(--fs-700));
   }
@@ -256,67 +340,5 @@ const cards: Card[] = [
   .wte__cta:hover,
   .wte__cta:focus-visible {
     gap: var(--sp-3);
-  }
-
-  /* Free-floating shape — placeholder for the eventual cutout. Sized and
-     positioned differently per slot so the page reads as a varied editorial
-     composition rather than a uniform grid. */
-  .wte__shape {
-    position: absolute;
-    display: block;
-    border-radius: 50%;
-    pointer-events: none;
-    background:
-      radial-gradient(
-        ellipse at 45% 45%,
-        color-mix(in srgb, var(--shape-hex) 38%, transparent) 0%,
-        color-mix(in srgb, var(--shape-hex) 20%, transparent) 50%,
-        transparent 75%
-      );
-  }
-
-  /* Catering — large shape, bottom-right, partial bleed */
-  .wte__card--catering .wte__shape {
-    width: clamp(220px, 60%, 480px);
-    aspect-ratio: 1;
-    right: -8%;
-    bottom: -12%;
-  }
-
-  /* Franchising — medium shape, off the right edge */
-  .wte__card--franchising .wte__shape {
-    width: clamp(180px, 70%, 280px);
-    aspect-ratio: 1;
-    right: -14%;
-    top: 20%;
-  }
-
-  /* Menu — smaller shape, off the top-right */
-  .wte__card--menu .wte__shape {
-    width: clamp(140px, 55%, 220px);
-    aspect-ratio: 1;
-    right: -10%;
-    top: -18%;
-  }
-
-  /* Locations — wide ellipse on the right of the strip */
-  .wte__card--locations .wte__shape {
-    width: clamp(180px, 38%, 360px);
-    aspect-ratio: 1;
-    right: -6%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  @media (max-width: 899px) {
-    /* On mobile each shape sits in the lower-right corner of its tile */
-    .wte__shape {
-      right: -10%;
-      bottom: -14%;
-      top: auto;
-      transform: none;
-      width: clamp(160px, 45%, 280px);
-      aspect-ratio: 1;
-    }
   }
 </style>
