@@ -202,8 +202,10 @@ const photoFor = (slot: Slot) => {
     pointer-events: none;
   }
 
-  /* Brand-coloured tint gradient — anchors the type side, fades to reveal
-     the photo on the opposite side. Direction varies by tile shape. */
+  /* Brand-coloured tint gradient — heavy zone fully covers the copy region
+     to guarantee WCAG 1.4.3 ≥4.5:1 contrast against photo bleed-through.
+     Tuned after a11y-audit-flagged dek-band failures (body contrast minima
+     2.34-2.95:1) at prior 20-30% mid-stop values. */
   .wte__card::before {
     content: "";
     position: absolute;
@@ -215,9 +217,9 @@ const photoFor = (slot: Slot) => {
     background: linear-gradient(
       180deg,
       var(--color-accent, var(--color-ink)) 0%,
-      var(--color-accent, var(--color-ink)) 30%,
-      color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 55%,
-      color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 90%,
+      var(--color-accent, var(--color-ink)) 50%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 68%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 35%, transparent) 90%,
       color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
     );
   }
@@ -231,9 +233,9 @@ const photoFor = (slot: Slot) => {
       background: linear-gradient(
         100deg,
         var(--color-accent, var(--color-ink)) 0%,
-        var(--color-accent, var(--color-ink)) 35%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 75%, transparent) 60%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 20%, transparent) 92%,
+        var(--color-accent, var(--color-ink)) 52%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 78%, transparent) 70%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 92%,
         color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
       );
     }
@@ -244,9 +246,9 @@ const photoFor = (slot: Slot) => {
       background: linear-gradient(
         160deg,
         var(--color-accent, var(--color-ink)) 0%,
-        var(--color-accent, var(--color-ink)) 32%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 78%, transparent) 58%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 25%, transparent) 90%,
+        var(--color-accent, var(--color-ink)) 48%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 66%,
+        color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 90%,
         color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
       );
     }

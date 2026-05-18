@@ -44,6 +44,25 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     <div class="hero__mask"></div>
   </div>
 
+  {/* WCAG 2.2.2 (Pause, Stop, Hide) — user must be able to stop the
+      autoplaying hero video. Toggle is reachable in Tab order and labelled
+      for screen readers. Hidden if the system already prefers reduced
+      motion (video is display:none in that case via the media query). */}
+  <button class="hero__media-toggle" type="button" aria-pressed="false">
+    <span class="hero__media-toggle-icon hero__media-toggle-icon--pause" aria-hidden="true">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+        <rect x="3.5" y="2.5" width="3" height="11" rx="0.6"></rect>
+        <rect x="9.5" y="2.5" width="3" height="11" rx="0.6"></rect>
+      </svg>
+    </span>
+    <span class="hero__media-toggle-icon hero__media-toggle-icon--play" aria-hidden="true">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+        <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z"></path>
+      </svg>
+    </span>
+    <span class="hero__media-toggle-label">Pause background video</span>
+  </button>
+
   <div class="hero__content">
     <p class="t-caption hero__kicker">Paddington Basin · Since 2019</p>
 
@@ -290,10 +309,69 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     outline-offset: 3px;
   }
 
-  /* Reduced motion: hide the video, leave the poster as a permanent still.
-     The hero still reads as a full-bleed cinematic photo with type overlay. */
+  /* WCAG 2.2.2 — Pause/Stop/Hide control for the autoplaying hero video.
+     Sits top-right of the hero section, above the mask + content layers. */
+  .hero__media-toggle {
+    position: absolute;
+    top: var(--sp-4);
+    right: var(--sp-4);
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: color-mix(in srgb, var(--color-ink) 70%, transparent);
+    color: var(--color-cream);
+    border: 1px solid color-mix(in srgb, var(--color-cream) 35%, transparent);
+    border-radius: var(--r-pill);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out);
+  }
+  .hero__media-toggle:hover,
+  .hero__media-toggle:focus-visible {
+    background: color-mix(in srgb, var(--color-ink) 85%, transparent);
+    border-color: var(--color-cream);
+  }
+  .hero__media-toggle-icon {
+    display: inline-flex;
+    line-height: 0;
+  }
+  /* Pause icon shows while video is playing; play icon shows while paused. */
+  .hero__media-toggle .hero__media-toggle-icon--play { display: none; }
+  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--pause { display: none; }
+  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--play { display: inline-flex; }
+  .hero__media-toggle-label {
+    /* Visible label keeps the toggle obvious; auto-hide on small screens via
+       responsive rule below if it crowds the type. */
+  }
+  @media (max-width: 559px) {
+    .hero__media-toggle-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .hero__media-toggle {
+      padding: var(--sp-2);
+    }
+  }
+
+  /* Reduced motion: hide the video AND the toggle (no autoplay = no need
+     for a stop control). Poster persists as a permanent still. */
   @media (prefers-reduced-motion: reduce) {
     .hero__video { display: none; }
+    .hero__media-toggle { display: none; }
     .hero__heading-line,
     .hero__dek,
     .hero__ctas {
@@ -317,5 +395,31 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
       video.addEventListener("loadeddata", ready, { once: true });
       video.addEventListener("playing", ready, { once: true });
     }
+  }
+
+  // WCAG 2.2.2 — user-operable pause/play control.
+  const toggle = document.querySelector(".hero__media-toggle");
+  const label = document.querySelector(".hero__media-toggle-label");
+  if (
+    toggle instanceof HTMLButtonElement &&
+    video instanceof HTMLVideoElement &&
+    label instanceof HTMLElement
+  ) {
+    const sync = () => {
+      const paused = video.paused;
+      toggle.setAttribute("aria-pressed", paused ? "true" : "false");
+      label.textContent = paused ? "Play background video" : "Pause background video";
+    };
+    toggle.addEventListener("click", () => {
+      if (video.paused) {
+        void video.play();
+      } else {
+        video.pause();
+      }
+      sync();
+    });
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    sync();
   }
 </script>
