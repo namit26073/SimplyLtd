@@ -5,85 +5,82 @@ import { Image } from "astro:assets";
 interface Props {
   brand: CollectionEntry<"brands">["data"];
   pitch: CollectionEntry<"locations">["data"] | null;
-  index: number;
-  total: number;
 }
 
-const { brand, pitch, index, total } = Astro.props;
+const { brand, pitch } = Astro.props;
 
 const wordmark = brand.name.replace(/^Simply\s+/i, "");
-const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
 ---
 
-<article class="panel" data-brand={brand.slug} aria-labelledby={`panel-${brand.slug}-heading`}>
+<a
+  href={`/${brand.slug}/`}
+  class="panel"
+  data-brand={brand.slug}
+  aria-labelledby={`panel-${brand.slug}-heading`}
+>
   {brand.showcaseImage ? (
     <Image
       src={brand.showcaseImage}
       alt=""
       class="panel__photo"
-      widths={[480, 768, 1024, 1440, 1920]}
-      sizes="(min-width: 900px) 60vw, 100vw"
+      widths={[400, 600, 800, 1200]}
+      sizes="(min-width: 900px) 33vw, 80vw"
       loading="lazy"
       quality={75}
     />
   ) : null}
 
-  <div class="panel__inner">
-    <div class="panel__copy">
-      <p class="t-caption panel__index" aria-hidden="true">{indexLabel}</p>
-      <p class="t-caption panel__concept">Simply</p>
-      <h3 id={`panel-${brand.slug}-heading`} class="t-display panel__wordmark">{wordmark}</h3>
-
-      <p class="t-editorial t-editorial--italic panel__dek">{brand.introDek}</p>
-
-      <ul role="list" class="panel__meta">
-        {pitch && <li class="t-caption">{pitch.name} · {pitch.postcode}</li>}
-        {brand.dietary?.map((tag) => <li class="t-caption">{tag}</li>)}
-      </ul>
-
-      <a href={`/${brand.slug}/`} class="panel__cta">
-        See {brand.name}
-        <span aria-hidden="true">→</span>
-      </a>
-    </div>
-
-    {/* Shape fallback only when no photo (Lebanese / Pasta, deferred brands). */}
-    {!brand.showcaseImage && <span class="panel__shape" aria-hidden="true" />}
+  <div class="panel__content">
+    <h3 id={`panel-${brand.slug}-heading`} class="t-display panel__wordmark">{wordmark}</h3>
+    <p class="t-body panel__tagline">{brand.tagline}</p>
+    {pitch && <p class="t-caption panel__meta">{pitch.name} · {pitch.postcode}</p>}
+    <span class="panel__cta" aria-hidden="true">
+      See Simply {wordmark} <span class="panel__cta-arrow">→</span>
+    </span>
   </div>
-</article>
+</a>
 
 <style>
   .panel {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--r-lg);
     background: var(--color-accent);
     color: var(--color-accent-contrast);
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    scroll-snap-align: start;
-    position: relative;
+    aspect-ratio: 3 / 4;
+    text-decoration: none;
     isolation: isolate;
+    transition: transform var(--dur-base) var(--ease-out);
   }
 
-  /* Photo bloom — full-bleed photograph behind everything. Mask sits above
-     the photo (::before) to anchor brand colour on the type side.
-     :global() pierces Astro Image's CSS scope. */
+  .panel:hover,
+  .panel:focus-visible {
+    transform: translateY(-4px);
+  }
+
+  /* Full-bleed photo behind everything. :global() pierces Astro Image's scope. */
   :global(.panel__photo) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 45%;
+    object-position: center 40%;
     z-index: 0;
     pointer-events: none;
+    transition: transform var(--dur-slow) var(--ease-out);
   }
 
-  /* Brand-tinted gradient — anchors the wordmark side; the heavy zone must
-     fully cover every line of body copy (wordmark + dek + meta + CTA) to
-     guarantee WCAG 1.4.3 ≥4.5:1 contrast against any photo bleed-through.
-     Heavy mask extends through ~50% of the panel; the remaining ~50%
-     reveals the photo. Tuned after accessibility-audit-flagged dek-band
-     contrast failures (2.0-2.94:1) at the prior 12-30% mid-stop values. */
-  .panel::before {
+  .panel:hover :global(.panel__photo),
+  .panel:focus-visible :global(.panel__photo) {
+    transform: scale(1.04);
+  }
+
+  /* Bottom gradient mask — anchors the type at the foot of the card.
+     Brand-coloured at the bottom, transparent at the top so the photo is
+     unobstructed in the upper two-thirds. */
+  .panel::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -91,166 +88,71 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      var(--color-accent) 0%,
-      var(--color-accent) 45%,
-      color-mix(in srgb, var(--color-accent) 78%, transparent) 65%,
-      color-mix(in srgb, var(--color-accent) 30%, transparent) 88%,
-      color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
+      transparent 0%,
+      transparent 40%,
+      color-mix(in srgb, var(--color-accent) 35%, transparent) 62%,
+      color-mix(in srgb, var(--color-accent) 78%, transparent) 78%,
+      var(--color-accent) 90%
     );
   }
 
-  @media (min-width: 900px) {
-    .panel::before {
-      background: linear-gradient(
-        100deg,
-        var(--color-accent) 0%,
-        var(--color-accent) 48%,
-        color-mix(in srgb, var(--color-accent) 75%, transparent) 65%,
-        color-mix(in srgb, var(--color-accent) 25%, transparent) 88%,
-        color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
-      );
-    }
-  }
-
-  .panel__inner {
-    position: relative;
-    z-index: 2; /* above photo (0) and brand-tint mask (1) */
-    display: grid;
-    grid-template-columns: 1fr;
-    min-height: 70vh;
-    padding: var(--sp-5) var(--sp-5) var(--sp-6);
-    gap: var(--sp-4);
-  }
-
-  @media (min-width: 900px) {
-    .panel__inner {
-      grid-template-columns: 1.4fr 1fr;
-      align-items: center;
-      padding: var(--sp-7);
-      min-height: 78vh;
-      gap: var(--sp-6);
-    }
-  }
-
-  .panel__copy {
-    position: relative;
-    z-index: 1;
+  .panel__content {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    padding: var(--sp-5);
     display: flex;
     flex-direction: column;
-    gap: var(--sp-3);
-    max-width: 40rem;
-  }
-
-  .panel__index {
-    color: var(--color-accent-contrast);
-  }
-
-  .panel__concept {
-    color: var(--color-accent-contrast);
-    margin-top: var(--sp-3);
+    gap: var(--sp-1);
   }
 
   .panel__wordmark {
-    font-size: clamp(var(--fs-800), 18vw, var(--fs-900));
+    font-size: clamp(var(--fs-700), 6vw, var(--fs-800));
     line-height: 0.86;
     letter-spacing: var(--ls-display-tight);
-    margin-top: calc(-1 * var(--sp-2));
     text-transform: uppercase;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: panel-wordmark-in var(--dur-slow) var(--ease-out) forwards;
-    animation-timeline: view();
-    animation-range: entry 0% cover 30%;
+    color: var(--color-accent-contrast);
   }
 
-  @supports not (animation-timeline: view()) {
-    .panel__wordmark {
-      opacity: 1;
-      transform: none;
-      animation: none;
-    }
-  }
-
-  @keyframes panel-wordmark-in {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .panel__dek {
-    font-size: clamp(var(--fs-400), 2.6vw, var(--fs-500));
-    max-width: 32ch;
-    margin-top: var(--sp-3);
+  .panel__tagline {
+    font-size: var(--fs-300);
+    line-height: var(--lh-snug);
+    color: var(--color-accent-contrast);
+    max-width: 28ch;
+    margin-top: var(--sp-2);
   }
 
   .panel__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-1) var(--sp-3);
-    margin-top: var(--sp-3);
-    align-items: center;
-  }
-
-  .panel__meta li {
-    padding: var(--sp-1) var(--sp-3);
-    border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
-    border-radius: var(--r-pill);
+    color: var(--color-accent-contrast);
+    margin-top: var(--sp-2);
   }
 
   .panel__cta {
-    margin-top: var(--sp-4);
+    margin-top: var(--sp-3);
     display: inline-flex;
     align-items: center;
     gap: var(--sp-2);
-    align-self: flex-start;
-    padding: var(--sp-3) var(--sp-4);
-    background: var(--color-accent-contrast);
-    color: var(--color-accent);
     font-family: var(--ff-body-stack);
     font-weight: var(--fw-strong);
     font-size: var(--fs-200);
     text-transform: uppercase;
     letter-spacing: var(--ls-caption);
-    text-decoration: none;
-    border-radius: var(--r-pill);
+    color: var(--color-accent-contrast);
+    border-bottom: 2px solid var(--color-accent-contrast);
+    padding-bottom: var(--sp-1);
+    align-self: flex-start;
+  }
+
+  .panel__cta-arrow {
     transition: transform var(--dur-fast) var(--ease-out);
   }
 
-  .panel__cta:hover,
-  .panel__cta:focus-visible {
-    transform: translateY(-1px);
+  .panel:hover .panel__cta-arrow,
+  .panel:focus-visible .panel__cta-arrow {
+    transform: translateX(4px);
   }
 
-  /* Cutout shape — sized to a real food-cutout footprint (portrait, ~300-
-     400px), anchored in the bottom-right of the panel with a small bleed.
-     Replaces the previous design-reviewer-flagged "giant disc behind type."
-     When the real PNG arrives, swap for <Image /> at the same anchor. */
-  .panel__shape {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    border-radius: 48% 52% 50% 50%; /* faintly organic */
-    width: clamp(220px, 48vw, 320px);
-    aspect-ratio: 4 / 5;
-    right: -6%;
-    bottom: -8%;
-    background:
-      radial-gradient(
-        ellipse at 50% 50%,
-        color-mix(in srgb, var(--color-accent-contrast) 30%, transparent) 0%,
-        color-mix(in srgb, var(--color-accent-contrast) 12%, transparent) 38%,
-        transparent 68%
-      );
-  }
-
-  @media (min-width: 900px) {
-    .panel__shape {
-      width: clamp(300px, 32%, 460px);
-      right: 4%;
-      bottom: 4%;
-    }
-  }
-
-  .panel :focus-visible {
+  .panel:focus-visible {
     outline: 2px solid var(--color-accent-contrast);
     outline-offset: 3px;
   }

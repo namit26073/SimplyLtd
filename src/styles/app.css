@@ -8,6 +8,10 @@
 @import "./typography.css" layer(base);
 @import "./transitions.css" layer(base);
 
+/* Leaflet base stylesheet (locations map). Not in a layer so its built-in
+   rules win — overrides happen in src/components/PaddingtonBasinMap.astro. */
+@import "leaflet/dist/leaflet.css";
+
 @import "./brands/falafel.css" layer(components);
 @import "./brands/shawarma.css" layer(components);
 @import "./brands/lebanese.css" layer(components);

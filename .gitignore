@@ -51,6 +51,13 @@ coverage/
 # Design-review screenshot artefacts (local-only; regenerated each pass)
 .audit/
 
+# Curation candidate thumbnails (local reference for asset picking; not
+# shipped, large, and re-creatable by re-running the content-researcher pass)
+assets-inbox/candidates/
+
+# Stray temp screenshots
+/temp-*.png
+
 # Asset processing intermediates (full-res source assets stay in assets-inbox/,
 # build pipeline outputs go to dist/ which is already ignored)
 *.psd

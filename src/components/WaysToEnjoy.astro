@@ -13,50 +13,33 @@
 import { Image } from "astro:assets";
 import cateringHero from "../assets/placeholders/catering-hero.jpg";
 import franchiseHero from "../assets/placeholders/franchising-hero.jpg";
-import wteMenu from "../assets/placeholders/wte-menu.jpg";
 import wteLocations from "../assets/placeholders/wte-locations.jpg";
 
-type Slot = "catering" | "franchising" | "locations" | "menu";
+type Slot = "catering" | "franchising" | "locations";
 
 type Card = {
   slot: Slot;
-  eyebrow: string;
   heading: string;
-  body: string;
   cta: { label: string; href: string };
-  accent: "ink" | "falafel" | "shawarma" | "burgers";
+  accent: "ink" | "falafel" | "burgers";
 };
 
 const cards: Card[] = [
   {
     slot: "catering",
-    eyebrow: "Catering",
-    heading: "Bring street food to your event.",
-    body: "Weddings, festivals, corporate, private. We bring the trucks, the team, and the queue that doesn't stop.",
+    heading: "Hire us for your event.",
     cta: { label: "Get a quote", href: "/catering/" },
     accent: "ink",
   },
   {
     slot: "franchising",
-    eyebrow: "Franchising",
-    heading: "Run a Simply truck of your own.",
-    body: "Three concepts on the canal, more in the wings. One operating model, six years of pitch-tested practice.",
-    cta: { label: "See how it works", href: "/franchising/" },
+    heading: "Run a truck of your own.",
+    cta: { label: "See how", href: "/franchising/" },
     accent: "burgers",
   },
   {
-    slot: "menu",
-    eyebrow: "Our brands",
-    heading: "What we cook.",
-    body: "Falafel, Shawarma, Burgers — each its own concept, each with its own kitchen.",
-    cta: { label: "Explore the fleet", href: "#brand-showcase" },
-    accent: "shawarma",
-  },
-  {
     slot: "locations",
-    eyebrow: "Locations",
-    heading: "Find your nearest pitch on the basin.",
-    body: "Three trucks on Paddington Basin. Falafel and Shawarma at Merchant Square; Burgers on Canal Side Walk.",
+    heading: "Find us on the basin.",
     cta: { label: "See the map", href: "/locations/" },
     accent: "falafel",
   },
@@ -65,7 +48,6 @@ const cards: Card[] = [
 const photoFor = (slot: Slot) => {
   if (slot === "catering") return cateringHero;
   if (slot === "franchising") return franchiseHero;
-  if (slot === "menu") return wteMenu;
   if (slot === "locations") return wteLocations;
   return null;
 };
@@ -74,8 +56,7 @@ const photoFor = (slot: Slot) => {
 <section class="wte" aria-labelledby="wte-heading">
   <div class="wte__inner">
     <header class="wte__header">
-      <p class="t-caption wte__kicker">Four ways to enjoy Simply</p>
-      <h2 id="wte-heading" class="t-display wte__heading">Choose your queue.</h2>
+      <h2 id="wte-heading" class="t-display wte__heading">What's next?</h2>
     </header>
 
     <ul role="list" class="wte__grid">
@@ -87,28 +68,24 @@ const photoFor = (slot: Slot) => {
               class={`wte__card wte__card--${card.slot}`}
               data-brand={card.accent === "ink" ? undefined : card.accent}
             >
-              {photo ? (
-                <Image
-                  src={photo}
-                  alt=""
-                  class="wte__photo"
-                  widths={[480, 768, 1024, 1440]}
-                  sizes="(min-width: 900px) 50vw, 100vw"
-                  loading="lazy"
-                  quality={72}
-                />
-              ) : null}
-              <article class="wte__card-inner">
-                <div class="wte__copy">
-                  <p class="t-caption wte__eyebrow">{card.eyebrow}</p>
-                  <h3 class="t-display wte__card-heading">{card.heading}</h3>
-                  <p class="t-body wte__body">{card.body}</p>
-                  <a href={card.cta.href} class="wte__cta">
-                    {card.cta.label}
-                    <span aria-hidden="true">→</span>
-                  </a>
-                </div>
-              </article>
+              <a href={card.cta.href} class="wte__link">
+                {photo ? (
+                  <Image
+                    src={photo}
+                    alt=""
+                    class="wte__photo"
+                    widths={[360, 540, 720, 1080]}
+                    sizes="(min-width: 900px) 33vw, 100vw"
+                    loading="lazy"
+                    quality={72}
+                  />
+                ) : null}
+                <span class="wte__heading-label t-display">{card.heading}</span>
+                <span class="wte__cta-label">
+                  {card.cta.label}
+                  <span aria-hidden="true">→</span>
+                </span>
+              </a>
             </li>
           );
         })
@@ -119,7 +96,7 @@ const photoFor = (slot: Slot) => {
 
 <style>
   .wte {
-    padding: var(--sp-7) var(--page-gutter);
+    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
     background: var(--color-cream);
     border-top: 1px solid var(--color-line);
   }
@@ -130,43 +107,30 @@ const photoFor = (slot: Slot) => {
   }
 
   .wte__header {
-    margin-bottom: var(--sp-6);
-    max-width: var(--measure-prose);
-  }
-
-  .wte__kicker {
-    color: var(--color-text-muted);
-    margin-bottom: var(--sp-2);
+    margin-bottom: var(--sp-4);
   }
 
   .wte__heading {
-    font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
+    font-size: clamp(var(--fs-500), 4vw, var(--fs-600));
     line-height: 0.96;
+    color: var(--color-ink);
   }
 
-  /* Asymmetric editorial grid */
+  /* Balanced 3-up grid — smaller, less feature-y than the prior asymmetric
+     layout. Stays distinct from the BrandShowcase rail above by being
+     wider/shorter (landscape tiles) vs. the showcase's portrait cards. */
   .wte__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--sp-4);
+    gap: var(--sp-3);
   }
 
   @media (min-width: 900px) {
     .wte__grid {
-      grid-template-columns: 1.45fr 1fr;
-      grid-template-rows: minmax(260px, auto) minmax(260px, auto) minmax(200px, auto);
-      grid-template-areas:
-        "catering franchising"
-        "catering menu"
-        "locations locations";
-      gap: var(--sp-4);
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
     }
   }
-
-  .wte__card--catering { grid-area: catering; }
-  .wte__card--franchising { grid-area: franchising; }
-  .wte__card--menu { grid-area: menu; }
-  .wte__card--locations { grid-area: locations; }
 
   .wte__card {
     position: relative;
@@ -174,23 +138,17 @@ const photoFor = (slot: Slot) => {
     border-radius: var(--r-lg);
     background: var(--color-accent, var(--color-ink));
     color: var(--color-accent-contrast, var(--color-cream));
-    transition: transform var(--dur-base) var(--ease-out);
-    height: 100%;
-    align-self: stretch;
     isolation: isolate;
+    aspect-ratio: 16 / 10;
   }
 
-  .wte__card:has(.wte__cta:hover),
-  .wte__card:has(.wte__cta:focus-visible) {
-    transform: translateY(-3px);
+  @media (min-width: 900px) {
+    .wte__card {
+      aspect-ratio: 4 / 3;
+    }
   }
 
-  /* Photo — full-bleed background. Brand-coloured gradient mask sits ABOVE
-     the photo (pseudo-element below) to give text a high-contrast anchor on
-     one side while the photo bleeds visibly on the other. Pattern matches
-     the hero treatment scaled to a card.
-     :global() pierces Astro Image's scope so .wte__photo styles land on
-     the rendered <img>. */
+  /* Photo behind everything. :global() pierces Astro Image's scope. */
   :global(.wte__photo) {
     position: absolute;
     inset: 0;
@@ -200,147 +158,82 @@ const photoFor = (slot: Slot) => {
     object-position: center 45%;
     z-index: 0;
     pointer-events: none;
+    transition: transform var(--dur-slow) var(--ease-out);
   }
 
-  /* Brand-coloured tint gradient — heavy zone fully covers the copy region
-     to guarantee WCAG 1.4.3 ≥4.5:1 contrast against photo bleed-through.
-     Tuned after a11y-audit-flagged dek-band failures (body contrast minima
-     2.34-2.95:1) at prior 20-30% mid-stop values. */
+  /* Brand-coloured tint anchored bottom-left where the heading + CTA sit. */
   .wte__card::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    /* Mobile default: vertical mask — brand colour anchors top where type
-       sits, photo reveals at bottom. */
     background: linear-gradient(
-      180deg,
+      135deg,
       var(--color-accent, var(--color-ink)) 0%,
-      var(--color-accent, var(--color-ink)) 50%,
-      color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 68%,
-      color-mix(in srgb, var(--color-accent, var(--color-ink)) 35%, transparent) 90%,
+      var(--color-accent, var(--color-ink)) 38%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 60%, transparent) 60%,
+      color-mix(in srgb, var(--color-accent, var(--color-ink)) 15%, transparent) 88%,
       color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
     );
   }
 
-  @media (min-width: 900px) {
-    /* Desktop tiles in the right column (franchising / menu / locations
-       strip): horizontal mask — copy left, photo right. */
-    .wte__card--franchising::before,
-    .wte__card--menu::before,
-    .wte__card--locations::before {
-      background: linear-gradient(
-        100deg,
-        var(--color-accent, var(--color-ink)) 0%,
-        var(--color-accent, var(--color-ink)) 52%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 78%, transparent) 70%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 92%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
-      );
-    }
-
-    /* Catering tile is tall (spans 2 rows) — diagonal mask reveals photo at
-       the bottom-right where the eye lands after reading the copy. */
-    .wte__card--catering::before {
-      background: linear-gradient(
-        160deg,
-        var(--color-accent, var(--color-ink)) 0%,
-        var(--color-accent, var(--color-ink)) 48%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 80%, transparent) 66%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 30%, transparent) 90%,
-        color-mix(in srgb, var(--color-accent, var(--color-ink)) 0%, transparent) 100%
-      );
-    }
-  }
-
-  .wte__card-inner {
-    position: relative;
-    z-index: 2; /* sits above .wte__card::before (z-index 1) brand-tint mask */
-    height: 100%;
+  .wte__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: var(--sp-5);
-    min-height: 260px;
-  }
-
-  /* Catering — feature size, more breathing room */
-  .wte__card--catering .wte__card-inner {
-    min-height: 360px;
-    padding: var(--sp-6) var(--sp-6) var(--sp-5);
-  }
-
-  @media (min-width: 900px) {
-    .wte__card--catering .wte__card-inner {
-      padding: var(--sp-7);
-    }
-  }
-
-  /* Locations — wide horizontal strip on desktop */
-  @media (min-width: 900px) {
-    .wte__card--locations .wte__card-inner {
-      flex-direction: row;
-      align-items: center;
-      gap: var(--sp-5);
-      padding: var(--sp-5) var(--sp-6);
-    }
-    .wte__card--locations .wte__copy {
-      max-width: 56ch;
-    }
-  }
-
-  .wte__copy {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-    max-width: 38ch;
-  }
-
-  .wte__eyebrow {
+    padding: var(--sp-4) var(--sp-4) var(--sp-4);
     color: var(--color-accent-contrast);
-    opacity: 1;
+    text-decoration: none;
+    transition: transform var(--dur-base) var(--ease-out);
   }
 
-  .wte__card-heading {
-    font-size: var(--fs-500);
+  .wte__card:hover .wte__link,
+  .wte__card:has(.wte__link:focus-visible) .wte__link {
+    transform: translateY(-2px);
+  }
+
+  .wte__card:hover :global(.wte__photo),
+  .wte__card:has(.wte__link:focus-visible) :global(.wte__photo) {
+    transform: scale(1.04);
+  }
+
+  .wte__heading-label {
+    font-size: clamp(var(--fs-500), 3vw, var(--fs-600));
     line-height: 1;
     letter-spacing: var(--ls-display-tight);
-  }
-
-  .wte__card--catering .wte__card-heading {
-    font-size: clamp(var(--fs-500), 4vw, var(--fs-700));
-  }
-
-  .wte__body {
-    font-size: var(--fs-300);
-    line-height: var(--lh-relaxed);
     color: var(--color-accent-contrast);
-    max-width: 36ch;
+    max-width: 14ch;
   }
 
-  .wte__cta {
+  .wte__cta-label {
     margin-top: var(--sp-3);
-    color: var(--color-accent-contrast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
     font-family: var(--ff-body-stack);
     font-weight: var(--fw-strong);
     font-size: var(--fs-200);
     text-transform: uppercase;
     letter-spacing: var(--ls-caption);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
+    color: var(--color-accent-contrast);
     border-bottom: 2px solid var(--color-accent-contrast);
     padding-bottom: var(--sp-1);
     align-self: flex-start;
     transition: gap var(--dur-fast) var(--ease-out);
   }
 
-  .wte__cta:hover,
-  .wte__cta:focus-visible {
+  .wte__card:hover .wte__cta-label,
+  .wte__card:has(.wte__link:focus-visible) .wte__cta-label {
     gap: var(--sp-3);
+  }
+
+  .wte__link:focus-visible {
+    outline: 2px solid var(--color-accent-contrast);
+    outline-offset: -4px;
+    border-radius: var(--r-lg);
   }
 </style>

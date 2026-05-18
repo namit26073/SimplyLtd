@@ -65,17 +65,7 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
 
   <div class="hero__content">
     <p class="t-caption hero__kicker">Paddington Basin · Since 2019</p>
-
-    <h1 id="hero-heading" class="t-display hero__heading">
-      <span class="hero__heading-line">Street food</span>
-      <span class="hero__heading-line hero__heading-line--accent">that earned</span>
-      <span class="hero__heading-line">its corner of the canal.</span>
-    </h1>
-
-    <p class="t-editorial t-editorial--italic hero__dek">
-      From a single falafel truck in 2019 to a fleet on Paddington Basin — fresh, fast, and on
-      the canal every day.
-    </p>
+    <h1 id="hero-heading" class="t-display hero__heading">SIMPLY.</h1>
 
     <div class="hero__ctas">
       <a href="/catering/" class="hero__cta hero__cta--primary">
@@ -197,34 +187,18 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
   }
 
   .hero__heading {
-    font-size: clamp(var(--fs-700), 8vw, var(--fs-900));
-    line-height: 0.92;
+    /* Wordmark — display type sized to dominate the viewport like a poster.
+       Letter-spacing tightens on entry. */
+    font-size: clamp(4rem, 18vw, 12rem);
+    line-height: 0.86;
     letter-spacing: var(--ls-display-tight);
-    margin-bottom: var(--sp-4);
+    margin: 0;
     color: var(--color-cream);
-  }
-
-  .hero__heading-line {
-    display: block;
-  }
-
-  .hero__heading-line--accent {
-    /* Warm amber accent reads against the dark mask and complements the
-       falafel/shawarma brand palette. */
-    color: #e8b83a;
-  }
-
-  /* Staggered reveal */
-  .hero__heading-line {
     letter-spacing: var(--ls-display-loose);
     opacity: 0;
     transform: translateY(8px);
-    animation: hero-line-in var(--dur-slow) var(--ease-out) forwards;
+    animation: hero-line-in var(--dur-slow) var(--ease-out) 200ms forwards;
   }
-
-  .hero__heading-line:nth-child(1) { animation-delay: 200ms; }
-  .hero__heading-line:nth-child(2) { animation-delay: 340ms; }
-  .hero__heading-line:nth-child(3) { animation-delay: 480ms; }
 
   @keyframes hero-line-in {
     to {
@@ -232,13 +206,6 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  .hero__dek {
-    font-size: var(--fs-400);
-    color: color-mix(in srgb, var(--color-cream) 90%, transparent);
-    opacity: 0;
-    animation: fade-up var(--dur-base) var(--ease-out) 680ms forwards;
   }
 
   @keyframes fade-up {
@@ -252,7 +219,7 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     flex-wrap: wrap;
     gap: var(--sp-3);
     opacity: 0;
-    animation: fade-up var(--dur-base) var(--ease-out) 840ms forwards;
+    animation: fade-up var(--dur-base) var(--ease-out) 480ms forwards;
   }
 
   .hero__cta {
@@ -372,8 +339,7 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
   @media (prefers-reduced-motion: reduce) {
     .hero__video { display: none; }
     .hero__media-toggle { display: none; }
-    .hero__heading-line,
-    .hero__dek,
+    .hero__heading,
     .hero__ctas {
       animation: none;
       opacity: 1;

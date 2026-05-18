@@ -21,19 +21,15 @@ const brandsWithPitches = await Promise.all(
   <header class="showcase__header">
     <p class="t-caption showcase__kicker">The fleet</p>
     <h2 id="showcase-heading" class="t-display showcase__heading">
-      Three concepts. <br />One canal.
+      Three trucks. One canal.
     </h2>
-    <p class="t-editorial t-editorial--italic showcase__intro">
-      Each truck is its own kitchen, its own queue, its own thing. The standards are shared. The
-      menus aren't.
-    </p>
   </header>
 
-  <div class="showcase__panels" role="list" aria-label="Sub-brands">
+  <div class="showcase__rail" role="list" aria-label="Sub-brands">
     {
-      brandsWithPitches.map(({ brand, pitch }, idx) => (
-        <div role="listitem" class="showcase__panel-wrap">
-          <BrandPanel brand={brand} pitch={pitch} index={idx} total={brandsWithPitches.length} />
+      brandsWithPitches.map(({ brand, pitch }) => (
+        <div role="listitem" class="showcase__cell">
+          <BrandPanel brand={brand} pitch={pitch} />
         </div>
       ))
     }
@@ -49,7 +45,7 @@ const brandsWithPitches = await Promise.all(
 
   .showcase__header {
     max-width: var(--page-max);
-    margin: 0 auto var(--sp-6);
+    margin: 0 auto var(--sp-5);
   }
 
   .showcase__kicker {
@@ -58,26 +54,42 @@ const brandsWithPitches = await Promise.all(
   }
 
   .showcase__heading {
-    font-size: clamp(var(--fs-700), 8vw, var(--fs-800));
-    line-height: 0.94;
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 0.96;
     letter-spacing: var(--ls-display-tight);
   }
 
-  .showcase__intro {
-    margin-top: var(--sp-3);
-    font-size: var(--fs-400);
-    max-width: 42ch;
-    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
-  }
-
-  .showcase__panels {
+  /* Card rail.
+     Desktop: 3 equal columns side-by-side, capped by --page-max.
+     Mobile: horizontal scroll-snap with peek of the next card. */
+  .showcase__rail {
     max-width: var(--page-max);
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-4);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    gap: var(--sp-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: var(--sp-2);
+    /* Hide scrollbar in modern browsers while keeping scrollable */
+    scrollbar-width: none;
+  }
+  .showcase__rail::-webkit-scrollbar {
+    display: none;
   }
 
-  /* On large screens, the panels still stack vertically but each pins
-     briefly as it enters view (animation-timeline: view()). */
+  .showcase__cell {
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 900px) {
+    .showcase__rail {
+      grid-auto-columns: unset;
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+      overflow: visible;
+    }
+  }
 </style>
