@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 
 interface Props {
   brand: CollectionEntry<"brands">["data"];
@@ -15,6 +16,18 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
 ---
 
 <article class="panel" data-brand={brand.slug} aria-labelledby={`panel-${brand.slug}-heading`}>
+  {brand.showcaseImage ? (
+    <Image
+      src={brand.showcaseImage}
+      alt=""
+      class="panel__photo"
+      widths={[480, 768, 1024, 1440, 1920]}
+      sizes="(min-width: 900px) 60vw, 100vw"
+      loading="lazy"
+      quality={75}
+    />
+  ) : null}
+
   <div class="panel__inner">
     <div class="panel__copy">
       <p class="t-caption panel__index" aria-hidden="true">{indexLabel}</p>
@@ -34,11 +47,8 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
       </a>
     </div>
 
-    {/* Cutout zone — bleeds off the bottom-right corner of the panel. The
-        shape is a soft wash standing in for the eventual brand cutout PNG.
-        When the real asset lands, replace the .panel__shape with an
-        <Image /> element at the same anchor (bottom: -10%, right: -8%). */}
-    <span class="panel__shape" aria-hidden="true"></span>
+    {/* Shape fallback only when no photo (Lebanese / Pasta, deferred brands). */}
+    {!brand.showcaseImage && <span class="panel__shape" aria-hidden="true" />}
   </div>
 </article>
 
@@ -50,10 +60,59 @@ const indexLabel = `${String(index + 1).padStart(2, "0")} / ${String(total).padS
     overflow: hidden;
     scroll-snap-align: start;
     position: relative;
+    isolation: isolate;
+  }
+
+  /* Photo bloom — full-bleed photograph behind everything. Mask sits above
+     the photo (::before) to anchor brand colour on the type side.
+     :global() pierces Astro Image's CSS scope. */
+  :global(.panel__photo) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Brand-tinted gradient — anchors the wordmark side, fades quickly to reveal
+     the photo on the opposite side. Wordmark + dek + meta need ~35-45% of
+     the panel as a high-contrast anchor; the remaining 55-65% lets the photo
+     bleed visibly. */
+  .panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      var(--color-accent) 0%,
+      var(--color-accent) 28%,
+      color-mix(in srgb, var(--color-accent) 55%, transparent) 50%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent) 80%,
+      color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
+    );
+  }
+
+  @media (min-width: 900px) {
+    .panel::before {
+      background: linear-gradient(
+        100deg,
+        var(--color-accent) 0%,
+        var(--color-accent) 32%,
+        color-mix(in srgb, var(--color-accent) 50%, transparent) 55%,
+        color-mix(in srgb, var(--color-accent) 10%, transparent) 82%,
+        color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
+      );
+    }
   }
 
   .panel__inner {
     position: relative;
+    z-index: 2; /* above photo (0) and brand-tint mask (1) */
     display: grid;
     grid-template-columns: 1fr;
     min-height: 70vh;

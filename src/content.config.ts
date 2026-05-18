@@ -19,6 +19,7 @@ const brands = defineCollection({
       visible: z.boolean().default(true),
       primaryPitchSlug: z.enum(["merchant-square", "canal-side-walk"]).optional(),
       heroImage: image().optional(),
+      showcaseImage: image().optional(),
       behindCounterVideo: z.string().optional(),
       behindCounterImage: image().optional(),
       behindCounterAlt: z.string().optional(),

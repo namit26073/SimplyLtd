@@ -9,6 +9,7 @@ cuisine: Levantine shawarma
 voice: Fast, generous, late-night-friendly
 visible: true
 primaryPitchSlug: merchant-square
+showcaseImage: ../../assets/placeholders/showcase-shawarma.jpg
 behindCounterVideo: /videos/shawarma-truck.mp4
 dietary:
   - halal

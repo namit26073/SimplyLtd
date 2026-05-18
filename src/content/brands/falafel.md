@@ -9,6 +9,7 @@ cuisine: Vegan and vegetarian Levantine
 voice: Warm, confident, plant-positive without being preachy
 visible: true
 primaryPitchSlug: merchant-square
+showcaseImage: ../../assets/placeholders/showcase-falafel.jpg
 behindCounterVideo: /videos/falafel-truck.mp4
 dietary:
   - vegan

@@ -57,6 +57,18 @@ Then, when the owner provides real photography:
 - **⚠ Perf debt:** MP4 is 5.7 MB — well above the 2 MB sub-budget in `.claude/rules/performance.md`. **Re-encode required** before Cloudflare Pages cutover: target H.264 ~1.8 MB + WebM ~1.5 MB at 1280×720, 24fps, CRF 26-28. Needs ffmpeg locally (currently unavailable on this machine).
 - **Used on:** `/` homepage hero (full-bleed, type overlay)
 
+### `showcase-*` — Homepage Brand Showcase panels (3 visible brands)
+
+Each brand panel = brand-coloured ground + full-bleed photo + brand-tinted gradient mask. Wordmark + dek + meta sit on the heavy-tint left side; photo blooms on the right.
+
+- **`showcase-falafel`** = `src/assets/placeholders/showcase-falafel.jpg` (Unsplash 9sSzuvxXZnc — falafel balls + side salad on speckled plate, pale-blue backdrop). Different from the homepage hero so user doesn't see the same falafel twice.
+- **`showcase-shawarma`** = `src/assets/placeholders/showcase-shawarma.jpg` (Unsplash U8UE4YC8lCs — meat-filled shawarma wrap in newspaper-style wrapping on black backdrop). Cinematic late-night street-food register.
+- **`showcase-burgers`** = `src/assets/placeholders/showcase-burgers.jpg` (Pexels 36727276 — same source as `burgers-behind-counter`; smash patties on commercial flat-top, steam rising).
+
+Wired via the `showcaseImage` field on the brands content collection. Lebanese + Pasta will pick up the same field when they go visible:true.
+
+All free for commercial, no attribution required.
+
 ### `wte-*` — Homepage WaysToEnjoy tiles (4)
 
 Each tile = brand-coloured ground + full-bleed photo + brand-tinted gradient mask. Photo shows visibly on one side of the tile; the brand colour anchors the type side. Replaces the prior floating-shape placeholders.
