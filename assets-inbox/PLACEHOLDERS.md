@@ -45,15 +45,28 @@ Then, when the owner provides real photography:
 
 ## Active placeholders
 
-### `home-hero` — homepage hero photograph
+### `home-hero` — homepage hero video (full-bleed) + poster fallback
 
-- **File:** `src/assets/placeholders/home-hero.jpg` (2000×3000 portrait JPEG, 467 KB source — Astro Image emits responsive AVIF/WebP)
-- **Source:** Pexels photo by Engin Akyurt — "Brown and White Food on White Ceramic Plate"
-- **URL:** https://www.pexels.com/photo/brown-and-white-food-on-white-ceramic-plate-6275226/
-- **Licence:** Pexels licence — free for commercial use, no attribution required ([pexels.com/license](https://www.pexels.com/license/))
-- **Why placeholder:** No owner-provided food photography yet. This shot reads as "Apple/Adidas-quality food ad" — moody dark-green backdrop, oval bowl of falafel + scattered pita rounds. Matches Simply Falafel's origin-brand story.
-- **Swap plan:** Replace with owner-commissioned falafel photography when available (target: 2026-07 photoshoot per Namit). Same file path so component swap is one-line.
-- **Used on:** `/` homepage hero (split layout: copy left, photo right desktop; photo top, copy below mobile)
+- **Video:** `public/videos/falafel-truck.mp4` (5.7 MB MP4, owner-provided kitchen footage, autoplays muted on load)
+- **Poster:** `src/assets/placeholders/home-hero.jpg` (Pexels 6275226 — falafel + pita on dark green; serves as LCP image + permanent still on prefers-reduced-motion)
+- **Source:** Pexels photo by Engin Akyurt (poster); owner-provided footage (video)
+- **URL (poster):** https://www.pexels.com/photo/brown-and-white-food-on-white-ceramic-plate-6275226/
+- **Licence:** Pexels licence (poster) — free for commercial, no attribution. Owner footage (video) — used with owner permission.
+- **Treatment:** Full-bleed background, type overlay on darkened gradient mask. Cream-coloured display type, amber accent on "THAT EARNED" line.
+- **Why placeholder:** No owner-commissioned brand film yet. Falafel kitchen footage is genuinely on-brand (Simply Falafel = origin) so works as long-term placeholder.
+- **⚠ Perf debt:** MP4 is 5.7 MB — well above the 2 MB sub-budget in `.claude/rules/performance.md`. **Re-encode required** before Cloudflare Pages cutover: target H.264 ~1.8 MB + WebM ~1.5 MB at 1280×720, 24fps, CRF 26-28. Needs ffmpeg locally (currently unavailable on this machine).
+- **Used on:** `/` homepage hero (full-bleed, type overlay)
+
+### `catering-hero` — catering page hero photograph (full-bleed)
+
+- **File:** `src/assets/placeholders/catering-hero.jpg` (2000×2999 portrait JPEG, 354 KB source — Astro Image emits responsive AVIF/WebP)
+- **Source:** Pexels photo 25388878 — Turkish kebab pans on street-food stall (Pexels search "kebab street food stall")
+- **URL:** https://www.pexels.com/photo/kebab-meat-on-pans-on-street-food-stall-25388878/
+- **Licence:** Pexels licence — free for commercial, no attribution required
+- **Treatment:** Full-bleed background, type overlay on darkened gradient mask (same pattern as homepage)
+- **Why placeholder:** No owner catering photography yet. Kebab-pans-on-stall is culturally aligned with Simply Falafel + Shawarma Levantine roots and reads as "real volume catering," not stock-fast-food.
+- **Swap plan:** Replace when owner provides catering event photography (likely post-first-catering-job-with-photo-permission). Could also swap to a chef-at-festival image (Pexels 14316004) if catering copy leans on hospitality over volume.
+- **Used on:** `/catering/` page hero
 
 ## What the owner already provided
 

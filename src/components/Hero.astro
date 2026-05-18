@@ -1,33 +1,50 @@
 ---
 /**
- * Homepage hero — split layout: cinematic food photograph on one side, type
- * on the other. Closer to the "Apple/Adidas ad" quality bar than the prior
- * floating-cutout treatment. Mobile stacks photo-on-top → copy-below; desktop
- * is copy-left → photo-right.
+ * Homepage hero — full-bleed cinematic background (video by default,
+ * static photo on reduced-motion / load failure), type overlaid on a
+ * darkened gradient mask. Owner-provided Falafel kitchen footage is the
+ * v1 placeholder; future commissioned brand film swaps via the <video>
+ * source attribute.
  *
- * The photograph is the placeholder until the owner provides commissioned
- * imagery. Source + licence logged in assets-inbox/PLACEHOLDERS.md.
+ * Contrast: type lives over the bottom 50% of the hero where the mask
+ * is darkest (>70% black). Cream-coloured display type maintains
+ * AAA contrast against the masked photo/video.
+ *
+ * Perf debt logged in PLACEHOLDERS.md: source MP4 is 5.7 MB pre-encode.
+ * Target post-cutover: H.264 sub-2 MB + WebM sub-1.5 MB via ffmpeg.
  */
 
 import { Image } from "astro:assets";
-import homeHero from "../assets/placeholders/home-hero.jpg";
+import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
 ---
 
 <section class="hero" aria-labelledby="hero-heading">
-  <div class="hero__photo-wrap" aria-hidden="true">
+  <div class="hero__bg" aria-hidden="true">
     <Image
-      src={homeHero}
+      src={homeHeroPoster}
       alt=""
-      class="hero__photo"
-      widths={[480, 768, 1200, 1600, 2000]}
-      sizes="(min-width: 900px) 50vw, 100vw"
+      class="hero__poster"
+      widths={[640, 1024, 1440, 1920, 2400]}
+      sizes="100vw"
       loading="eager"
       fetchpriority="high"
-      quality={80}
+      quality={75}
     />
+    <video
+      class="hero__video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster=""
+    >
+      <source src="/videos/falafel-truck.mp4" type="video/mp4" />
+    </video>
+    <div class="hero__mask"></div>
   </div>
 
-  <div class="hero__copy">
+  <div class="hero__content">
     <p class="t-caption hero__kicker">Paddington Basin · Since 2019</p>
 
     <h1 id="hero-heading" class="t-display hero__heading">
@@ -53,77 +70,119 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
 
 <style>
   .hero {
-    background: var(--color-cream);
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-areas: "photo" "copy";
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    /* Solid dark ground so the section never flashes white pre-paint */
+    background: var(--color-ink);
+    min-height: 88vh;
+    color: var(--color-cream);
+    display: flex;
+    align-items: flex-end;
   }
 
   @media (min-width: 900px) {
     .hero {
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas: "copy photo";
-      min-height: 78vh;
+      min-height: 92vh;
+      align-items: center;
     }
   }
 
-  /* Photo zone */
-  .hero__photo-wrap {
-    grid-area: photo;
-    position: relative;
-    overflow: hidden;
-    /* Mobile: hold a deliberate hero portrait shape (cinematic) */
-    aspect-ratio: 4 / 5;
-    max-height: 70vh;
+  /* Full-bleed background — poster (LCP image), video on top, mask above both */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
   }
 
-  @media (min-width: 900px) {
-    .hero__photo-wrap {
-      aspect-ratio: auto;
-      max-height: none;
-      height: 100%;
-    }
-  }
-
-  .hero__photo {
+  .hero__poster,
+  .hero__video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 35%;
+    object-position: center center;
   }
 
-  /* Copy zone */
-  .hero__copy {
-    grid-area: copy;
-    padding: var(--sp-6) var(--page-gutter) var(--sp-7);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: var(--page-max);
-    margin: 0 auto;
-    width: 100%;
+  .hero__poster {
+    z-index: 0;
+  }
+
+  .hero__video {
+    z-index: 1;
+    /* Fade up softly once the video has buffered enough to play. The browser
+       paints the poster underneath instantly, so the swap is seamless. */
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+
+  /* When the video can play (or already is playing), reveal it. */
+  .hero__video[data-ready] {
+    opacity: 1;
+  }
+
+  /* Gradient mask — keeps the bottom 60% dark enough for type legibility */
+  .hero__mask {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-ink) 30%, transparent) 0%,
+        color-mix(in srgb, var(--color-ink) 45%, transparent) 40%,
+        color-mix(in srgb, var(--color-ink) 78%, transparent) 80%,
+        color-mix(in srgb, var(--color-ink) 90%, transparent) 100%
+      );
   }
 
   @media (min-width: 900px) {
-    .hero__copy {
-      padding: var(--sp-7) var(--page-gutter);
-      max-width: none;
-      /* Cap inner content width inside the half-page column */
-      padding-right: max(var(--sp-7), 4vw);
+    /* Desktop: keep the dark anchor on the left where the type sits */
+    .hero__mask {
+      background:
+        linear-gradient(
+          100deg,
+          color-mix(in srgb, var(--color-ink) 88%, transparent) 0%,
+          color-mix(in srgb, var(--color-ink) 64%, transparent) 40%,
+          color-mix(in srgb, var(--color-ink) 18%, transparent) 80%,
+          transparent 100%
+        );
     }
   }
 
+  /* Type column */
+  .hero__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--sp-7) var(--page-gutter) var(--sp-6);
+  }
+
+  @media (min-width: 900px) {
+    .hero__content {
+      padding: var(--sp-7) var(--page-gutter);
+    }
+    .hero__content > * {
+      max-width: 22ch;
+    }
+    .hero__dek { max-width: 38ch; }
+    .hero__ctas { max-width: none; }
+  }
+
   .hero__kicker {
-    color: var(--color-text-muted);
-    margin-bottom: var(--sp-4);
+    color: color-mix(in srgb, var(--color-cream) 75%, transparent);
+    margin-bottom: var(--sp-3);
   }
 
   .hero__heading {
-    font-size: clamp(var(--fs-700), 7vw, var(--fs-800));
-    line-height: 0.96;
+    font-size: clamp(var(--fs-700), 8vw, var(--fs-900));
+    line-height: 0.92;
     letter-spacing: var(--ls-display-tight);
     margin-bottom: var(--sp-4);
-    max-width: 16ch;
+    color: var(--color-cream);
   }
 
   .hero__heading-line {
@@ -131,11 +190,12 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
   }
 
   .hero__heading-line--accent {
-    /* Deep canal-green — passes AA on cream (~6.4:1). */
-    color: #3a5d3f;
+    /* Warm amber accent reads against the dark mask and complements the
+       falafel/shawarma brand palette. */
+    color: #e8b83a;
   }
 
-  /* Hero load animation: letter-spacing tightens, lines reveal */
+  /* Staggered reveal */
   .hero__heading-line {
     letter-spacing: var(--ls-display-loose);
     opacity: 0;
@@ -157,8 +217,7 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
 
   .hero__dek {
     font-size: var(--fs-400);
-    max-width: 38ch;
-    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+    color: color-mix(in srgb, var(--color-cream) 90%, transparent);
     opacity: 0;
     animation: fade-up var(--dur-base) var(--ease-out) 680ms forwards;
   }
@@ -194,26 +253,26 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
   }
 
   .hero__cta--primary {
-    background: var(--color-ink);
-    color: var(--color-cream);
+    background: var(--color-cream);
+    color: var(--color-ink);
   }
 
   .hero__cta--primary:hover,
   .hero__cta--primary:focus-visible {
     transform: translateY(-1px);
-    background: color-mix(in srgb, var(--color-ink) 88%, var(--color-canal));
+    background: #fff;
   }
 
   .hero__cta--secondary {
     background: transparent;
-    color: var(--color-ink);
-    border: 1.5px solid var(--color-ink);
+    color: var(--color-cream);
+    border: 1.5px solid var(--color-cream);
   }
 
   .hero__cta--secondary:hover,
   .hero__cta--secondary:focus-visible {
-    background: var(--color-ink);
-    color: var(--color-cream);
+    background: var(--color-cream);
+    color: var(--color-ink);
   }
 
   .hero__cta-arrow {
@@ -225,7 +284,16 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
     transform: translateX(3px);
   }
 
+  /* Focus outlines on the cream-on-dark hero */
+  .hero :focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 3px;
+  }
+
+  /* Reduced motion: hide the video, leave the poster as a permanent still.
+     The hero still reads as a full-bleed cinematic photo with type overlay. */
   @media (prefers-reduced-motion: reduce) {
+    .hero__video { display: none; }
     .hero__heading-line,
     .hero__dek,
     .hero__ctas {
@@ -236,3 +304,18 @@ import homeHero from "../assets/placeholders/home-hero.jpg";
     }
   }
 </style>
+
+<script>
+  // Reveal the video once it has at least one playable frame buffered.
+  // The poster stays visible underneath, so the transition is seamless.
+  const video = document.querySelector(".hero__video");
+  if (video instanceof HTMLVideoElement) {
+    const ready = () => video.setAttribute("data-ready", "");
+    if (video.readyState >= 2) {
+      ready();
+    } else {
+      video.addEventListener("loadeddata", ready, { once: true });
+      video.addEventListener("playing", ready, { once: true });
+    }
+  }
+</script>
