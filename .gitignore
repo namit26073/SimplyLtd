@@ -67,3 +67,7 @@ assets-inbox/videos/
 *.psd
 *.ai
 *.sketch
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
