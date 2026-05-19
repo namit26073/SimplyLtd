@@ -1,0 +1,22 @@
+// Cloudflare Workers config for the Simply Ltd static site.
+//
+// This is a pure-static "Workers + Static Assets" deployment — there is no
+// `main` Worker handler, so every request is served directly from the
+// uploaded `./dist` directory. Pages Functions in `functions/api/` are
+// auto-discovered by Cloudflare and don't need to be referenced here.
+//
+// If we ever introduce SSR routes inside Astro (currently `output: "static"`,
+// see astro.config.mjs), add a `main` pointing at the rendered worker entry
+// and a corresponding compatible adapter, but until then keep this static.
+{
+	"name": "simply",
+	"compatibility_date": "2026-05-19",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"assets": {
+		"directory": "./dist",
+		"not_found_handling": "404-page"
+	},
+	"observability": {
+		"enabled": true
+	}
+}
