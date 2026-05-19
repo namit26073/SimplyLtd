@@ -55,6 +55,10 @@ coverage/
 # shipped, large, and re-creatable by re-running the content-researcher pass)
 assets-inbox/candidates/
 
+# Raw / intermediate video files staged for processing (the build pipeline
+# expects re-encoded outputs in public/videos/; raw sources stay local)
+assets-inbox/videos/
+
 # Stray temp screenshots
 /temp-*.png
 

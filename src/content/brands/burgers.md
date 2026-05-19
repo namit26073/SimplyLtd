@@ -10,6 +10,7 @@ voice: Loud, direct, indulgent
 visible: true
 primaryPitchSlug: canal-side-walk
 showcaseImage: ../../assets/placeholders/showcase-burgers.jpg
+heroImage: ../../assets/placeholders/showcase-burgers.jpg
 behindCounterImage: ../../assets/placeholders/burgers-behind-counter.jpg
 behindCounterAlt: "Six smash patties cooking on the truck's commercial flat-top grill, mid-service, steam rising."
 dietary: []

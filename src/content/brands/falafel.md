@@ -10,6 +10,8 @@ voice: Warm, confident, plant-positive without being preachy
 visible: true
 primaryPitchSlug: merchant-square
 showcaseImage: ../../assets/placeholders/showcase-falafel.jpg
+heroImage: ../../assets/placeholders/showcase-falafel.jpg
+heroVideo: /videos/falafel-truck.mp4
 behindCounterVideo: /videos/falafel-truck.mp4
 dietary:
   - vegan

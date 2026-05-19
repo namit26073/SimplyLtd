@@ -19,6 +19,7 @@ type Slot = "catering" | "franchising" | "locations";
 
 type Card = {
   slot: Slot;
+  kicker: string;
   heading: string;
   cta: { label: string; href: string };
   accent: "ink" | "falafel" | "burgers";
@@ -27,18 +28,21 @@ type Card = {
 const cards: Card[] = [
   {
     slot: "catering",
+    kicker: "Catering",
     heading: "Hire us for your event.",
     cta: { label: "Get a quote", href: "/catering/" },
     accent: "ink",
   },
   {
     slot: "franchising",
+    kicker: "Franchising",
     heading: "Run a truck of your own.",
     cta: { label: "See how", href: "/franchising/" },
     accent: "burgers",
   },
   {
     slot: "locations",
+    kicker: "Locations",
     heading: "Find us on the basin.",
     cta: { label: "See the map", href: "/locations/" },
     accent: "falafel",
@@ -68,19 +72,22 @@ const photoFor = (slot: Slot) => {
               class={`wte__card wte__card--${card.slot}`}
               data-brand={card.accent === "ink" ? undefined : card.accent}
             >
+              {photo ? (
+                <Image
+                  src={photo}
+                  alt=""
+                  class="wte__photo"
+                  widths={[360, 540, 720, 1080]}
+                  sizes="(min-width: 900px) 33vw, 100vw"
+                  loading="lazy"
+                  quality={72}
+                />
+              ) : null}
               <a href={card.cta.href} class="wte__link">
-                {photo ? (
-                  <Image
-                    src={photo}
-                    alt=""
-                    class="wte__photo"
-                    widths={[360, 540, 720, 1080]}
-                    sizes="(min-width: 900px) 33vw, 100vw"
-                    loading="lazy"
-                    quality={72}
-                  />
-                ) : null}
-                <span class="wte__heading-label t-display">{card.heading}</span>
+                <div class="wte__top">
+                  <span class="wte__kicker t-caption">{card.kicker}</span>
+                  <span class="wte__heading-label t-display">{card.heading}</span>
+                </div>
                 <span class="wte__cta-label">
                   {card.cta.label}
                   <span aria-hidden="true">→</span>
@@ -199,6 +206,16 @@ const photoFor = (slot: Slot) => {
   .wte__card:hover :global(.wte__photo),
   .wte__card:has(.wte__link:focus-visible) :global(.wte__photo) {
     transform: scale(1.04);
+  }
+
+  .wte__top {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .wte__kicker {
+    color: color-mix(in srgb, var(--color-accent-contrast) 78%, transparent);
   }
 
   .wte__heading-label {

@@ -19,23 +19,26 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
   aria-labelledby={`panel-${brand.slug}-heading`}
 >
   {brand.showcaseImage ? (
-    <Image
-      src={brand.showcaseImage}
-      alt=""
-      class="panel__photo"
-      widths={[400, 600, 800, 1200]}
-      sizes="(min-width: 900px) 33vw, 80vw"
-      loading="lazy"
-      quality={75}
-    />
+    <div class="panel__photo-wrap" aria-hidden="true">
+      <Image
+        src={brand.showcaseImage}
+        alt=""
+        class="panel__photo"
+        widths={[400, 600, 800, 1200]}
+        sizes="(min-width: 900px) 33vw, 80vw"
+        loading="lazy"
+        quality={75}
+      />
+    </div>
   ) : null}
 
   <div class="panel__content">
+    <p class="t-caption panel__kicker">Simply</p>
     <h3 id={`panel-${brand.slug}-heading`} class="t-display panel__wordmark">{wordmark}</h3>
     <p class="t-body panel__tagline">{brand.tagline}</p>
     {pitch && <p class="t-caption panel__meta">{pitch.name} · {pitch.postcode}</p>}
     <span class="panel__cta" aria-hidden="true">
-      See Simply {wordmark} <span class="panel__cta-arrow">→</span>
+      Visit Simply {wordmark} <span class="panel__cta-arrow">→</span>
     </span>
   </div>
 </a>
@@ -59,16 +62,48 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: translateY(-4px);
   }
 
-  /* Full-bleed photo behind everything. :global() pierces Astro Image's scope. */
+  /* Photo wrap. mask-image feathers the top + bottom of the photo into the
+     brand-coloured ground beneath, so the image reads as a bloom of food
+     out of the brand colour rather than a rectangular cut-out sitting on
+     top. This is the "transparent-feeling" treatment without needing
+     PNG cutouts from the asset side. */
+  .panel__photo-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.55) 12%,
+      #000 28%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 78%,
+      transparent 96%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.55) 12%,
+      #000 28%,
+      #000 58%,
+      rgba(0, 0, 0, 0.55) 78%,
+      transparent 96%
+    );
+  }
+
+  /* The photo itself sits inside the masked wrap. :global() pierces
+     Astro Image's component-scoped class. */
   :global(.panel__photo) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
-    z-index: 0;
-    pointer-events: none;
+    /* Pull the subject upward (most food / portrait shots have the focal
+       weight in the upper third). The wrap's bottom feather then handles
+       the blend into the text band cleanly. */
+    object-position: center 32%;
     transition: transform var(--dur-slow) var(--ease-out);
   }
 
@@ -77,9 +112,8 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: scale(1.04);
   }
 
-  /* Bottom gradient mask — anchors the type at the foot of the card.
-     Brand-coloured at the bottom, transparent at the top so the photo is
-     unobstructed in the upper two-thirds. */
+  /* Soft brand-tint layer over the photo. Lighter than before because the
+     mask now handles the bottom fade — this just unifies the colour cast. */
   .panel::after {
     content: "";
     position: absolute;
@@ -88,11 +122,11 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      transparent 0%,
-      transparent 40%,
-      color-mix(in srgb, var(--color-accent) 35%, transparent) 62%,
-      color-mix(in srgb, var(--color-accent) 78%, transparent) 78%,
-      var(--color-accent) 90%
+      color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
+      transparent 35%,
+      transparent 60%,
+      color-mix(in srgb, var(--color-accent) 25%, transparent) 78%,
+      color-mix(in srgb, var(--color-accent) 55%, transparent) 92%
     );
   }
 
@@ -104,6 +138,11 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     display: flex;
     flex-direction: column;
     gap: var(--sp-1);
+  }
+
+  .panel__kicker {
+    color: color-mix(in srgb, var(--color-accent-contrast) 75%, transparent);
+    margin-bottom: var(--sp-1);
   }
 
   .panel__wordmark {
