@@ -1,6 +1,8 @@
 import { defineConfig, fontProviders } from "astro/config";
 import react from "@astrojs/react";
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://simplyltd.co.uk",
@@ -42,4 +44,14 @@ export default defineConfig({
       cssCodeSplit: true,
     },
   },
+
+  adapter: cloudflare({
+    // Force build-time image processing. The default Cloudflare adapter
+    // image service swaps Astro's <Image /> to runtime URLs like
+    // /_image?href=...&f=webp, which expect Cloudflare's runtime
+    // Image Transformations to handle the request. We're a fully static
+    // site (output: 'static'), so we bake the images at build time
+    // instead — sharp pre-renders each variant into /_astro/*.webp.
+    imageService: "compile",
+  }),
 });
