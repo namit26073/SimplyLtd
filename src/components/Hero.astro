@@ -109,28 +109,14 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     z-index: 0;
   }
 
-  /* The current home-hero.mp4 has ~25% black pillarbox bars on each side
-     baked into the 1920×1080 file. Active content is only the centre
-     49.1% (~943px) of width. To make that CONTENT fill the viewport on
-     any aspect ratio:
-       - width = max(viewport-width / 0.491, viewport-height × 16/9)
-       - height auto-derives from the video's intrinsic 16:9 aspect
-       - centred in both axes so the content sits over the hero centre
-     When the video gets replaced with a non-pillarboxed source, revert
-     this rule to the simpler `inset: 0; width: 100%; height: 100%;
-     object-fit: cover;` pattern. */
   .hero__poster,
   .hero__video {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: max(204vw, calc(100svh * 16 / 9));
-    /* Override the global media reset that pins media to max-width: 100%,
-       which would clamp our intentional viewport-overflow scale. */
-    max-width: none;
-    height: auto;
-    transform: translate(-50%, -50%);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    object-position: center center;
   }
 
   .hero__poster {
