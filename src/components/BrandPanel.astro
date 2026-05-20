@@ -112,8 +112,10 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: scale(1.04);
   }
 
-  /* Soft brand-tint layer over the photo. Lighter than before because the
-     mask now handles the bottom fade — this just unifies the colour cast. */
+  /* Brand-tint layer. Light at the top so the photo reads through; ramps to
+     solid accent in the bottom ~12% so the wordmark + tagline + CTA always
+     sit on a known brand-coloured ground (no photo-pixel bleed under text,
+     which was failing AA on the shawarma yellow + falafel green panels). */
   .panel::after {
     content: "";
     position: absolute;
@@ -123,10 +125,11 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
-      transparent 35%,
-      transparent 60%,
-      color-mix(in srgb, var(--color-accent) 25%, transparent) 78%,
-      color-mix(in srgb, var(--color-accent) 55%, transparent) 92%
+      transparent 32%,
+      color-mix(in srgb, var(--color-accent) 30%, transparent) 56%,
+      color-mix(in srgb, var(--color-accent) 78%, transparent) 76%,
+      var(--color-accent) 92%,
+      var(--color-accent) 100%
     );
   }
 
