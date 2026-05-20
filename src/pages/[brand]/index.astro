@@ -315,12 +315,12 @@ const hasHeroImage = Boolean(brand.heroImage);
   }
   .brand-hero__video[data-ready] { opacity: 1; }
 
-  /* Brand-tinted gradient mask. Content block is bottom-anchored on mobile
-     (align-items: flex-end) and centred on desktop — kicker top lands
-     around 38-42% from the top of the hero on mobile, and the text
-     column extends to ~46% width on desktop 1440px. Mask must reach
-     near-solid accent BEFORE either of those marks; previous shapes were
-     only solid in the last 8-35% and failed AA on the upper text band. */
+  /* Brand-tinted gradient mask. On mobile the in-flow content block sits in
+     the upper third of the hero (padding-top sp-7 lands the kicker at
+     ~12% from hero top, with wordmark/dek/meta cascading downward), so
+     the mask must be near-solid from very near the top. On desktop the
+     text column occupies the left ~46% width and the diagonal gradient
+     keeps the photo visible on the right. */
   .brand-hero__mask {
     position: absolute;
     inset: 0;
@@ -328,10 +328,9 @@ const hasHeroImage = Boolean(brand.heroImage);
     background:
       linear-gradient(
         180deg,
-        color-mix(in srgb, var(--color-accent) 40%, transparent) 0%,
-        color-mix(in srgb, var(--color-accent) 72%, transparent) 22%,
-        color-mix(in srgb, var(--color-accent) 95%, transparent) 34%,
-        var(--color-accent) 40%,
+        color-mix(in srgb, var(--color-accent) 88%, transparent) 0%,
+        color-mix(in srgb, var(--color-accent) 96%, transparent) 6%,
+        var(--color-accent) 12%,
         var(--color-accent) 100%
       );
   }
