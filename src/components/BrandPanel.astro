@@ -112,10 +112,12 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: scale(1.04);
   }
 
-  /* Brand-tint layer. Light at the top so the photo reads through; ramps to
-     solid accent in the bottom ~12% so the wordmark + tagline + CTA always
-     sit on a known brand-coloured ground (no photo-pixel bleed under text,
-     which was failing AA on the shawarma yellow + falafel green panels). */
+  /* Brand-tint layer. Photo blooms in the upper ~38% — the area above the
+     content stack. From ~44% onward the gradient becomes solid accent, so
+     the entire content stack (kicker, wordmark, tagline, meta, CTA) sits
+     on a known brand-coloured ground regardless of the photo behind. The
+     panel content block is anchored to the bottom and intrinsically
+     occupies the bottom 55-60% on every aspect ratio. */
   .panel::after {
     content: "";
     position: absolute;
@@ -124,11 +126,11 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
-      transparent 32%,
-      color-mix(in srgb, var(--color-accent) 30%, transparent) 56%,
-      color-mix(in srgb, var(--color-accent) 78%, transparent) 76%,
-      var(--color-accent) 92%,
+      transparent 0%,
+      transparent 22%,
+      color-mix(in srgb, var(--color-accent) 55%, transparent) 34%,
+      color-mix(in srgb, var(--color-accent) 92%, transparent) 42%,
+      var(--color-accent) 48%,
       var(--color-accent) 100%
     );
   }
