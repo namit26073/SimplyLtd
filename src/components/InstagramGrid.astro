@@ -1,0 +1,267 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+const posts = (await getCollection("instagramPosts")).sort((a, b) =>
+  b.data.timestamp.getTime() - a.data.timestamp.getTime(),
+);
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+function altFor(post: (typeof posts)[number]) {
+  if (post.data.altText) return post.data.altText;
+  if (post.data.caption) {
+    const trimmed = post.data.caption.trim().replace(/\s+/g, " ");
+    return trimmed.length > 80 ? `${trimmed.slice(0, 77)}…` : trimmed;
+  }
+  return `Instagram post by @simplyltd dated ${dateFormatter.format(post.data.timestamp)}`;
+}
+---
+
+{posts.length > 0 && (
+  <section class="ig" aria-labelledby="ig-heading">
+    <div class="ig__inner">
+      <header class="ig__header">
+        <div class="ig__title">
+          <p class="t-caption ig__kicker">Latest from @simplyltd</p>
+          <h2 id="ig-heading" class="t-display ig__heading">Follow along.</h2>
+          <p class="t-editorial t-editorial--italic ig__dek">
+            Six most recent posts from the trucks.
+          </p>
+        </div>
+        <a
+          class="ig__cta"
+          href="https://www.instagram.com/simplyltd/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Follow on Instagram
+          <span aria-hidden="true">→</span>
+        </a>
+      </header>
+
+      <ul role="list" class="ig__grid">
+        {posts.map((post) => (
+          <li class="ig__cell">
+            <a
+              class="ig__tile"
+              href={post.data.permalink}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open Instagram post from ${dateFormatter.format(post.data.timestamp)}`}
+            >
+              <Image
+                src={post.data.image}
+                alt={altFor(post)}
+                class="ig__photo"
+                widths={[240, 360, 540, 720]}
+                sizes="(min-width: 720px) 33vw, 50vw"
+                loading="lazy"
+                quality={75}
+              />
+              {post.data.mediaType === "VIDEO" && (
+                <span class="ig__glyph ig__glyph--play" aria-label="Video" title="Video">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+                    <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z" />
+                  </svg>
+                </span>
+              )}
+              {post.data.mediaType === "CAROUSEL_ALBUM" && (
+                <span class="ig__glyph ig__glyph--carousel" aria-label="Multi-post" title="Multi-post">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                    <rect x="3.5" y="3.5" width="9" height="9" rx="1.2" />
+                    <rect x="5.5" y="5.5" width="9" height="9" rx="1.2" />
+                  </svg>
+                </span>
+              )}
+              <span class="ig__overlay" aria-hidden="true">
+                <span class="ig__date">{dateFormatter.format(post.data.timestamp)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .ig {
+    padding: var(--sp-7) var(--page-gutter);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .ig__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+
+  .ig__header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+    align-items: end;
+    margin-bottom: var(--sp-5);
+  }
+
+  @media (min-width: 720px) {
+    .ig__header {
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  .ig__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-2);
+  }
+
+  .ig__heading {
+    font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
+    line-height: 0.96;
+    letter-spacing: var(--ls-display-tight);
+  }
+
+  .ig__dek {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-300);
+    color: color-mix(in srgb, var(--color-ink) 78%, transparent);
+  }
+
+  .ig__cta {
+    align-self: end;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  @media (min-width: 720px) {
+    .ig__cta {
+      justify-self: end;
+    }
+  }
+
+  .ig__cta:hover,
+  .ig__cta:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .ig__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-2);
+  }
+
+  @media (min-width: 720px) {
+    .ig__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
+    }
+  }
+
+  .ig__cell {
+    list-style: none;
+  }
+
+  .ig__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    background: var(--color-paper);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  :global(.ig__photo) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .ig__tile:hover :global(.ig__photo),
+  .ig__tile:focus-visible :global(.ig__photo) {
+    transform: scale(1.04);
+  }
+
+  /* Always-visible media-type badges. Video → bottom-right, carousel →
+     top-right. Don't overlap each other; one tile only has one type. */
+  .ig__glyph {
+    position: absolute;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--color-ink) 70%, transparent);
+    color: var(--color-cream);
+    z-index: 1;
+  }
+
+  .ig__glyph--play {
+    bottom: var(--sp-3);
+    right: var(--sp-3);
+  }
+
+  .ig__glyph--carousel {
+    top: var(--sp-3);
+    right: var(--sp-3);
+  }
+
+  /* Hover overlay — fades in a dark gradient with the post date bottom-left.
+     Independent of the media-type badges above. */
+  .ig__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--sp-3);
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 55%,
+      color-mix(in srgb, var(--color-ink) 35%, transparent) 100%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+    pointer-events: none;
+    color: var(--color-cream);
+  }
+
+  .ig__tile:hover .ig__overlay,
+  .ig__tile:focus-visible .ig__overlay {
+    opacity: 1;
+  }
+
+  .ig__date {
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-100);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+  }
+
+  .ig__tile:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+</style>
