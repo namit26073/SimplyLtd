@@ -36,7 +36,13 @@ export async function fetchInstagramPosts({
     `?fields=${FIELDS}&limit=${POST_COUNT}` +
     `&access_token=${encodeURIComponent(igAccessToken)}`;
 
-  const res = await fetchFn(url);
+  let res;
+  try {
+    res = await fetchFn(url);
+  } catch (err) {
+    logger.error?.(`[instagram] Graph API fetch threw: ${err.message} — using fallback set`);
+    return copyFallback({ outputDir, fallbackDir, logger });
+  }
   if (!res.ok) {
     logger.error?.(`[instagram] Graph API ${res.status} — using fallback set`);
     return copyFallback({ outputDir, fallbackDir, logger });

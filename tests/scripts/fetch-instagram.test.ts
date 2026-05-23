@@ -84,3 +84,111 @@ describe("fetchInstagramPosts — happy path", () => {
     expect(files.filter((f) => f.endsWith(".jpg"))).toHaveLength(6);
   });
 });
+
+describe("fetchInstagramPosts — error paths", () => {
+  it("uses fallback when env vars are missing", async () => {
+    const fetchMock = vi.fn();
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+
+    const result = await fetchInstagramPosts({
+      igUserId: undefined,
+      igAccessToken: undefined,
+      fetchFn: fetchMock,
+      outputDir,
+      fallbackDir,
+      logger,
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.source).toBe("fallback");
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining("IG_USER_ID / IG_ACCESS_TOKEN missing"),
+    );
+    const files = await readdir(outputDir);
+    expect(files).toContain("manifest.json");
+    expect(files).toContain("fb-1.jpg");
+  });
+
+  it("uses fallback when Graph API returns 401", async () => {
+    const fetchMock = vi.fn(
+      async () => new Response("Unauthorized", { status: 401 }),
+    );
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+
+    const result = await fetchInstagramPosts({
+      igUserId: "x",
+      igAccessToken: "y",
+      fetchFn: fetchMock,
+      outputDir,
+      fallbackDir,
+      logger,
+    });
+
+    expect(result.source).toBe("fallback");
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining("Graph API 401"),
+    );
+  });
+
+  it("uses fallback when Graph API returns 429", async () => {
+    const fetchMock = vi.fn(
+      async () => new Response("Too Many Requests", { status: 429 }),
+    );
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+
+    const result = await fetchInstagramPosts({
+      igUserId: "x",
+      igAccessToken: "y",
+      fetchFn: fetchMock,
+      outputDir,
+      fallbackDir,
+      logger,
+    });
+
+    expect(result.source).toBe("fallback");
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining("Graph API 429"),
+    );
+  });
+
+  it("uses fallback when fetch throws (network error)", async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new Error("ECONNREFUSED");
+    });
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+
+    await expect(
+      fetchInstagramPosts({
+        igUserId: "x",
+        igAccessToken: "y",
+        fetchFn: fetchMock,
+        outputDir,
+        fallbackDir,
+        logger,
+      }),
+    ).resolves.toMatchObject({ source: "fallback" });
+
+    expect(logger.error).toHaveBeenCalled();
+  });
+
+  it("uses fallback when API returns 0 posts", async () => {
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ data: [] }), { status: 200 }),
+    );
+    const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+
+    const result = await fetchInstagramPosts({
+      igUserId: "x",
+      igAccessToken: "y",
+      fetchFn: fetchMock,
+      outputDir,
+      fallbackDir,
+      logger,
+    });
+
+    expect(result.source).toBe("fallback");
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining("0 posts"),
+    );
+  });
+});
