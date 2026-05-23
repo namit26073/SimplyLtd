@@ -1,5 +1,5 @@
 [data-brand="falafel"] {
-  --color-accent: #3f7a3a;
+  --color-accent: #367033;
   --color-accent-contrast: var(--color-cream);
-  --color-accent-soft: color-mix(in srgb, #3f7a3a 12%, var(--color-cream));
+  --color-accent-soft: color-mix(in srgb, #367033 12%, var(--color-cream));
 }

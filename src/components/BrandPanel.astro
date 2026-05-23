@@ -62,34 +62,23 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: translateY(-4px);
   }
 
-  /* Photo wrap. mask-image feathers the top + bottom of the photo into the
-     brand-coloured ground beneath, so the image reads as a bloom of food
-     out of the brand colour rather than a rectangular cut-out sitting on
-     top. This is the "transparent-feeling" treatment without needing
-     PNG cutouts from the asset side. */
+  /* Photo wrap — top half of the panel only, no internal mask. The
+     content box below has its own backdrop gradient (transparent at top,
+     ramping to solid accent within ~46px) which handles the blend from
+     photo to brand-coloured ground. Tying the wrap height to 50% keeps
+     the photo aggressively cropped so the lower portion of each
+     placeholder (where the food actually sits) appears in the visible
+     band on both mobile and desktop. */
   .panel__photo-wrap {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(0, 0, 0, 0.55) 12%,
-      #000 28%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 78%,
-      transparent 96%
-    );
-    mask-image: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(0, 0, 0, 0.55) 12%,
-      #000 28%,
-      #000 58%,
-      rgba(0, 0, 0, 0.55) 78%,
-      transparent 96%
-    );
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 85%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 85%, transparent 100%);
   }
 
   /* The photo itself sits inside the masked wrap. :global() pierces
@@ -100,10 +89,14 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Pull the subject upward (most food / portrait shots have the focal
-       weight in the upper third). The wrap's bottom feather then handles
-       the blend into the text band cleanly. */
-    object-position: center 32%;
+    /* Each placeholder has food at a different vertical position
+       (falafel bowl bottom, shawarma wrap middle, burgers patties
+       lower-middle), so each brand stylesheet overrides
+       --panel-photo-position. Default 85% (used when no brand sets it)
+       crops toward the bottom — works for the falafel + burgers
+       bottom-weighted photos. Shawarma wrap sits in the photo's middle
+       above a dark counter; it overrides to ~50%. */
+    object-position: var(--panel-photo-position, center 85%);
     transition: transform var(--dur-slow) var(--ease-out);
   }
 
@@ -112,8 +105,15 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: scale(1.04);
   }
 
-  /* Soft brand-tint layer over the photo. Lighter than before because the
-     mask now handles the bottom fade — this just unifies the colour cast. */
+  /* Brand-tint layer. Above the photo (z 0) and below the content box
+     (z 2). Light cast at the top of the panel, transparent through the
+     clean-photo zone, then ramps to solid accent in the band where the
+     photo wrap fades out — this is what makes the photo "colour-blend"
+     into the accent ground instead of fading through a dark intermediate
+     where the photo's bottom is dark (shawarma, burgers). On mobile the
+     ramp lives under the content-box backdrop (which is solid by panel
+     ~47%); on desktop the ramp fills the gap between wrap-end (50%) and
+     content-box-top (~59%). */
   .panel::after {
     content: "";
     position: absolute;
@@ -123,13 +123,21 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
-      transparent 35%,
-      transparent 60%,
-      color-mix(in srgb, var(--color-accent) 25%, transparent) 78%,
-      color-mix(in srgb, var(--color-accent) 55%, transparent) 92%
+      transparent 32%,
+      transparent 40%,
+      color-mix(in srgb, var(--color-accent) 60%, transparent) 47%,
+      color-mix(in srgb, var(--color-accent) 92%, transparent) 53%,
+      var(--color-accent) 58%,
+      var(--color-accent) 100%
     );
   }
 
+  /* Text-area backdrop. The content block is anchored to the bottom; its
+     own background gradient fades in from transparent at the top edge
+     (so the photo bloom above transitions smoothly) to solid accent at
+     ~14% of the box height — kicker line lands inside the solid zone.
+     This isolates the readable-text band from the photo without flooding
+     the whole panel with solid colour. */
   .panel__content {
     position: absolute;
     inset: auto 0 0 0;
@@ -138,10 +146,17 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     display: flex;
     flex-direction: column;
     gap: var(--sp-1);
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--color-accent) 88%, transparent) 8%,
+      var(--color-accent) 18%,
+      var(--color-accent) 100%
+    );
   }
 
   .panel__kicker {
-    color: color-mix(in srgb, var(--color-accent-contrast) 75%, transparent);
+    color: var(--color-accent-contrast);
     margin-bottom: var(--sp-1);
   }
 

@@ -2,4 +2,11 @@
   --color-accent: #e8b83a;
   --color-accent-contrast: var(--color-ink);
   --color-accent-soft: color-mix(in srgb, #e8b83a 18%, var(--color-cream));
+  /* Shawarma placeholder photo has the wrap at ~30-65% of its height,
+     with dark counter/reflection at 65-100%. Default 85% positioning
+     shows the dark band which fades through near-black into the yellow
+     accent (very visible step). 50% positioning centres the wrap food
+     in the visible band so the fade goes through mid-tone food pixels
+     instead. */
+  --panel-photo-position: center 50%;
 }
