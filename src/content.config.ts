@@ -1,5 +1,5 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
+import { glob, file } from "astro/loaders";
 import { z } from "zod";
 
 const brandSlugs = ["falafel", "shawarma", "lebanese", "burgers", "pasta"] as const;
@@ -73,4 +73,18 @@ const press = defineCollection({
   }),
 });
 
-export const collections = { brands, locations, testimonials, press };
+const instagramPosts = defineCollection({
+  loader: file("src/_generated/instagram/manifest.json"),
+  schema: ({ image }) =>
+    z.object({
+      id: z.string(),
+      permalink: z.url(),
+      mediaType: z.enum(["IMAGE", "VIDEO", "CAROUSEL_ALBUM"]),
+      timestamp: z.coerce.date(),
+      caption: z.string().optional(),
+      image: image(),
+      altText: z.string().optional(),
+    }),
+});
+
+export const collections = { brands, locations, testimonials, press, instagramPosts };
