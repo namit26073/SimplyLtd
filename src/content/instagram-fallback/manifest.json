@@ -11,9 +11,9 @@
   {
     "id": "post-2",
     "permalink": "https://www.instagram.com/simplyltd/",
-    "mediaType": "IMAGE",
+    "mediaType": "VIDEO",
     "timestamp": "2026-05-13T17:30:00.000Z",
-    "caption": "Late-night shawarma. Open till 10 tonight.",
+    "caption": "Behind the counter at Shawarma. Late-night service.",
     "image": "./post-2.jpg",
     "altText": "Shawarma wrap on dark paper, fillings visible."
   },
@@ -47,7 +47,7 @@
   {
     "id": "post-6",
     "permalink": "https://www.instagram.com/simplyltd/",
-    "mediaType": "IMAGE",
+    "mediaType": "CAROUSEL_ALBUM",
     "timestamp": "2026-05-02T14:00:00.000Z",
     "caption": "Catering setup for a 200-guest event. Three concepts, one team.",
     "image": "./post-6.jpg",

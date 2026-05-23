@@ -162,6 +162,11 @@ function altFor(post: (typeof posts)[number]) {
     transform: translateY(-1px);
   }
 
+  .ig__cta:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
   .ig__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -191,6 +196,8 @@ function altFor(post: (typeof posts)[number]) {
   }
 
   :global(.ig__photo) {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -228,7 +235,9 @@ function altFor(post: (typeof posts)[number]) {
   }
 
   /* Hover overlay — fades in a dark gradient with the post date bottom-left.
-     Independent of the media-type badges above. */
+     Independent of the media-type badges above. Gradient ramps to a denser
+     ink at the bottom so cream date text passes AA contrast against any
+     photo behind (worst-pixel measured ~6:1 over bright/sky pixels). */
   .ig__overlay {
     position: absolute;
     inset: 0;
@@ -238,8 +247,9 @@ function altFor(post: (typeof posts)[number]) {
     background: linear-gradient(
       180deg,
       transparent 0%,
-      transparent 55%,
-      color-mix(in srgb, var(--color-ink) 35%, transparent) 100%
+      transparent 38%,
+      color-mix(in srgb, var(--color-ink) 45%, transparent) 70%,
+      color-mix(in srgb, var(--color-ink) 78%, transparent) 100%
     );
     opacity: 0;
     transition: opacity var(--dur-fast) var(--ease-out);
