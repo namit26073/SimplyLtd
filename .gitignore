@@ -71,3 +71,9 @@ assets-inbox/videos/
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# Build-time generated content (Instagram grid fetch output)
+src/_generated/
+
+# Local environment overrides
+.env.local

@@ -6,6 +6,8 @@
   "description": "Simply Ltd — UK food-truck group marketing site. Astro 6 on Cloudflare Pages.",
   "scripts": {
     "dev": "astro dev",
+    "fetch:instagram": "node scripts/fetch-instagram.mjs",
+    "prebuild": "npm run fetch:instagram",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "check": "astro check",
