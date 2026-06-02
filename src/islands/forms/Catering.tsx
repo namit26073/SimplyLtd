@@ -160,125 +160,133 @@ export default function Catering(): JSX.Element {
         />
       </div>
 
-      <div className="form__grid">
-        <Field
-          id={`${formId}-name`}
-          label="Your name"
-          required
-          error={errors.name}
-        >
-          <input
+      <fieldset className="form__fieldset form__fieldset--group">
+        <legend className="t-caption form__legend">Contact</legend>
+        <div className="form__grid">
+          <Field
             id={`${formId}-name`}
-            type="text"
-            autoComplete="name"
+            label="Your name"
             required
-            aria-required="true"
-            value={values.name}
-            onChange={(e) => setValues({ ...values, name: e.target.value })}
-          />
-        </Field>
-
-        <Field
-          id={`${formId}-email`}
-          label="Email"
-          required
-          error={errors.email}
-        >
-          <input
-            id={`${formId}-email`}
-            type="email"
-            autoComplete="email"
-            required
-            aria-required="true"
-            value={values.email}
-            onChange={(e) => setValues({ ...values, email: e.target.value })}
-          />
-        </Field>
-
-        <Field
-          id={`${formId}-phone`}
-          label="Phone (optional)"
-          error={errors.phone}
-        >
-          <input
-            id={`${formId}-phone`}
-            type="tel"
-            autoComplete="tel"
-            value={values.phone}
-            onChange={(e) => setValues({ ...values, phone: e.target.value })}
-          />
-        </Field>
-
-        <Field
-          id={`${formId}-event-location`}
-          label="Event location"
-          required
-          error={errors.eventLocation}
-          hint="A postcode or venue name is fine."
-        >
-          <input
-            id={`${formId}-event-location`}
-            type="text"
-            autoComplete="off"
-            required
-            aria-required="true"
-            value={values.eventLocation}
-            onChange={(e) => setValues({ ...values, eventLocation: e.target.value })}
-          />
-        </Field>
-
-        <Field
-          id={`${formId}-event-date`}
-          label="Event date"
-          error={errors.eventDate}
-        >
-          <input
-            id={`${formId}-event-date`}
-            type="date"
-            value={values.eventDate}
-            disabled={values.flexibleDate}
-            onChange={(e) => setValues({ ...values, eventDate: e.target.value })}
-          />
-          <label className="form__inline-check">
+            error={errors.name}
+          >
             <input
-              type="checkbox"
-              checked={values.flexibleDate}
+              id={`${formId}-name`}
+              type="text"
+              autoComplete="name"
+              required
+              aria-required="true"
+              value={values.name}
+              onChange={(e) => setValues({ ...values, name: e.target.value })}
+            />
+          </Field>
+
+          <Field
+            id={`${formId}-email`}
+            label="Email"
+            required
+            error={errors.email}
+          >
+            <input
+              id={`${formId}-email`}
+              type="email"
+              autoComplete="email"
+              required
+              aria-required="true"
+              value={values.email}
+              onChange={(e) => setValues({ ...values, email: e.target.value })}
+            />
+          </Field>
+
+          <Field
+            id={`${formId}-phone`}
+            label="Phone (optional)"
+            error={errors.phone}
+          >
+            <input
+              id={`${formId}-phone`}
+              type="tel"
+              autoComplete="tel"
+              value={values.phone}
+              onChange={(e) => setValues({ ...values, phone: e.target.value })}
+            />
+          </Field>
+        </div>
+      </fieldset>
+
+      <fieldset className="form__fieldset form__fieldset--group">
+        <legend className="t-caption form__legend">Event details</legend>
+        <div className="form__grid">
+          <Field
+            id={`${formId}-event-location`}
+            label="Event location"
+            required
+            error={errors.eventLocation}
+            hint="A postcode or venue name is fine."
+          >
+            <input
+              id={`${formId}-event-location`}
+              type="text"
+              autoComplete="off"
+              required
+              aria-required="true"
+              value={values.eventLocation}
+              onChange={(e) => setValues({ ...values, eventLocation: e.target.value })}
+            />
+          </Field>
+
+          <Field
+            id={`${formId}-event-date`}
+            label="Event date"
+            error={errors.eventDate}
+          >
+            <input
+              id={`${formId}-event-date`}
+              type="date"
+              value={values.eventDate}
+              disabled={values.flexibleDate}
+              onChange={(e) => setValues({ ...values, eventDate: e.target.value })}
+            />
+            <label className="form__inline-check">
+              <input
+                type="checkbox"
+                checked={values.flexibleDate}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    flexibleDate: e.target.checked,
+                    eventDate: e.target.checked ? "" : values.eventDate,
+                  })
+                }
+              />
+              <span className="t-caption">Date is flexible</span>
+            </label>
+          </Field>
+
+          <Field
+            id={`${formId}-guest-count`}
+            label="Guest count"
+            required
+            error={errors.guestCount}
+            hint="We cater for 10 and up."
+          >
+            <input
+              id={`${formId}-guest-count`}
+              type="number"
+              min={10}
+              step={1}
+              inputMode="numeric"
+              required
+              aria-required="true"
+              value={values.guestCount}
               onChange={(e) =>
-                setValues({
-                  ...values,
-                  flexibleDate: e.target.checked,
-                  eventDate: e.target.checked ? "" : values.eventDate,
-                })
+                setValues({ ...values, guestCount: Number.parseInt(e.target.value, 10) || 0 })
               }
             />
-            <span className="t-caption">Date is flexible</span>
-          </label>
-        </Field>
+          </Field>
+        </div>
+      </fieldset>
 
-        <Field
-          id={`${formId}-guest-count`}
-          label="Guest count"
-          required
-          error={errors.guestCount}
-          hint="We cater for 10 and up."
-        >
-          <input
-            id={`${formId}-guest-count`}
-            type="number"
-            min={10}
-            step={1}
-            inputMode="numeric"
-            required
-            aria-required="true"
-            value={values.guestCount}
-            onChange={(e) =>
-              setValues({ ...values, guestCount: Number.parseInt(e.target.value, 10) || 0 })
-            }
-          />
-        </Field>
-      </div>
-
-      <fieldset className="form__fieldset">
+      <fieldset className="form__fieldset form__fieldset--group">
         <legend className="t-caption form__legend">Event type</legend>
         <div className="form__radio-grid">
           {EVENT_TYPES.map((type) => (

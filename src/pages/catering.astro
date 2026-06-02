@@ -7,7 +7,7 @@ import Catering from "../islands/forms/Catering.tsx";
 
 <Base
   title="Catering"
-  description="Simply Ltd catering — weddings, corporate, festivals, private parties. Three food-truck concepts, one team, on-site cooking across London and the south-east."
+  description="Simply Ltd catering — weddings, corporate, festivals, private parties. Past pitches include Hyde Park's Winter Wonderland. On-site cooking across London and the south-east."
 >
   <article class="catering-page">
     {/* Hero — full-bleed photo, type overlay -------------------------------- */}
@@ -42,96 +42,17 @@ import Catering from "../islands/forms/Catering.tsx";
       </div>
     </section>
 
-    {/* Why us --------------------------------------------------------------- */}
-    <section class="why" aria-labelledby="why-heading">
-      <div class="why__inner">
-        <header class="why__header">
-          <p class="t-caption">Why book Simply</p>
-          <h2 id="why-heading" class="t-display why__heading">
-            Three concepts, one team.
-          </h2>
-        </header>
-
-        <ol role="list" class="why__list">
-          <li class="reason">
-            <p class="t-display reason__numeral" aria-hidden="true">01</p>
-            <h3 class="t-display reason__title">On-site cooking, always.</h3>
-            <p class="t-body reason__body">
-              Nothing pre-plated. Wraps off the grill, burgers off the smash. Your guests watch it
-              come together.
-            </p>
-          </li>
-          <li class="reason">
-            <p class="t-display reason__numeral" aria-hidden="true">02</p>
-            <h3 class="t-display reason__title">A range of cuisines.</h3>
-            <p class="t-body reason__body">
-              Falafel, shawarma, smash burgers. Pick one concept or combine for variety.
-            </p>
-          </li>
-          <li class="reason">
-            <p class="t-display reason__numeral" aria-hidden="true">03</p>
-            <h3 class="t-display reason__title">An experienced team.</h3>
-            <p class="t-body reason__body">
-              The crew that runs the trucks every day runs your event.
-            </p>
-          </li>
-          <li class="reason">
-            <p class="t-display reason__numeral" aria-hidden="true">04</p>
-            <h3 class="t-display reason__title">Simple logistics.</h3>
-            <p class="t-body reason__body">
-              We bring the truck or set up a stall. Power and water requirements documented up
-              front; allergens covered; insurance in order.
-            </p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    {/* Event types ---------------------------------------------------------- */}
-    <section class="events" aria-labelledby="events-heading">
-      <div class="events__inner">
-        <header class="events__header">
-          <p class="t-caption">Events we cover</p>
-          <h2 id="events-heading" class="t-display events__heading">
-            We've fed all of these.
-          </h2>
-        </header>
-
-        <ul role="list" class="events__grid">
-          <li class="event-tile" data-brand="falafel">
-            <h3 class="t-display event-tile__name">Weddings</h3>
-            <p class="t-body event-tile__body">
-              Full-service catering for receptions, ceremonies, and the wind-down. Late-night
-              street-food refresh is a popular add-on.
-            </p>
-          </li>
-          <li class="event-tile" data-brand="shawarma">
-            <h3 class="t-display event-tile__name">Corporate</h3>
-            <p class="t-body event-tile__body">
-              Office lunches, launch days, away-days, holiday parties.
-            </p>
-          </li>
-          <li class="event-tile" data-brand="burgers">
-            <h3 class="t-display event-tile__name">Festivals</h3>
-            <p class="t-body event-tile__body">
-              Multi-day pitches, weekend rotations, and one-off festival appearances. We bring our
-              own setup and clear up after.
-            </p>
-          </li>
-          <li class="event-tile">
-            <h3 class="t-display event-tile__name">Private</h3>
-            <p class="t-body event-tile__body">
-              Birthdays, anniversaries, garden parties. The smallest event we cater is usually
-              ~20 guests — under that, we'll point you somewhere better.
-            </p>
-          </li>
-          <li class="event-tile">
-            <h3 class="t-display event-tile__name">Something else</h3>
-            <p class="t-body event-tile__body">
-              Filming, photoshoots, brand activations, residencies. Tell us what you're planning.
-            </p>
-          </li>
-        </ul>
+    {/* Credibility — single confident statement, no padding ----------------- */}
+    <section class="credibility" aria-labelledby="credibility-heading">
+      <div class="credibility__inner">
+        <p class="t-caption credibility__kicker">Past pitches</p>
+        <h2 id="credibility-heading" class="t-display credibility__heading">
+          We've fed Hyde Park's <span class="credibility__highlight">Winter Wonderland</span>.
+        </h2>
+        <p class="t-editorial credibility__dek">
+          Three trucks, operating from Paddington Basin since 2019. The crew that runs the
+          pitches every day runs your event.
+        </p>
       </div>
     </section>
 
@@ -227,7 +148,9 @@ import Catering from "../islands/forms/Catering.tsx";
           </p>
         </header>
 
-        <Catering client:visible />
+        <div class="enquire__panel">
+          <Catering client:visible />
+        </div>
       </div>
     </section>
   </article>
@@ -348,91 +271,58 @@ import Catering from "../islands/forms/Catering.tsx";
   }
 
   /* Shared section frame */
-  .why, .events, .process, .logistics, .enquire {
+  .credibility, .process, .logistics, .enquire {
     padding: var(--sp-7) var(--page-gutter);
     border-top: 1px solid var(--color-line);
   }
-  .why { background: var(--color-cream); }
-  .events { background: var(--color-paper); }
+  .credibility { background: var(--color-paper); }
   .process { background: var(--color-cream); }
   .logistics { background: var(--color-paper); }
   .enquire { background: var(--color-cream); }
-  .why__inner, .events__inner, .process__inner, .logistics__inner, .enquire__inner {
+  .credibility__inner, .process__inner, .logistics__inner, .enquire__inner {
     max-width: var(--page-max);
     margin: 0 auto;
   }
-  .why__header, .events__header, .process__header, .enquire__header {
+  .process__header, .enquire__header {
     margin-bottom: var(--sp-5);
   }
 
-  .why__heading, .events__heading, .process__heading, .logistics__heading, .enquire__heading {
+  .process__heading, .logistics__heading, .enquire__heading {
     font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
     line-height: 1;
     margin-top: var(--sp-2);
   }
 
-  /* Why list */
-  .why__list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-4);
+  /* Credibility — single editorial statement, the page's first proof point */
+  .credibility {
+    padding-block: var(--sp-6);
   }
   @media (min-width: 720px) {
-    .why__list { grid-template-columns: repeat(2, 1fr); }
+    .credibility { padding-block: var(--sp-7); }
   }
-  @media (min-width: 1080px) {
-    .why__list { grid-template-columns: repeat(4, 1fr); }
-  }
-  .reason {
-    padding: var(--sp-4);
-    background: var(--color-paper);
-    border-radius: var(--r-md);
-  }
-  .reason__numeral {
-    font-size: var(--fs-700);
-    line-height: 1;
+  .credibility__kicker {
     color: var(--color-text-muted);
+    margin-bottom: var(--sp-3);
   }
-  .reason__title {
-    font-size: var(--fs-500);
-    margin-top: var(--sp-2);
+  .credibility__heading {
+    font-size: clamp(var(--fs-700), 7vw, var(--fs-800));
     line-height: 1;
+    letter-spacing: var(--ls-display-tight);
+    max-width: 22ch;
   }
-  .reason__body {
-    margin-top: var(--sp-2);
-    font-size: var(--fs-300);
+  .credibility__highlight {
+    font-family: var(--ff-editorial-stack);
+    font-style: italic;
+    font-weight: var(--fw-editorial);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .credibility__dek {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-400);
+    max-width: 56ch;
     line-height: var(--lh-relaxed);
-  }
-
-  /* Event tiles */
-  .events__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-3);
-  }
-  @media (min-width: 720px) {
-    .events__grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-  }
-  .event-tile {
-    padding: var(--sp-4);
-    background: var(--color-accent, var(--color-cream));
-    color: var(--color-accent-contrast, var(--color-ink));
-    border-radius: var(--r-md);
-    border: 1px solid var(--color-line);
-  }
-  .event-tile[data-brand] {
-    border-color: transparent;
-  }
-  .event-tile__name {
-    font-size: var(--fs-500);
-    line-height: 1;
-  }
-  .event-tile__body {
-    margin-top: var(--sp-2);
-    font-size: var(--fs-300);
-    line-height: var(--lh-relaxed);
+    color: color-mix(in srgb, var(--color-ink) 78%, transparent);
   }
 
   /* Process steps */
@@ -496,5 +386,18 @@ import Catering from "../islands/forms/Catering.tsx";
     margin-top: var(--sp-3);
     max-width: 50ch;
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+  .enquire__panel {
+    margin-top: var(--sp-5);
+    padding: var(--sp-5);
+    background: var(--color-paper);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--color-line);
+    max-width: 760px;
+  }
+  @media (min-width: 720px) {
+    .enquire__panel {
+      padding: var(--sp-6);
+    }
   }
 </style>
