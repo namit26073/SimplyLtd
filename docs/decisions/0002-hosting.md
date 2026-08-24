@@ -1,7 +1,10 @@
 # ADR 0002 — Hosting on Cloudflare Pages free tier
 
 **Date:** 2026-05-17
-**Status:** Accepted
+**Status:** Amended 2026-08-24 — in practice the site deploys as a Cloudflare **Worker
+with static assets** (name `simply`, manual `npm run deploy`), not a Pages project.
+Same free-tier commercial terms apply. The Instagram cron workflow still targets the
+Pages API and needs rewriting (see `docs/runbooks/domains-cutover.md`).
 
 ## Decision
 

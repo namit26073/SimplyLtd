@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smash Me Up — Coming Soon</title>
+    <meta
+      name="description"
+      content="Smash Me Up — a new permanent smash-burger spot from the team behind Simply. Coming soon."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:title" content="Smash Me Up — Coming Soon" />
+    <meta property="og:description" content="A new permanent smash-burger spot from the team behind Simply." />
+    <!-- Pre-cutover URL; the cutover runbook flips this to https://smashmeup.com/og.png -->
+    <meta property="og:image" content="https://smashmeup.namit-garg.workers.dev/og.png" />
+    <meta property="og:type" content="website" />
+    <style>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        background: #000;
+        color: #f5efe2;
+        font-family:
+          ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        text-align: center;
+        padding: 2rem 1.5rem;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        max-width: 30rem;
+      }
+      h1 {
+        line-height: 0;
+      }
+      h1 img {
+        width: min(70vw, 420px);
+        height: auto;
+      }
+      .soon {
+        font-size: clamp(1.4rem, 5vw, 2rem);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .credit {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #cfc8b8;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.85rem 1.6rem;
+        border: 2px solid #f5efe2;
+        border-radius: 999px;
+        color: #f5efe2;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        transition:
+          background-color 150ms ease-out,
+          color 150ms ease-out;
+      }
+      .btn:hover {
+        background: #f5efe2;
+        color: #000;
+      }
+      .btn:focus-visible {
+        outline: 2px solid #f5efe2;
+        outline-offset: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1><img src="/logo-800.webp" width="800" height="800" alt="Smash Me Up" fetchpriority="high" /></h1>
+      <p class="soon">Coming soon.</p>
+      <p class="credit">From the team behind <strong>Simply</strong> — the food trucks on Paddington Basin.</p>
+      <!-- Pre-cutover URL; the cutover runbook flips this to https://simplyltd.co.uk -->
+      <a class="btn" href="https://simply.namit-garg.workers.dev">Meet Simply →</a>
+    </main>
+  </body>
+</html>

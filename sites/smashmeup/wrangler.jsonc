@@ -1,0 +1,9 @@
+{
+	// Assets-only Worker — serves the smashmeup.com coming-soon page.
+	// Deploy: npx wrangler deploy --config sites/smashmeup/wrangler.jsonc
+	"name": "smashmeup",
+	"compatibility_date": "2026-05-19",
+	"assets": {
+		"directory": "."
+	}
+}

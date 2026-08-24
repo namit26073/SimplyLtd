@@ -10,18 +10,20 @@
   **not** a `brands` content-collection entry, because it links off-site instead of
   routing to `/[brand]` and has no menu, pitch, or page of its own yet.
 - smashmeup.com is a single hand-written static page in `sites/smashmeup/`, deployed as
-  a second Cloudflare Pages project (`smashmeup`) by direct upload
-  (`npx wrangler pages deploy sites/smashmeup --project-name smashmeup`). No build step.
+  a second **assets-only Cloudflare Worker** (`smashmeup`) via
+  `npx wrangler deploy --config sites/smashmeup/wrangler.jsonc`. No build step. This
+  matches how the main site actually ships — a Worker with static assets, not the
+  Pages project ADR 0002 planned (see its amendment).
 - Brand vanity domains 301 via Porkbun URL forwarding; only simplyltd.co.uk and
-  smashmeup.com move nameservers to Cloudflare (Pages custom-domain requirement).
+  smashmeup.com move nameservers to Cloudflare (Workers custom-domain requirement).
   See `docs/runbooks/domains-cutover.md`.
 
 ## Why
 
 - A collection entry would force fake data through the brands schema (pitch, menu,
   visibility) for something that is not a sub-brand page.
-- Direct upload keeps the coming-soon page decoupled from the main site's build — it
-  changes approximately never.
+- A separate assets-only Worker keeps the coming-soon page decoupled from the main
+  site's build — it changes approximately never.
 - Porkbun forwarding is a minutes-per-domain change with no nameserver moves for
   pure-redirect domains.
 
