@@ -7,7 +7,7 @@ import Franchising from "../islands/forms/Franchising.tsx";
 
 <Base
   title="Franchising"
-  description="Run a Simply truck of your own. Three concepts, one operating model, six years on Paddington Basin. Apply to franchise Simply Ltd."
+  description="Run a Simply truck of your own. Four concepts, seven trucks, one operating model. Apply to franchise Simply Ltd."
 >
   <article class="franchising-page">
     {/* Hero — full-bleed photo, type overlay -------------------------------- */}
@@ -32,7 +32,7 @@ import Franchising from "../islands/forms/Franchising.tsx";
           Run a Simply truck of your own.
         </h1>
         <p class="t-editorial t-editorial--italic franchise-hero__dek">
-          Three concepts. One operating model. Six years on Paddington Basin.
+          Four concepts. Seven trucks. One operating model.
         </p>
         <a href="#enquire" class="franchise-hero__cta">
           Apply below
@@ -55,16 +55,16 @@ import Franchising from "../islands/forms/Franchising.tsx";
             <p class="t-caption stat__label">Founded</p>
           </div>
           <div class="stat">
-            <p class="t-display stat__figure">3</p>
+            <p class="t-display stat__figure">7</p>
             <p class="t-caption stat__label">Trucks operating</p>
           </div>
           <div class="stat">
-            <p class="t-display stat__figure">3</p>
+            <p class="t-display stat__figure">4</p>
             <p class="t-caption stat__label">Operating concepts</p>
           </div>
           <div class="stat">
-            <p class="t-display stat__figure">~250m</p>
-            <p class="t-caption stat__label">Between pitches</p>
+            <p class="t-display stat__figure stat__figure--live" data-people-fed>400,000+</p>
+            <p class="t-caption stat__label">People fed</p>
           </div>
         </div>
       </div>
@@ -375,6 +375,11 @@ import Franchising from "../islands/forms/Franchising.tsx";
     margin-top: var(--sp-1);
   }
 
+  /* Live people-fed counter — tabular digits stop the figure jittering as it ticks. */
+  .stat__figure--live {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* Provisions */
   .provisions__list {
     display: grid;
@@ -470,3 +475,62 @@ import Franchising from "../islands/forms/Franchising.tsx";
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
   }
 </style>
+
+<script>
+  import { peopleFed } from "../lib/peopleFed";
+
+  // Static markup ships "400,000+" so the no-JS page stays truthful; this
+  // swaps in the live figure, counts up on first view (skipped under
+  // prefers-reduced-motion), then re-renders every 30s so lingering
+  // visitors see it tick (+1 roughly every 4.8 minutes).
+  const COUNT_UP_MS = 1200;
+  const COUNT_UP_RUNWAY = 150;
+
+  function initPeopleFed() {
+    const el = document.querySelector("[data-people-fed]");
+    if (!(el instanceof HTMLElement) || el.dataset.ready) return;
+    el.dataset.ready = "true";
+
+    const render = (n: number) => {
+      el.textContent = n.toLocaleString("en-GB");
+    };
+    const live = () => render(peopleFed(Date.now()));
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced || !("IntersectionObserver" in window)) {
+      live();
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          io.disconnect();
+          const target = peopleFed(Date.now());
+          const from = target - COUNT_UP_RUNWAY;
+          const t0 = performance.now();
+          const tick = (t: number) => {
+            const p = Math.min(1, (t - t0) / COUNT_UP_MS);
+            const eased = 1 - Math.pow(1 - p, 3);
+            render(Math.round(from + (target - from) * eased));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        },
+        { threshold: 0.3 },
+      );
+      io.observe(el);
+    }
+
+    const interval = window.setInterval(() => {
+      if (!el.isConnected) {
+        window.clearInterval(interval);
+        return;
+      }
+      live();
+    }, 30_000);
+  }
+
+  initPeopleFed();
+  // ClientRouter (view transitions) swaps the DOM without re-running module
+  // scripts — re-init on every client-side navigation.
+  document.addEventListener("astro:page-load", initPeopleFed);
+</script>
