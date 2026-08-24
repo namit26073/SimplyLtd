@@ -1,0 +1,120 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/smash-me-up-logo.jpg";
+
+interface Props {
+  /** Pre-cutover this points at the pages.dev preview; the cutover runbook flips it to smashmeup.com. */
+  href?: string;
+}
+
+const { href = "https://smashmeup.pages.dev" } = Astro.props;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="coming-panel"
+  aria-label="Smash Me Up — coming soon"
+>
+  <Image
+    src={logo}
+    alt=""
+    class="coming-panel__logo"
+    widths={[400, 600, 800]}
+    sizes="(min-width: 900px) 25vw, 80vw"
+    loading="lazy"
+    quality={80}
+  />
+  <div class="coming-panel__content">
+    <p class="t-caption coming-panel__kicker">Coming soon</p>
+    <p class="t-body coming-panel__line">Our first permanent shop.</p>
+    <span class="coming-panel__cta" aria-hidden="true">
+      smashmeup.com <span class="coming-panel__arrow">→</span>
+    </span>
+  </div>
+</a>
+
+<style>
+  /* Mirrors BrandPanel's frame (aspect, radius, hover lift) on a true-black
+     ground — the logo art's own background — so it reads as kin to the
+     brand cards without pretending to be a truck. */
+  .coming-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: #000;
+    color: var(--color-cream);
+    aspect-ratio: 3 / 4;
+    text-decoration: none;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .coming-panel:hover,
+  .coming-panel:focus-visible {
+    transform: translateY(-4px);
+  }
+
+  .coming-panel:focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 3px;
+  }
+
+  :global(.coming-panel__logo) {
+    width: 100%;
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    object-fit: contain;
+    padding: var(--sp-3);
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .coming-panel:hover :global(.coming-panel__logo),
+  .coming-panel:focus-visible :global(.coming-panel__logo) {
+    transform: scale(1.04);
+  }
+
+  .coming-panel__content {
+    padding: 0 var(--sp-5) var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .coming-panel__kicker {
+    color: var(--color-cream);
+  }
+
+  .coming-panel__line {
+    font-size: var(--fs-300);
+    line-height: var(--lh-snug);
+    color: var(--color-cream);
+  }
+
+  .coming-panel__cta {
+    margin-top: var(--sp-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    border-bottom: 2px solid var(--color-cream);
+    padding-bottom: var(--sp-1);
+    align-self: flex-start;
+  }
+
+  .coming-panel__arrow {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .coming-panel:hover .coming-panel__arrow,
+  .coming-panel:focus-visible .coming-panel__arrow {
+    transform: translateX(4px);
+  }
+</style>

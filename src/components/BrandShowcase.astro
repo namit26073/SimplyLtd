@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 import BrandPanel from "./BrandPanel.astro";
+import ComingSoonPanel from "./ComingSoonPanel.astro";
 
 const allBrands = await getCollection("brands");
 const visibleBrands = allBrands
@@ -21,11 +22,11 @@ const brandsWithPitches = await Promise.all(
   <header class="showcase__header">
     <p class="t-caption showcase__kicker">The fleet</p>
     <h2 id="showcase-heading" class="t-display showcase__heading">
-      Three trucks. One canal.
+      Three trucks. One canal. And something new.
     </h2>
   </header>
 
-  <div class="showcase__rail" role="list" aria-label="Sub-brands">
+  <div class="showcase__rail" role="list" aria-label="Sub-brands and coming soon">
     {
       brandsWithPitches.map(({ brand, pitch }) => (
         <div role="listitem" class="showcase__cell">
@@ -33,6 +34,9 @@ const brandsWithPitches = await Promise.all(
         </div>
       ))
     }
+    <div role="listitem" class="showcase__cell">
+      <ComingSoonPanel />
+    </div>
   </div>
 </section>
 
@@ -87,7 +91,7 @@ const brandsWithPitches = await Promise.all(
     .showcase__rail {
       grid-auto-columns: unset;
       grid-auto-flow: row;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: var(--sp-4);
       overflow: visible;
     }
