@@ -7,9 +7,7 @@ const locations = await getCollection("locations");
 const brands = await getCollection("brands");
 
 // Build a brand-name lookup so each pitch card can list the brands by name.
-const brandNameBySlug = Object.fromEntries(
-  brands.map((b) => [b.data.slug, b.data.name]),
-);
+const brandNameBySlug = Object.fromEntries(brands.map((b) => [b.data.slug, b.data.name]));
 
 const orderedLocations = locations.sort((a, b) =>
   a.data.slug === "merchant-square" ? -1 : b.data.slug === "merchant-square" ? 1 : 0,
@@ -50,8 +48,9 @@ const orderedLocations = locations.sort((a, b) =>
         <ul role="list" class="locations-list__grid">
           {
             orderedLocations.map((location) => {
-              const hoursEntries = (Object.entries(location.data.openingHours) as [string, string | undefined][])
-                .filter(([, v]) => Boolean(v));
+              const hoursEntries = (
+                Object.entries(location.data.openingHours) as [string, string | undefined][]
+              ).filter(([, v]) => Boolean(v));
               const brandNames = location.data.brandsOnPitch
                 .map((slug) => brandNameBySlug[slug])
                 .filter(Boolean);
@@ -64,7 +63,9 @@ const orderedLocations = locations.sort((a, b) =>
                   </header>
 
                   <address class="location-card__address t-body">
-                    {location.data.addressLines.map((line) => <span>{line}</span>)}
+                    {location.data.addressLines.map((line) => (
+                      <span>{line}</span>
+                    ))}
                     <span class="location-card__postcode">{location.data.postcode}</span>
                   </address>
 
@@ -74,7 +75,9 @@ const orderedLocations = locations.sort((a, b) =>
                       <tbody>
                         {hoursEntries.map(([day, range]) => (
                           <tr>
-                            <th scope="row" class="t-caption location-card__hours-day">{day}</th>
+                            <th scope="row" class="t-caption location-card__hours-day">
+                              {day}
+                            </th>
                             <td class="t-body">{range}</td>
                           </tr>
                         ))}
