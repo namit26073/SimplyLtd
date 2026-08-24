@@ -10,16 +10,10 @@ interface Props {
 const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
 ---
 
-<a
-  href={href}
-  target="_blank"
-  rel="noopener noreferrer"
-  class="coming-panel"
-  aria-label="Smash Me Up — coming soon"
->
+<a href={href} target="_blank" rel="noopener noreferrer" class="coming-panel">
   <Image
     src={logo}
-    alt=""
+    alt="Smash Me Up"
     class="coming-panel__logo"
     widths={[400, 600, 800]}
     sizes="(min-width: 900px) 25vw, 80vw"
@@ -32,6 +26,7 @@ const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
     <span class="coming-panel__cta" aria-hidden="true">
       smashmeup.com <span class="coming-panel__arrow">→</span>
     </span>
+    <span class="visually-hidden">(opens in a new tab)</span>
   </div>
 </a>
 
@@ -57,8 +52,10 @@ const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
     transform: translateY(-4px);
   }
 
+  /* The outline paints outside the card onto the showcase's cream ground,
+     so it must be ink, not cream, to stay visible (WCAG 2.4.7). */
   .coming-panel:focus-visible {
-    outline: 2px solid var(--color-cream);
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
   }
 
