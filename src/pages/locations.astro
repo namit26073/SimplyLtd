@@ -29,7 +29,8 @@ const orderedLocations = locations.sort((a, b) =>
         </h1>
         <p class="t-editorial t-editorial--italic locations-intro__dek">
           We're on Paddington Basin every weekday. Falafel and Shawarma share Merchant Square;
-          Burgers is on Canal Side Walk, about 250 metres east.
+          Burgers is on Canal Side Walk, about 250 metres east. Home base is Paddington —
+          <a href="/catering/">our trucks also cook across London for events</a>.
         </p>
       </div>
     </section>
@@ -138,6 +139,11 @@ const orderedLocations = locations.sort((a, b) =>
     font-size: var(--fs-400);
     max-width: 48ch;
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+
+  .locations-intro__dek a {
+    color: inherit;
+    text-underline-offset: 0.15em;
   }
 
   /* Map */

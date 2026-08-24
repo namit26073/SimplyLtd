@@ -1,7 +1,7 @@
 # ADR 0012 — Truck count
 
 **Date:** 2026-05-17
-**Status:** Accepted
+**Status:** Amended 2026-08-24
 
 ## Decision
 
@@ -21,3 +21,10 @@ The "seven food trucks" claim on the existing Wix site is **not** carried forwar
 ## Open thread
 
 If the owner subsequently confirms additional pitches (e.g. Pasta and Lebanese), they become new entries in the `locations` content collection. Schema supports N pitches; today there are 2.
+
+## Amendment — 2026-08-24
+
+The owner confirms **seven trucks / four operating concepts** fleet-wide. Fleet-wide
+numbers now appear on the franchising and about pages. The locations page continues to
+list only the confirmed Paddington pitches (three trucks, two pitches); where the other
+four trucks operate is not stated on-site until the owner provides detail.
