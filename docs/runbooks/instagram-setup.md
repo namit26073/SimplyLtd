@@ -1,73 +1,69 @@
-# Instagram grid — auth + secrets runbook
+# Instagram grid — auth + token runbook
 
-> Owner-facing setup steps for the homepage Instagram grid. One-time setup
-> (~30 min), then re-issue the access token roughly every 50 days.
+> How the homepage Instagram grid gets its posts, and how to renew the token
+> roughly every 50 days. Corrected 2026-08-25 after the first renewal: the
+> site uses the **Instagram API with Instagram Login** (`graph.instagram.com`),
+> so tokens come from the App Dashboard — not the Graph API Explorer.
 
-## One-time setup
+## How it works
 
-### 1. Meta developer account + app
+- `npm run build` (and `npm run deploy`) first runs `scripts/fetch-instagram.mjs`,
+  which calls `https://graph.instagram.com/v21.0/<IG_USER_ID>/media` and bakes the
+  six most recent posts into the site. **The grid is a build-time snapshot** — it
+  only changes when the site is rebuilt and redeployed.
+- Credentials are read from `.env.local` in the repo root (gitignored; loaded via
+  `node --env-file-if-exists`). Two lines: `IG_USER_ID=…` and `IG_ACCESS_TOKEN=…`.
+- If either is missing or the API errors, the build logs
+  `[instagram] … using fallback set` and ships the committed placeholder posts from
+  `src/content/instagram-fallback/`. The build never fails because of Instagram.
+- Success looks like `[instagram] wrote 6 live posts to src/_generated/instagram`.
 
-1. Sign in at <https://developers.facebook.com/> with a Facebook account that is an admin of the **@simplyltd** Instagram Business account.
-2. **My Apps → Create App** → "Other" → "Business" type.
-3. Name the app `Simply Ltd Site`. Save the App ID + App Secret.
-4. Add the **Instagram Graph API** product to the app.
-5. Ensure the linked Facebook page is connected to the @simplyltd Instagram Business account.
+## Where the token comes from
 
-### 2. Resolve the IG-User-ID
+Meta app **Simply Ltd Site** at <https://developers.facebook.com/apps/>, use case
+**"Manage messaging & content on Instagram"**. The token is a long-lived
+Instagram user token (60 days).
 
-1. Open the Graph API Explorer: <https://developers.facebook.com/tools/explorer/>
-2. Select your app from the dropdown.
-3. Generate a User Access Token with the scopes `instagram_basic`, `instagram_manage_insights`, `pages_show_list`, `business_management`.
-4. Run the query:
-   ```
-   GET /me/accounts
-   ```
-   Find the page connected to @simplyltd; copy its `id` (this is the **Facebook Page ID**).
-5. Run:
-   ```
-   GET /<page-id>?fields=instagram_business_account
-   ```
-   The returned `instagram_business_account.id` is the **IG-User-ID**. Save it.
+1. Open the app → **Use cases** → **Customize** on the Instagram use case.
+2. Left sidebar → **API setup with Instagram login**.
+3. Section **Generate access tokens** — the **@simplyltd** account is listed with its
+   account ID (this ID is `IG_USER_ID`; it never changes).
+4. Click **Generate token** → log in as @simplyltd in the popup → **Allow** → tick
+   "I understand" → copy the token (starts `IGAA…`).
+5. Paste it into `.env.local` as `IG_ACCESS_TOKEN=…`, then
+   `npm run fetch:instagram` to confirm `wrote 6 live posts`, then `npm run deploy`.
 
-### 3. Issue a long-lived access token
+## Renewal (~every 50 days)
 
-1. Still in the Graph API Explorer, exchange the short-lived token for a long-lived one:
-   ```
-   GET /oauth/access_token
-     ?grant_type=fb_exchange_token
-     &client_id=<app-id>
-     &client_secret=<app-secret>
-     &fb_exchange_token=<short-lived-token>
-   ```
-2. The returned `access_token` is valid for ~60 days. Save it.
+**Current token issued 2026-08-25 → expires ~2026-10-24.** Renew before then.
 
-### 4. Upload secrets
+- **While the token is still valid** (and at least 24 h old) it can be refreshed
+  without logging in — open in a browser or curl:
 
-**GitHub repository secrets** (Settings → Secrets and variables → Actions):
-- `IG_USER_ID` — from step 2.5.
-- `IG_ACCESS_TOKEN` — from step 3.1.
-- `CLOUDFLARE_ACCOUNT_ID` — from Cloudflare dashboard (account home page sidebar).
-- `CLOUDFLARE_API_TOKEN` — Cloudflare dashboard → My Profile → API Tokens → Create Token → "Edit Cloudflare Pages" template, restrict to the `simply` project.
+  ```
+  https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=<current-token>
+  ```
 
-**Cloudflare Pages environment variables** (Pages project → Settings → Environment variables → Production):
-- `IG_USER_ID` — same value.
-- `IG_ACCESS_TOKEN` — same value.
+  The JSON response's `access_token` is a fresh 60-day token. Update `.env.local`
+  and redeploy. (This is what the automated refresh will use once the cron is
+  rewritten — see below.)
+- **If it has already expired**, refresh returns an error: generate a new token via
+  the App Dashboard steps above.
 
-### 5. Trigger first refresh
+## Automated refresh — currently broken, follow-up pending
 
-Either wait for the next cron (every 6 hours) or run `Refresh Instagram grid` manually from GitHub Actions → Workflows.
+`.github/workflows/rebuild-instagram.yml` calls the Cloudflare **Pages** API for a
+project that doesn't exist (the site deploys as a **Worker** named `simply`, via
+`npm run deploy`). It has never refreshed anything. Rewriting it to build in GitHub
+Actions and `wrangler deploy` needs these repository secrets:
 
-## Recurring task — token renewal (~every 50 days)
+- `IG_USER_ID`, `IG_ACCESS_TOKEN` — from above.
+- `CLOUDFLARE_ACCOUNT_ID` — `772357e2ba3af2f83f3837f040113069`.
+- `CLOUDFLARE_API_TOKEN` — Cloudflare dashboard → My Profile → API Tokens → Create
+  Token → "Edit Cloudflare Workers" template.
 
-The access token expires after 60 days. When `IG_ACCESS_TOKEN` expires the next CF Pages build will skip the live fetch and use the committed `src/content/instagram-fallback/` set; users see the fallback grid until you refresh the token.
-
-To renew:
-1. Open the Graph API Explorer.
-2. Re-run the long-lived-token exchange (step 3 above) — Meta lets you refresh within the 60-day validity window.
-3. Update the `IG_ACCESS_TOKEN` value in **both** GitHub secrets and Cloudflare Pages env vars.
-4. Trigger the `Refresh Instagram grid` workflow manually to confirm the new token works.
-
-If you wait past 60 days, you'll need to start from a fresh short-lived token (Graph API Explorer → Get User Access Token) and re-do the exchange in step 3.
+Until that's done, "refreshing the grid" = renewing the token if needed and running
+`npm run deploy` from a machine with `.env.local`.
 
 ## Replacing the fallback set with real screenshots
 
@@ -77,22 +73,24 @@ For v1 the fallback uses Unsplash placeholders. To swap for real IG content:
 2. Pick 6 recent posts you want as the "if-the-API-is-down" view.
 3. For each, save the image (1080×1080 ideal) into `src/content/instagram-fallback/post-N.jpg` (overwrite the existing placeholder).
 4. Edit `src/content/instagram-fallback/manifest.json` — for each entry update the `permalink`, `caption`, `timestamp`, and `altText` to match the real post.
-5. Commit + push. CI rebuilds the site; the fallback set is now real Simply Ltd content.
+5. Commit + push, then redeploy.
 
 ## Troubleshooting
 
-**The grid shows placeholders even though I uploaded the secrets.**
-- Check `IG_USER_ID` and `IG_ACCESS_TOKEN` are both set in **Cloudflare Pages env vars** (not just GitHub secrets — the build runs on Cloudflare).
-- Trigger a fresh deployment (push any commit, or manually re-deploy in the CF Pages dashboard) and watch the build log. The first lines should include `[instagram] wrote 6 live posts to ...` if the fetch worked, or `[instagram] Graph API <status> — using fallback set` if it didn't.
+**Build log: `IG_USER_ID / IG_ACCESS_TOKEN missing — using fallback set`.**
+- `.env.local` isn't in the repo root on this machine (it's gitignored, so it doesn't
+  travel with clones). Recreate it with both lines.
 
-**Build logs show `[instagram] Graph API 400 — using fallback set`.**
-- Token is invalid or the IG-User-ID has changed. Re-run step 3 to issue a new token, update secrets, redeploy.
+**Build log: `Graph API 400 — using fallback set`.**
+- Token expired or invalid. Generate a new one via the App Dashboard steps.
 
-**Build logs show `[instagram] Graph API 429 — using fallback set`.**
-- Hit Meta's rate limit. The cron only fires every 6 hours so this is unlikely from our side; usually means another integration on the same App is over-consuming. Wait an hour, redeploy.
+**Build log: `Graph API 429 — using fallback set`.**
+- Meta rate limit. Wait an hour and rebuild.
 
-**The cron workflow fails in GitHub Actions with an HTTP 401 from Cloudflare.**
-- `CLOUDFLARE_API_TOKEN` is missing the `Pages:Edit` permission, or it's scoped to a different account. Recreate the token using the "Edit Cloudflare Pages" template and re-upload.
+**The live site shows placeholder posts (tiles link to the profile, not to individual posts).**
+- The last deploy ran without valid credentials. Fix `.env.local`, confirm
+  `npm run fetch:instagram` reports live posts, `npm run deploy`.
 
-**Local `npm run dev` shows the fallback grid.**
-- Expected — local dev doesn't have the secrets. To test the live grid locally, create `.env.local` with `IG_USER_ID=` and `IG_ACCESS_TOKEN=` set to the production values, then `npm run fetch:instagram && npm run dev`. Do not commit `.env.local` — it's gitignored.
+**Which posts is the live site showing?** Each version's preview URL is
+`https://<first-8-chars-of-version-id>-simply.namit-garg.workers.dev`
+(`npx wrangler versions list --name simply`).
