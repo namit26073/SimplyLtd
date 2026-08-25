@@ -22,7 +22,7 @@ const brandsWithPitches = await Promise.all(
   <header class="showcase__header">
     <p class="t-caption showcase__kicker">The fleet</p>
     <h2 id="showcase-heading" class="t-display showcase__heading">
-      Three trucks. One canal. And something new.
+      Four concepts. One canal. And something new.
     </h2>
   </header>
 
@@ -87,12 +87,19 @@ const brandsWithPitches = await Promise.all(
     scroll-snap-align: start;
   }
 
+  /* Five cards: tablets keep the snap rail with ~3 visible; wide screens lay
+     all five side by side. */
   @media (min-width: 900px) {
+    .showcase__rail {
+      grid-auto-columns: 30%;
+      gap: var(--sp-4);
+    }
+  }
+  @media (min-width: 1100px) {
     .showcase__rail {
       grid-auto-columns: unset;
       grid-auto-flow: row;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--sp-4);
+      grid-template-columns: repeat(5, 1fr);
       overflow: visible;
     }
   }

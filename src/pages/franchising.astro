@@ -64,7 +64,12 @@ import Franchising from "../islands/forms/Franchising.tsx";
           </div>
           <div class="stat">
             <p class="t-display stat__figure stat__figure--live" data-people-fed>400,000+</p>
-            <p class="t-caption stat__label">People fed</p>
+            <p class="t-caption stat__label">
+              People fed
+              <span class="stat__live"
+                ><span class="stat__live-dot" aria-hidden="true"></span>live</span
+              >
+            </p>
           </div>
         </div>
       </div>
@@ -409,6 +414,36 @@ import Franchising from "../islands/forms/Franchising.tsx";
   .stat__figure--live {
     font-variant-numeric: tabular-nums;
   }
+  .stat__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-left: var(--sp-2);
+    color: var(--color-ink);
+  }
+  .stat__live-dot {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--color-ink);
+    animation: stat-live-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes stat-live-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.7);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stat__live-dot {
+      animation: none;
+    }
+  }
 
   /* Provisions */
   .provisions__list {
@@ -523,8 +558,8 @@ import Franchising from "../islands/forms/Franchising.tsx";
   // swaps in the live figure, counts up on first view (skipped under
   // prefers-reduced-motion), then re-renders every 30s so lingering
   // visitors see it tick (+1 roughly every 4.8 minutes).
-  const COUNT_UP_MS = 1200;
-  const COUNT_UP_RUNWAY = 150;
+  const COUNT_UP_MS = 2200;
+  const COUNT_UP_RUNWAY = 10_000;
 
   function initPeopleFed() {
     const el = document.querySelector("[data-people-fed]");

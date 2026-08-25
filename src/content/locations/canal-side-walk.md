@@ -6,7 +6,7 @@ addressLines:
   - Paddington Basin
   - London
 postcode: W2 1AS
-coordinates: [-0.1748, 51.5187]
+coordinates: [-0.173326, 51.518829]
 brandsOnPitch:
   - burgers
 openingHours:

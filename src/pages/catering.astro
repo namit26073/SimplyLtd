@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import { Image } from "astro:assets";
 import cateringHero from "../assets/placeholders/catering-hero.jpg";
 import Catering from "../islands/forms/Catering.tsx";
+import ClientMarquee from "../components/ClientMarquee.astro";
 ---
 
 <Base
@@ -63,7 +64,8 @@ import Catering from "../islands/forms/Catering.tsx";
             <p class="t-display reason__numeral" aria-hidden="true">02</p>
             <h3 class="t-display reason__title">A range of cuisines.</h3>
             <p class="t-body reason__body">
-              Falafel, shawarma, smash burgers. Pick one concept or combine for variety.
+              Falafel, shawarma, a full Lebanese spread, smash burgers. Pick one concept or combine
+              for variety.
             </p>
           </li>
           <li class="reason">
@@ -128,6 +130,17 @@ import Catering from "../islands/forms/Catering.tsx";
             </p>
           </li>
         </ul>
+
+        <ClientMarquee
+          clients={[
+            { name: "Battersea Power Station" },
+            { name: "Hyde Park Winter Wonderland" },
+            { name: "Underbelly Festival" },
+            { name: "IMG Events" },
+            { name: "Sony" },
+            { name: "Chiswick Business Park" },
+          ]}
+        />
       </div>
     </section>
 

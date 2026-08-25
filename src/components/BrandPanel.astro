@@ -18,27 +18,36 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
   data-brand={brand.slug}
   aria-labelledby={`panel-${brand.slug}-heading`}
 >
-  {brand.showcaseImage ? (
-    <div class="panel__photo-wrap" aria-hidden="true">
-      <Image
-        src={brand.showcaseImage}
-        alt=""
-        class="panel__photo"
-        widths={[400, 600, 800, 1200]}
-        sizes="(min-width: 900px) 33vw, 80vw"
-        loading="lazy"
-        quality={75}
-      />
-    </div>
-  ) : null}
+  {
+    brand.showcaseImage ? (
+      <div class="panel__photo-wrap" aria-hidden="true">
+        <Image
+          src={brand.showcaseImage}
+          alt=""
+          class="panel__photo"
+          widths={[400, 600, 800, 1200]}
+          sizes="(min-width: 900px) 33vw, 80vw"
+          loading="lazy"
+          quality={75}
+        />
+      </div>
+    ) : null
+  }
 
   <div class="panel__content">
     <p class="t-caption panel__kicker">Simply</p>
     <h3 id={`panel-${brand.slug}-heading`} class="t-display panel__wordmark">{wordmark}</h3>
     <p class="t-body panel__tagline">{brand.tagline}</p>
-    {pitch && <p class="t-caption panel__meta">{pitch.name} · {pitch.postcode}</p>}
+    {
+      pitch && (
+        <p class="t-caption panel__meta">
+          {pitch.name} · {pitch.postcode}
+        </p>
+      )
+    }
     <span class="panel__cta" aria-hidden="true">
-      Visit Simply {wordmark} <span class="panel__cta-arrow">→</span>
+      Visit Simply {wordmark}
+      <span class="panel__cta-arrow">→</span>
     </span>
   </div>
 </a>
@@ -55,6 +64,9 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     text-decoration: none;
     isolation: isolate;
     transition: transform var(--dur-base) var(--ease-out);
+    /* Wordmark scales with the card, not the viewport — five cards across
+       would otherwise clip the longer names (SHAWARMA, LEBANESE). */
+    container-type: inline-size;
   }
 
   .panel:hover,
@@ -161,7 +173,7 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
   }
 
   .panel__wordmark {
-    font-size: clamp(var(--fs-700), 6vw, var(--fs-800));
+    font-size: clamp(var(--fs-600), 17cqi, var(--fs-800));
     line-height: 0.86;
     letter-spacing: var(--ls-display-tight);
     text-transform: uppercase;

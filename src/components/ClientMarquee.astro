@@ -1,0 +1,137 @@
+---
+/**
+ * ClientMarquee — a slow, CSS-only scrolling strip of client names.
+ *
+ * The track is rendered twice so the loop is seamless (translateX(-50%)).
+ * Under prefers-reduced-motion the strip becomes a static wrapped row and
+ * the clones are hidden. Screen readers get a plain list; the moving strip
+ * is aria-hidden so nothing is announced twice.
+ *
+ * Items are typographic wordmarks by default. Pass `logo` (an imported
+ * image) on any item to swap in a real logo — no template change needed.
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Client {
+  name: string;
+  logo?: ImageMetadata;
+}
+
+interface Props {
+  clients: Client[];
+  kicker?: string;
+  label?: string;
+}
+
+const {
+  clients,
+  kicker = "Some of the names we've fed",
+  label = "Clients we have catered for",
+} = Astro.props;
+---
+
+<div class="marquee" role="group" aria-label={label}>
+  <p class="t-caption marquee__kicker">{kicker}</p>
+
+  <ul class="visually-hidden">
+    {clients.map((c) => <li>{c.name}</li>)}
+  </ul>
+
+  <div class="marquee__viewport" aria-hidden="true">
+    <div class="marquee__track">
+      {
+        [false, true].map((clone) =>
+          clients.map((c) => (
+            <span class:list={["marquee__item", { "marquee__item--clone": clone }]}>
+              {c.logo ? (
+                <Image src={c.logo} alt="" height={40} class="marquee__logo" loading="lazy" />
+              ) : (
+                <span class="marquee__wordmark">{c.name}</span>
+              )}
+            </span>
+          )),
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    margin-top: var(--sp-6);
+  }
+
+  .marquee__kicker {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-3);
+    text-align: center;
+  }
+
+  .marquee__viewport {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 42s linear infinite;
+  }
+
+  .marquee__viewport:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  /* Items carry their own trailing space (not `gap`) so the doubled track is
+     exactly 2× wide and translateX(-50%) loops without a visible seam. */
+  .marquee__item {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    margin-inline-end: var(--sp-7);
+  }
+
+  .marquee__wordmark {
+    font-family: var(--ff-display-stack);
+    font-size: var(--fs-500);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-display-tight);
+    color: var(--color-ink);
+    opacity: 0.72;
+    white-space: nowrap;
+  }
+
+  :global(.marquee__logo) {
+    height: 40px;
+    width: auto;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__viewport {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee__track {
+      animation: none;
+      width: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: var(--sp-3);
+    }
+    .marquee__item--clone {
+      display: none;
+    }
+  }
+</style>

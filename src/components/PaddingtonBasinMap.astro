@@ -1,12 +1,45 @@
 ---
 /**
  * Interactive map of Paddington Basin via Leaflet + OpenStreetMap tiles.
- * No API key, no billing, no Google branding. Two pitch markers:
- *   - Merchant Square (W2 1PW) — Falafel + Shawarma
- *   - Canal Side Walk (W2 1AS) — Burgers
+ * No API key, no billing, no Google branding.
  *
- * Coordinates from CLAUDE.md owner-confirmed pitches (2026-05-16).
+ * Pins come from the `locations` content collection (single source of truth)
+ * — coordinates are postcode centroids verified against postcodes.io on
+ * 2026-08-25. Each popup offers a "Get directions" hand-off by address.
  */
+import type { CollectionEntry } from "astro:content";
+import { directionsUrl } from "../lib/directions";
+
+interface Props {
+  locations: CollectionEntry<"locations">["data"][];
+  /** Brand display names per location slug, e.g. { "merchant-square": ["Simply Falafel", …] }. */
+  brandNamesBySlug: Record<string, string[]>;
+}
+
+const { locations, brandNamesBySlug } = Astro.props;
+
+const ACCENT: Record<string, string> = {
+  "merchant-square": "green",
+  "canal-side-walk": "red",
+};
+
+const pins = locations.map((loc) => ({
+  lat: loc.coordinates[1],
+  lng: loc.coordinates[0],
+  label: loc.name,
+  accent: ACCENT[loc.slug] ?? "ink",
+  brands: (brandNamesBySlug[loc.slug] ?? []).join(" + "),
+  postcode: loc.postcode,
+  directions: directionsUrl(loc.addressLines, loc.postcode),
+}));
+
+const center =
+  pins.length > 0
+    ? [
+        pins.reduce((s, p) => s + p.lat, 0) / pins.length,
+        pins.reduce((s, p) => s + p.lng, 0) / pins.length,
+      ]
+    : [51.519, -0.1748];
 ---
 
 <div class="basin-map">
@@ -14,10 +47,13 @@
     id="basin-map"
     class="basin-map__canvas"
     role="application"
-    aria-label="Paddington Basin pitch map — two Simply Ltd locations marked"
-  ></div>
+    aria-label={`Paddington Basin pitch map — ${pins.length} Simply Ltd locations marked`}
+    data-pins={JSON.stringify(pins)}
+    data-center={JSON.stringify(center)}
+  >
+  </div>
   <p class="basin-map__caption t-caption">
-    Two pitches on Paddington Basin, about 250 metres apart.
+    {pins.length} pitches on Paddington Basin, about 250 metres apart. Tap a pin for directions.
   </p>
 </div>
 
@@ -86,15 +122,38 @@
     display: block;
     margin-bottom: var(--sp-1);
   }
+  :global(.leaflet-popup-content .basin-directions) {
+    display: inline-block;
+    margin-top: var(--sp-2);
+    font-weight: var(--fw-strong);
+    color: var(--color-ink);
+    text-underline-offset: 0.15em;
+  }
 </style>
 
 <script>
   import L from "leaflet";
 
-  const container = document.getElementById("basin-map");
-  if (container) {
+  interface Pin {
+    lat: number;
+    lng: number;
+    label: string;
+    accent: string;
+    brands: string;
+    postcode: string;
+    directions: string;
+  }
+
+  function initBasinMap() {
+    const container = document.getElementById("basin-map");
+    if (!(container instanceof HTMLElement) || container.dataset.ready) return;
+    container.dataset.ready = "true";
+
+    const pins = JSON.parse(container.dataset.pins ?? "[]") as Pin[];
+    const center = JSON.parse(container.dataset.center ?? "[51.519, -0.1748]") as [number, number];
+
     const map = L.map(container, {
-      center: [51.51895, -0.1758],
+      center,
       zoom: 17,
       scrollWheelZoom: false,
       zoomControl: true,
@@ -102,43 +161,27 @@
     });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
     }).addTo(map);
-
-    const pins: Array<{
-      lat: number;
-      lng: number;
-      label: string;
-      className: string;
-      popup: string;
-    }> = [
-      {
-        lat: 51.5193,
-        lng: -0.1768,
-        label: "Merchant Square",
-        className: "basin-pin basin-pin--green",
-        popup:
-          "<strong>Merchant Square</strong>Simply Falafel + Simply Shawarma<br/>W2 1PW",
-      },
-      {
-        lat: 51.5187,
-        lng: -0.1748,
-        label: "Canal Side Walk",
-        className: "basin-pin basin-pin--red",
-        popup: "<strong>Canal Side Walk</strong>Simply Burgers<br/>W2 1AS",
-      },
-    ];
 
     for (const p of pins) {
       const icon = L.divIcon({
         className: "",
-        html: `<span class="${p.className}">${p.label}</span>`,
+        html: `<span class="basin-pin basin-pin--${p.accent}">${p.label}</span>`,
         iconSize: [0, 0],
         iconAnchor: [0, 0],
       });
-      L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(p.popup);
+      L.marker([p.lat, p.lng], { icon })
+        .addTo(map)
+        .bindPopup(
+          `<strong>${p.label}</strong>${p.brands}<br/>${p.postcode}<br/>` +
+            `<a class="basin-directions" href="${p.directions}" target="_blank" rel="noopener noreferrer">Get directions ↗</a>`,
+        );
     }
   }
+
+  initBasinMap();
+  // ClientRouter swaps the DOM without re-running module scripts — re-init on navigation.
+  document.addEventListener("astro:page-load", initBasinMap);
 </script>

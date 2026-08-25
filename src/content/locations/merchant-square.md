@@ -6,7 +6,7 @@ addressLines:
   - Paddington Basin
   - London
 postcode: W2 1PW
-coordinates: [-0.1768, 51.5193]
+coordinates: [-0.176271, 51.519082]
 brandsOnPitch:
   - falafel
   - shawarma

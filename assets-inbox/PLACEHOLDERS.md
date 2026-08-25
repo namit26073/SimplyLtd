@@ -127,3 +127,8 @@ These are NOT placeholders — they're real assets to use:
 The owner's raster logos have a cartoon-mascot style (chef characters, food characters). They're charming but inconsistent with each other and not professional-grade. **Do not lean on them as the primary brand identity.** The previous build observed that the owner's truck-side branding (a clean black + leaf-icon + white wordmark on the actual physical trucks) is a stronger system — lift that to the parent brand identity rather than reinvent.
 
 If you need a parent-brand wordmark, design one in code (CSS) using a heavy condensed sans (Anton, Druk, Knockout, Tungsten — Anton is free). "SIMPLY." in poster-display caps is the safest interpretation.
+
+- `src/assets/placeholders/showcase-lebanese.jpg` — frame at 12 s from the owner's own `assets-inbox/videos/ShawarmaVid.mp4` (real kitchen footage, not stock)
+  - Why placeholder: no Simply Lebanese photography yet; owner asked for the brand to be shown (2026-08-25)
+  - Swap plan: owner photography of the Lebanese offering; the `/lebanese/` hero + behind-counter reuse `shawarma-truck.mp4` for the same reason
+  - Used on: /lebanese/ hero, brand showcase tile, About "Meet the fleet"

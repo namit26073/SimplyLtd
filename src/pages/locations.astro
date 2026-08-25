@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PaddingtonBasinMap from "../components/PaddingtonBasinMap.astro";
+import { directionsUrl } from "../lib/directions";
 
 const locations = await getCollection("locations");
 const brands = await getCollection("brands");
@@ -11,6 +12,13 @@ const brandNameBySlug = Object.fromEntries(brands.map((b) => [b.data.slug, b.dat
 
 const orderedLocations = locations.sort((a, b) =>
   a.data.slug === "merchant-square" ? -1 : b.data.slug === "merchant-square" ? 1 : 0,
+);
+
+const brandNamesByLocation = Object.fromEntries(
+  orderedLocations.map((l) => [
+    l.data.slug,
+    l.data.brandsOnPitch.map((slug) => brandNameBySlug[slug]).filter(Boolean),
+  ]),
 );
 ---
 
@@ -35,7 +43,10 @@ const orderedLocations = locations.sort((a, b) =>
 
     <section class="locations-map" aria-label="Map of Paddington Basin">
       <div class="locations-map__inner">
-        <PaddingtonBasinMap />
+        <PaddingtonBasinMap
+          locations={orderedLocations.map((l) => l.data)}
+          brandNamesBySlug={brandNamesByLocation}
+        />
       </div>
     </section>
 
@@ -88,6 +99,17 @@ const orderedLocations = locations.sort((a, b) =>
                   {location.data.notes && (
                     <p class="t-body location-card__notes">{location.data.notes}</p>
                   )}
+
+                  <a
+                    class="location-card__directions"
+                    href={directionsUrl(location.data.addressLines, location.data.postcode)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Get directions
+                    <span aria-hidden="true">↗</span>
+                    <span class="visually-hidden">(opens in a new tab)</span>
+                  </a>
                 </li>
               );
             })
@@ -261,6 +283,35 @@ const orderedLocations = locations.sort((a, b) =>
     color: var(--color-text-muted);
     font-size: var(--fs-200);
     max-width: 40ch;
+  }
+
+  .location-card__directions {
+    margin-top: auto;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caption);
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .location-card__directions:hover,
+  .location-card__directions:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .location-card__directions:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
   }
 
   /* Bottom CTA */

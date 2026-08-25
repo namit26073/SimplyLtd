@@ -7,10 +7,21 @@ introDek: >-
   events that want a full Levantine spread.
 cuisine: Combined Lebanese
 voice: Rooted, family-table-feel, hospitable
-visible: false
+establishedYear: 2023
+visible: true
+showcaseImage: ../../assets/placeholders/showcase-lebanese.jpg
+heroImage: ../../assets/placeholders/showcase-lebanese.jpg
+heroVideo: /videos/shawarma-truck.mp4
+behindCounterVideo: /videos/shawarma-truck.mp4
+dietary:
+  - vegetarian
+  - halal
 order: 3
 ---
 
-Combines the best of our Falafel and Shawarma offerings into a single Levantine experience. Currently
-off public rota — primarily catered to events. Get in touch via the catering page if you'd like to
-book.
+Everything we learned on the Falafel and Shawarma trucks, laid out the way a Lebanese table is
+meant to be: mezze to share, wraps and plates for the table, and enough of everything that nobody
+has to choose.
+
+Pitch details are coming soon. In the meantime, Simply Lebanese is the spread we bring to
+events — get in touch via the catering page to book it.
