@@ -24,32 +24,30 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
       </div>
     </section>
 
-    {/* The fleet, in one frame ---------------------------------------------- */}
-    <section class="about-photo" aria-label="The Simply fleet">
-      <figure class="about-photo__figure">
-        <Image
-          src={fleetPhoto}
-          alt="The owner of Simply standing with arms folded in front of the four Simply trucks — Shawarma, Falafel, Lebanese and Burgers — their signs lit up at dusk beside glass office buildings"
-          class="about-photo__img"
-          widths={[640, 1024, 1440, 1920, 2400]}
-          sizes="(min-width: 1280px) 1200px, 100vw"
-          loading="eager"
-          fetchpriority="high"
-          quality={78}
-        />
-        <figcaption class="t-caption about-photo__caption">
-          The fleet, and the owner who started it with one truck.
-        </figcaption>
-      </figure>
-    </section>
-
-    {/* Origin story --------------------------------------------------------- */}
+    {/* Origin story — heading + photo plate beside the prose ---------------- */}
     <section class="origin" aria-labelledby="origin-heading">
       <div class="origin__inner">
-        <header class="origin__header">
-          <p class="t-caption">The story</p>
-          <h2 id="origin-heading" class="t-display origin__heading">How it grew.</h2>
-        </header>
+        <div class="origin__aside">
+          <header class="origin__header">
+            <p class="t-caption">The story</p>
+            <h2 id="origin-heading" class="t-display origin__heading">How it grew.</h2>
+          </header>
+
+          <figure class="origin__figure">
+            <Image
+              src={fleetPhoto}
+              alt="The owner of Simply standing with arms folded in front of the four Simply trucks — Shawarma, Falafel, Lebanese and Burgers — their signs lit up at dusk beside glass office buildings"
+              class="origin__img"
+              widths={[480, 720, 960, 1446]}
+              sizes="(min-width: 900px) 40vw, (min-width: 720px) 640px, 100vw"
+              loading="lazy"
+              quality={78}
+            />
+            <figcaption class="t-caption origin__caption">
+              The fleet, and the owner who started it with one truck.
+            </figcaption>
+          </figure>
+        </div>
 
         <div class="t-prose origin__prose">
           <p>
@@ -212,27 +210,8 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
   }
 
-  /* Fleet photo */
-  .about-photo {
-    padding: 0 var(--page-gutter) var(--sp-6);
-    background: var(--color-cream);
-  }
-  .about-photo__figure {
-    max-width: var(--page-max);
-    margin: 0 auto;
-  }
-  :global(.about-photo__img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: var(--r-lg);
-  }
-  .about-photo__caption {
-    margin-top: var(--sp-3);
-    color: var(--color-text-muted);
-  }
-
-  /* Origin */
+  /* Origin — heading and photo plate on the left, prose on the right.
+     Below 900px it stacks: heading, photo, then the story. */
   .origin {
     padding: var(--sp-7) var(--page-gutter);
     background: var(--color-cream);
@@ -247,9 +226,35 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
   }
   @media (min-width: 900px) {
     .origin__inner {
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
       gap: var(--sp-7);
+      align-items: start;
     }
+  }
+  .origin__figure {
+    /* Explicit sides: the UA gives <figure> 40px side margins by default. */
+    margin: var(--sp-5) 0 0;
+    max-width: 40rem;
+  }
+  @media (min-width: 900px) {
+    .origin__figure {
+      max-width: none;
+    }
+  }
+  :global(.origin__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+  }
+  .origin__caption {
+    margin-top: var(--sp-3);
+    padding-top: var(--sp-2);
+    border-top: 2px solid var(--color-ink);
+    max-width: 32ch;
+    color: var(--color-text-muted);
   }
   .origin__heading {
     font-size: clamp(var(--fs-600), 6vw, var(--fs-700));
