@@ -45,7 +45,7 @@ const {
           clients.map((c) => (
             <span class:list={["marquee__item", { "marquee__item--clone": clone }]}>
               {c.logo ? (
-                <Image src={c.logo} alt="" height={40} class="marquee__logo" loading="lazy" />
+                <Image src={c.logo} alt="" height={80} class="marquee__logo" loading="lazy" />
               ) : (
                 <span class="marquee__wordmark">{c.name}</span>
               )}
@@ -104,9 +104,13 @@ const {
     white-space: nowrap;
   }
 
+  /* Real logos render at 40px (from 80px assets for retina) in a single ink
+     tone so six different brand palettes read as one calm strip. */
   :global(.marquee__logo) {
     height: 40px;
     width: auto;
+    filter: grayscale(1) contrast(1.15);
+    opacity: 0.72;
   }
 
   @keyframes marquee-scroll {

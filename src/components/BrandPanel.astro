@@ -74,6 +74,17 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     transform: translateY(-4px);
   }
 
+  /* In narrow slots (five-across on ~1100–1300px screens) the bottom-anchored
+     text block outgrows a 3:4 card and clips the wordmark — go taller. */
+  @container (max-width: 250px) {
+    .panel {
+      aspect-ratio: 3 / 5;
+    }
+    .panel__tagline {
+      font-size: var(--fs-200);
+    }
+  }
+
   /* Photo wrap — top half of the panel only, no internal mask. The
      content box below has its own backdrop gradient (transparent at top,
      ramping to solid accent within ~46px) which handles the blend from
@@ -154,7 +165,7 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
     position: absolute;
     inset: auto 0 0 0;
     z-index: 2;
-    padding: var(--sp-5);
+    padding: clamp(var(--sp-3), 10cqi, var(--sp-5));
     display: flex;
     flex-direction: column;
     gap: var(--sp-1);
@@ -173,7 +184,9 @@ const wordmark = brand.name.replace(/^Simply\s+/i, "");
   }
 
   .panel__wordmark {
-    font-size: clamp(var(--fs-600), 17cqi, var(--fs-800));
+    /* 18cqi with 10cqi side padding keeps an 8-letter wordmark (SHAWARMA,
+       LEBANESE) inside the card at every width — measured, not eyeballed. */
+    font-size: clamp(var(--fs-600), 18cqi, var(--fs-800));
     line-height: 0.86;
     letter-spacing: var(--ls-display-tight);
     text-transform: uppercase;

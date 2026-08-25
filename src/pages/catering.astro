@@ -4,6 +4,12 @@ import { Image } from "astro:assets";
 import cateringHero from "../assets/placeholders/catering-hero.jpg";
 import Catering from "../islands/forms/Catering.tsx";
 import ClientMarquee from "../components/ClientMarquee.astro";
+import logoBattersea from "../assets/clients/battersea-power-station.png";
+import logoWinterWonderland from "../assets/clients/hyde-park-winter-wonderland.png";
+import logoUnderbelly from "../assets/clients/underbelly-festival.png";
+import logoImg from "../assets/clients/img.png";
+import logoSony from "../assets/clients/sony.png";
+import logoChiswick from "../assets/clients/chiswick-park.png";
 ---
 
 <Base
@@ -133,12 +139,12 @@ import ClientMarquee from "../components/ClientMarquee.astro";
 
         <ClientMarquee
           clients={[
-            { name: "Battersea Power Station" },
-            { name: "Hyde Park Winter Wonderland" },
-            { name: "Underbelly Festival" },
-            { name: "IMG Events" },
-            { name: "Sony" },
-            { name: "Chiswick Business Park" },
+            { name: "Battersea Power Station", logo: logoBattersea },
+            { name: "Hyde Park Winter Wonderland", logo: logoWinterWonderland },
+            { name: "Underbelly Festival", logo: logoUnderbelly },
+            { name: "IMG Events", logo: logoImg },
+            { name: "Sony", logo: logoSony },
+            { name: "Chiswick Business Park", logo: logoChiswick },
           ]}
         />
       </div>

@@ -292,9 +292,16 @@ import Base from "../layouts/Base.astro";
     grid-template-columns: 1fr;
     gap: var(--sp-3);
   }
+  /* Four tiles: 2-up on tablets, 4-up on wide screens; minmax(0, …) stops a
+     long wordmark from widening a column past the viewport. */
   @media (min-width: 720px) {
     .fleet__grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .fleet__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
   .fleet__item {
@@ -303,6 +310,7 @@ import Base from "../layouts/Base.astro";
     border-radius: var(--r-lg);
     overflow: hidden;
     transition: transform var(--dur-base) var(--ease-out);
+    container-type: inline-size;
   }
   .fleet__item:has(.fleet__link:hover),
   .fleet__item:has(.fleet__link:focus-visible) {
@@ -322,7 +330,8 @@ import Base from "../layouts/Base.astro";
     outline-offset: 3px;
   }
   .fleet__wordmark {
-    font-size: var(--fs-700);
+    /* Scales with the tile so "SHAWARMA"/"LEBANESE" fit at tablet widths. */
+    font-size: clamp(var(--fs-500), 16cqi, var(--fs-700));
     line-height: 0.92;
     text-transform: uppercase;
     letter-spacing: var(--ls-display-tight);

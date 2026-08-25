@@ -85,6 +85,15 @@ const brandsWithPitches = await Promise.all(
 
   .showcase__cell {
     scroll-snap-align: start;
+    /* Lets the cards query their own slot width (see BrandPanel/ComingSoonPanel). */
+    container-type: inline-size;
+  }
+
+  /* Tablets: two cards visible instead of one giant one. */
+  @media (min-width: 600px) {
+    .showcase__rail {
+      grid-auto-columns: 46%;
+    }
   }
 
   /* Five cards: tablets keep the snap rail with ~3 visible; wide screens lay
@@ -95,11 +104,13 @@ const brandsWithPitches = await Promise.all(
       gap: var(--sp-4);
     }
   }
-  @media (min-width: 1100px) {
+  @media (min-width: 1200px) {
     .showcase__rail {
       grid-auto-columns: unset;
       grid-auto-flow: row;
-      grid-template-columns: repeat(5, 1fr);
+      /* minmax(0, …) lets columns shrink below their content's min width, so a
+         long wordmark can never push the last card past the viewport edge. */
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       overflow: visible;
     }
   }

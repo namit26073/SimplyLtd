@@ -52,6 +52,13 @@ const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
     transform: translateY(-4px);
   }
 
+  /* Match BrandPanel's taller ratio in narrow slots so the row stays level. */
+  @container (max-width: 250px) {
+    .coming-panel {
+      aspect-ratio: 3 / 5;
+    }
+  }
+
   /* The outline paints outside the card onto the showcase's cream ground,
      so it must be ink, not cream, to stay visible (WCAG 2.4.7). */
   .coming-panel:focus-visible {
