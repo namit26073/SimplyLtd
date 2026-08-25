@@ -120,7 +120,8 @@ const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
 
   .coming-panel__name {
     font-size: clamp(var(--fs-600), 18cqi, var(--fs-800));
-    line-height: 0.86;
+    /* Two-line name: 0.86 (the single-line wordmark leading) collides. */
+    line-height: 1;
     text-wrap: balance; /* "SMASH / ME UP", like the logo's lockup, when it wraps */
     letter-spacing: var(--ls-display-tight);
     text-transform: uppercase;
