@@ -284,14 +284,13 @@ import Franchising from "../islands/forms/Franchising.tsx";
     .franchise-hero__content {
       padding: var(--sp-7) var(--page-gutter);
     }
-    .franchise-hero__content > * {
+    /* Named selectors, not `> *` — see Hero.astro for why. */
+    .franchise-hero__kicker,
+    .franchise-hero__heading {
       max-width: 22ch;
     }
     .franchise-hero__dek {
       max-width: 38ch;
-    }
-    .franchise-hero__cta {
-      max-width: none;
     }
   }
   .franchise-hero__kicker {

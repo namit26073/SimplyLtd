@@ -12,7 +12,10 @@ visible: true
 showcaseImage: ../../assets/placeholders/showcase-lebanese.jpg
 heroImage: ../../assets/placeholders/showcase-lebanese.jpg
 heroVideo: /videos/shawarma-truck.mp4
-behindCounterVideo: /videos/shawarma-truck.mp4
+storyHeading: Laid out like a Lebanese table.
+behindCounterImage: ../../assets/photos/lebanese-still.jpg
+behindCounterAlt: "A takeaway box held up outside the truck — a grilled wrap, falafel and a pot of sauce."
+behindCounterCaption: "Boxed for the table. Simply Lebanese, from the Merchant Square trucks."
 dietary:
   - vegetarian
   - halal
@@ -24,4 +27,4 @@ meant to be: mezze to share, wraps and plates for the table, and enough of every
 has to choose.
 
 Pitch details are coming soon. In the meantime, Simply Lebanese is the spread we bring to
-events — get in touch via the catering page to book it.
+events — [get in touch via the catering page](/catering/) to book it.

@@ -21,9 +21,12 @@ const brands = defineCollection({
       heroImage: image().optional(),
       heroVideo: z.string().optional(),
       showcaseImage: image().optional(),
-      behindCounterVideo: z.string().optional(),
+      /** Heading for the brand page's story section; the markdown body is its copy. */
+      storyHeading: z.string().max(60).default("Everything is prepared on the truck."),
+      /** Still beside the story — a frame from the owner's footage or a real photo. */
       behindCounterImage: image().optional(),
       behindCounterAlt: z.string().optional(),
+      behindCounterCaption: z.string().max(90).optional(),
       dietary: z.array(z.enum(dietaryTags)).optional(),
       order: z.number().int().default(0),
     }),

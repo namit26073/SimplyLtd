@@ -30,24 +30,18 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
       fetchpriority="high"
       quality={75}
     />
-    <video
-      class="hero__video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      poster=""
-    >
+    <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="">
       <source src="/videos/home-hero.mp4" type="video/mp4" />
     </video>
     <div class="hero__mask"></div>
   </div>
 
-  {/* WCAG 2.2.2 (Pause, Stop, Hide) — user must be able to stop the
+  {
+    /* WCAG 2.2.2 (Pause, Stop, Hide) — user must be able to stop the
       autoplaying hero video. Toggle is reachable in Tab order and labelled
       for screen readers. Hidden if the system already prefers reduced
-      motion (video is display:none in that case via the media query). */}
+      motion (video is display:none in that case via the media query). */
+  }
   <button class="hero__media-toggle" type="button" aria-pressed="false">
     <span class="hero__media-toggle-icon hero__media-toggle-icon--pause" aria-hidden="true">
       <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
@@ -57,7 +51,8 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     </span>
     <span class="hero__media-toggle-icon hero__media-toggle-icon--play" aria-hidden="true">
       <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-        <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z"></path>
+        <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z"
+        ></path>
       </svg>
     </span>
     <span class="hero__media-toggle-label">Pause background video</span>
@@ -141,27 +136,25 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     position: absolute;
     inset: 0;
     z-index: 2;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-ink) 30%, transparent) 0%,
-        color-mix(in srgb, var(--color-ink) 45%, transparent) 40%,
-        color-mix(in srgb, var(--color-ink) 78%, transparent) 80%,
-        color-mix(in srgb, var(--color-ink) 90%, transparent) 100%
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-ink) 30%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 45%, transparent) 40%,
+      color-mix(in srgb, var(--color-ink) 78%, transparent) 80%,
+      color-mix(in srgb, var(--color-ink) 90%, transparent) 100%
+    );
   }
 
   @media (min-width: 900px) {
     /* Desktop: keep the dark anchor on the left where the type sits */
     .hero__mask {
-      background:
-        linear-gradient(
-          100deg,
-          color-mix(in srgb, var(--color-ink) 88%, transparent) 0%,
-          color-mix(in srgb, var(--color-ink) 64%, transparent) 40%,
-          color-mix(in srgb, var(--color-ink) 18%, transparent) 80%,
-          transparent 100%
-        );
+      background: linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--color-ink) 88%, transparent) 0%,
+        color-mix(in srgb, var(--color-ink) 64%, transparent) 40%,
+        color-mix(in srgb, var(--color-ink) 18%, transparent) 80%,
+        transparent 100%
+      );
     }
   }
 
@@ -179,11 +172,13 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     .hero__content {
       padding: var(--sp-7) var(--page-gutter);
     }
-    .hero__content > * {
+    /* Named selectors, not `> *`: Astro's scoping attribute gives a
+       universal-child rule higher specificity than a class override, which
+       used to cap the CTA row at 22ch and wrap the pill onto two lines. */
+    .hero__kicker,
+    .hero__heading {
       max-width: 22ch;
     }
-    .hero__dek { max-width: 38ch; }
-    .hero__ctas { max-width: none; }
   }
 
   .hero__kicker {
@@ -214,8 +209,14 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
   }
 
   @keyframes fade-up {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .hero__ctas {
@@ -239,8 +240,9 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     letter-spacing: var(--ls-caption);
     text-decoration: none;
     border-radius: var(--r-pill);
-    transition: transform var(--dur-fast) var(--ease-out),
-                background var(--dur-fast) var(--ease-out);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
   }
 
   .hero__cta--primary {
@@ -302,8 +304,9 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     text-transform: uppercase;
     letter-spacing: var(--ls-caption);
     cursor: pointer;
-    transition: background var(--dur-fast) var(--ease-out),
-                border-color var(--dur-fast) var(--ease-out);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
   }
   .hero__media-toggle:hover,
   .hero__media-toggle:focus-visible {
@@ -315,9 +318,15 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
     line-height: 0;
   }
   /* Pause icon shows while video is playing; play icon shows while paused. */
-  .hero__media-toggle .hero__media-toggle-icon--play { display: none; }
-  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--pause { display: none; }
-  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--play { display: inline-flex; }
+  .hero__media-toggle .hero__media-toggle-icon--play {
+    display: none;
+  }
+  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--pause {
+    display: none;
+  }
+  .hero__media-toggle[aria-pressed="true"] .hero__media-toggle-icon--play {
+    display: inline-flex;
+  }
   .hero__media-toggle-label {
     /* Visible label keeps the toggle obvious; auto-hide on small screens via
        responsive rule below if it crowds the type. */
@@ -342,8 +351,12 @@ import homeHeroPoster from "../assets/placeholders/home-hero.jpg";
   /* Reduced motion: hide the video AND the toggle (no autoplay = no need
      for a stop control). Poster persists as a permanent still. */
   @media (prefers-reduced-motion: reduce) {
-    .hero__video { display: none; }
-    .hero__media-toggle { display: none; }
+    .hero__video {
+      display: none;
+    }
+    .hero__media-toggle {
+      display: none;
+    }
     .hero__heading,
     .hero__ctas {
       animation: none;

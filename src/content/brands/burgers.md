@@ -11,8 +11,10 @@ visible: true
 primaryPitchSlug: canal-side-walk
 showcaseImage: ../../assets/placeholders/showcase-burgers.jpg
 heroImage: ../../assets/placeholders/showcase-burgers.jpg
-behindCounterImage: ../../assets/placeholders/burgers-behind-counter.jpg
-behindCounterAlt: "Six smash patties cooking on the truck's commercial flat-top grill, mid-service, steam rising."
+storyHeading: Smash, sauce, bun.
+behindCounterImage: ../../assets/photos/burgers-still.jpg
+behindCounterAlt: "A double smash burger with melted American cheese, pickles and shredded lettuce on a brioche bun, sitting on a wooden board."
+behindCounterCaption: "The double. Simply Burgers, Canal Side Walk."
 dietary: []
 order: 4
 ---

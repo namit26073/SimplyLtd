@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import type { GetStaticPaths } from "astro";
@@ -17,9 +17,11 @@ export const getStaticPaths = (async () => {
 const { entry } = Astro.props;
 const brand = entry.data;
 const wordmark = brand.name.replace(/^Simply\s+/i, "");
+// The markdown body is the brand's own story; it renders in the story section.
+const { Content } = await render(entry);
 
 const pitch = brand.primaryPitchSlug
-  ? (await getEntry("locations", brand.primaryPitchSlug))?.data ?? null
+  ? ((await getEntry("locations", brand.primaryPitchSlug))?.data ?? null)
   : null;
 
 const allBrands = await getCollection("brands");
@@ -29,21 +31,34 @@ const otherBrands = allBrands
   .map((b) => b.data);
 
 const hoursEntries = pitch
-  ? (Object.entries(pitch.openingHours) as [string, string | undefined][]).filter(
-      ([, v]) => Boolean(v),
+  ? (Object.entries(pitch.openingHours) as [string, string | undefined][]).filter(([, v]) =>
+      Boolean(v),
     )
   : [];
 
-const hasVideo = Boolean(brand.behindCounterVideo);
-const hasBehindImage = !hasVideo && Boolean(brand.behindCounterImage);
-
 const hasHeroVideo = Boolean(brand.heroVideo);
 const hasHeroImage = Boolean(brand.heroImage);
+
+// Quick facts under the story copy. Only rows with real data render, so a
+// brand without a confirmed pitch or an established year just has fewer.
+const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const facts: { label: string; value: string }[] = [
+  ...(brand.establishedYear ? [{ label: "Since", value: String(brand.establishedYear) }] : []),
+  {
+    label: "Find us",
+    value: pitch ? `${pitch.name}, ${pitch.postcode}` : "Events only — pitch coming soon",
+  },
+  { label: "Cooking", value: brand.cuisine },
+  ...(brand.dietary?.length
+    ? [{ label: "Dietary", value: brand.dietary.map(capitalise).join(", ") }]
+    : []),
+];
 ---
 
 <Base title={brand.name} description={brand.tagline} brand={brand.slug}>
   <article class="brand-page">
-    {/* Hero ------------------------------------------------------------------
+    {
+      /* Hero ------------------------------------------------------------------
         Cinematic full-bleed treatment per sub-brand. Mirrors the homepage
         Hero pattern: poster image paints first (LCP), video reveals once
         buffered, brand-tinted gradient mask anchors the type column on the
@@ -51,53 +66,66 @@ const hasHeroImage = Boolean(brand.heroImage);
 
         Falafel + Shawarma use owner-provided kitchen footage as the v1
         heroVideo. Burgers + future AI-gen brand films swap in via the
-        `heroVideo` content field; no template change required. */}
+        `heroVideo` content field; no template change required. */
+    }
     <section class="brand-hero" aria-labelledby="brand-hero-heading">
       <div class="brand-hero__bg" aria-hidden="true">
-        {hasHeroImage && brand.heroImage ? (
-          <Image
-            src={brand.heroImage}
-            alt=""
-            class="brand-hero__poster"
-            widths={[640, 1024, 1440, 1920, 2400]}
-            sizes="100vw"
-            loading="eager"
-            fetchpriority="high"
-            quality={78}
-          />
-        ) : null}
-        {hasHeroVideo ? (
-          <video
-            class="brand-hero__video"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            poster=""
-          >
-            <source src={brand.heroVideo} type="video/mp4" />
-          </video>
-        ) : null}
+        {
+          hasHeroImage && brand.heroImage ? (
+            <Image
+              src={brand.heroImage}
+              alt=""
+              class="brand-hero__poster"
+              widths={[640, 1024, 1440, 1920, 2400]}
+              sizes="100vw"
+              loading="eager"
+              fetchpriority="high"
+              quality={78}
+            />
+          ) : null
+        }
+        {
+          hasHeroVideo ? (
+            <video
+              class="brand-hero__video"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster=""
+            >
+              <source src={brand.heroVideo} type="video/mp4" />
+            </video>
+          ) : null
+        }
         <div class="brand-hero__mask"></div>
       </div>
 
-      {hasHeroVideo && (
-        <button class="brand-hero__media-toggle" type="button" aria-pressed="false">
-          <span class="brand-hero__media-toggle-icon brand-hero__media-toggle-icon--pause" aria-hidden="true">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <rect x="3.5" y="2.5" width="3" height="11" rx="0.6"></rect>
-              <rect x="9.5" y="2.5" width="3" height="11" rx="0.6"></rect>
-            </svg>
-          </span>
-          <span class="brand-hero__media-toggle-icon brand-hero__media-toggle-icon--play" aria-hidden="true">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
-              <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z"></path>
-            </svg>
-          </span>
-          <span class="brand-hero__media-toggle-label">Pause background video</span>
-        </button>
-      )}
+      {
+        hasHeroVideo && (
+          <button class="brand-hero__media-toggle" type="button" aria-pressed="false">
+            <span
+              class="brand-hero__media-toggle-icon brand-hero__media-toggle-icon--pause"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                <rect x="3.5" y="2.5" width="3" height="11" rx="0.6" />
+                <rect x="9.5" y="2.5" width="3" height="11" rx="0.6" />
+              </svg>
+            </span>
+            <span
+              class="brand-hero__media-toggle-icon brand-hero__media-toggle-icon--play"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                <path d="M3.5 2.7c0-.6.7-1 1.2-.66l8.6 5.3c.5.3.5 1 0 1.32l-8.6 5.3c-.5.3-1.2 0-1.2-.66Z" />
+              </svg>
+            </span>
+            <span class="brand-hero__media-toggle-label">Pause background video</span>
+          </button>
+        )
+      }
 
       <div class="brand-hero__content">
         <p class="t-caption brand-hero__concept">Simply</p>
@@ -105,88 +133,78 @@ const hasHeroImage = Boolean(brand.heroImage);
         <p class="t-editorial t-editorial--italic brand-hero__dek">{brand.introDek}</p>
 
         <ul role="list" class="brand-hero__meta">
-          {pitch && <li class="t-caption">{pitch.name} · {pitch.postcode}</li>}
+          {
+            pitch && (
+              <li class="t-caption">
+                {pitch.name} · {pitch.postcode}
+              </li>
+            )
+          }
           <li class="t-caption">{brand.cuisine}</li>
           {brand.dietary?.map((tag) => <li class="t-caption">{tag}</li>)}
         </ul>
 
         <div class="brand-hero__ctas">
           <a href="/catering/" class="brand-hero__cta brand-hero__cta--primary">
-            Hire {brand.name} for your event
+            Hire us for your event
             <span aria-hidden="true">→</span>
           </a>
-          <a href="/locations/" class="brand-hero__cta brand-hero__cta--secondary">
-            Find us
-          </a>
+          <a href="/locations/" class="brand-hero__cta brand-hero__cta--secondary"> Find us </a>
         </div>
       </div>
     </section>
 
-    {/* Behind the counter ---------------------------------------------------- */}
-    <section class="behind-counter" aria-labelledby="behind-counter-heading">
-      <div class="behind-counter__inner">
-        <header class="behind-counter__header">
-          <p class="t-caption behind-counter__kicker">Behind the counter</p>
-          <h2 id="behind-counter-heading" class="t-display behind-counter__heading">
-            Everything is prepared on the truck.
-          </h2>
-        </header>
+    {
+      /* Story ----------------------------------------------------------------
+        The brand's own copy (markdown body) beside one still from the truck,
+        with a strip of quick facts. Same composition as the About page's
+        origin section: copy left, plate right, the two centred on each other
+        so neither side leaves a void. Phones stack heading → still → copy. */
+    }
+    <section class="story" aria-labelledby="story-heading">
+      <div class="story__inner">
+        <div class="story__copy">
+          <header class="story__header">
+            <p class="t-caption story__kicker">Behind the counter</p>
+            <h2 id="story-heading" class="t-display story__heading">{brand.storyHeading}</h2>
+          </header>
 
-        <div class="behind-counter__body">
-          <figure class="behind-counter__media">
-            {
-              hasVideo ? (
-                <>
-                  <video
-                    class="behind-counter__video"
-                    src={brand.behindCounterVideo}
-                    controls
-                    muted
-                    preload="metadata"
-                    playsinline
-                    aria-describedby="behind-counter-copy"
-                  >
-                    Your browser doesn't support inline video. Visit us at the truck instead.
-                  </video>
-                  <figcaption class="visually-hidden">
-                    Silent kitchen B-roll showing prep and service inside the {brand.name} truck.
-                    A text description of the kitchen follows.
-                  </figcaption>
-                </>
-              ) : hasBehindImage && brand.behindCounterImage ? (
-                <>
-                  <Image
-                    src={brand.behindCounterImage}
-                    alt={brand.behindCounterAlt ?? ""}
-                    class="behind-counter__image"
-                    widths={[640, 1024, 1440, 1920]}
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    loading="lazy"
-                    quality={78}
-                  />
-                  {brand.behindCounterAlt && (
-                    <figcaption class="visually-hidden">{brand.behindCounterAlt}</figcaption>
-                  )}
-                </>
-              ) : (
-                <div class="behind-counter__media-placeholder" role="img" aria-label={`Placeholder for behind-the-counter still — ${brand.name}`}>
-                  <span class="t-caption">Behind the counter</span>
-                </div>
-              )
-            }
-          </figure>
-
-          <div class="behind-counter__copy" id="behind-counter-copy">
-            <p class="t-body">
-              The {wordmark.toLowerCase()} kitchen is small. Two or three people, one prep bench, one
-              service window. That's the operating discipline — everything fresh, everything to
-              order, everything from the same team that's been doing it since 2019.
-            </p>
-            <p class="t-body">
-              The menu stays small on purpose: a few things, done properly.
-            </p>
+          <div class="t-prose story__prose">
+            <Content />
           </div>
+
+          <dl class="story__facts">
+            {
+              facts.map((fact) => (
+                <div class="story__fact">
+                  <dt class="t-caption story__fact-label">{fact.label}</dt>
+                  <dd class="story__fact-value">{fact.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
         </div>
+
+        {
+          brand.behindCounterImage && (
+            <figure class="story__figure">
+              <Image
+                src={brand.behindCounterImage}
+                alt={brand.behindCounterAlt ?? ""}
+                class="story__img"
+                widths={[360, 480, 640, 960]}
+                sizes="(min-width: 900px) 40vw, (min-width: 720px) 34rem, 100vw"
+                loading="lazy"
+                quality={80}
+              />
+              {brand.behindCounterCaption && (
+                <figcaption class="t-caption story__caption">
+                  {brand.behindCounterCaption}
+                </figcaption>
+              )}
+            </figure>
+          )
+        }
       </div>
     </section>
 
@@ -204,7 +222,9 @@ const hasHeroImage = Boolean(brand.heroImage);
 
             <div class="pitch__body">
               <address class="pitch__address t-body">
-                {pitch.addressLines.map((line) => <span>{line}</span>)}
+                {pitch.addressLines.map((line) => (
+                  <span>{line}</span>
+                ))}
                 <span class="pitch__postcode">{pitch.postcode}</span>
               </address>
 
@@ -253,7 +273,9 @@ const hasHeroImage = Boolean(brand.heroImage);
                 <li class="cross-links__item" data-brand={other.slug}>
                   <a href={`/${other.slug}/`} class="cross-links__link">
                     <p class="t-caption">Simply</p>
-                    <h3 class="t-display cross-links__wordmark">{other.name.replace(/^Simply\s+/i, "")}</h3>
+                    <h3 class="t-display cross-links__wordmark">
+                      {other.name.replace(/^Simply\s+/i, "")}
+                    </h3>
                     <p class="t-editorial t-editorial--italic cross-links__dek">{other.tagline}</p>
                     <span class="cross-links__arrow" aria-hidden="true">
                       Visit →
@@ -306,14 +328,18 @@ const hasHeroImage = Boolean(brand.heroImage);
     object-position: center center;
   }
 
-  .brand-hero__poster { z-index: 0; }
+  .brand-hero__poster {
+    z-index: 0;
+  }
 
   .brand-hero__video {
     z-index: 1;
     opacity: 0;
     transition: opacity var(--dur-slow) var(--ease-out);
   }
-  .brand-hero__video[data-ready] { opacity: 1; }
+  .brand-hero__video[data-ready] {
+    opacity: 1;
+  }
 
   /* Brand-tinted gradient mask. On mobile the in-flow content block sits in
      the upper third of the hero (padding-top sp-7 lands the kicker at
@@ -325,27 +351,25 @@ const hasHeroImage = Boolean(brand.heroImage);
     position: absolute;
     inset: 0;
     z-index: 2;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-accent) 88%, transparent) 0%,
-        color-mix(in srgb, var(--color-accent) 96%, transparent) 6%,
-        var(--color-accent) 12%,
-        var(--color-accent) 100%
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-accent) 88%, transparent) 0%,
+      color-mix(in srgb, var(--color-accent) 96%, transparent) 6%,
+      var(--color-accent) 12%,
+      var(--color-accent) 100%
+    );
   }
 
   @media (min-width: 900px) {
     .brand-hero__mask {
-      background:
-        linear-gradient(
-          100deg,
-          var(--color-accent) 0%,
-          var(--color-accent) 38%,
-          color-mix(in srgb, var(--color-accent) 88%, transparent) 52%,
-          color-mix(in srgb, var(--color-accent) 30%, transparent) 78%,
-          color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
-        );
+      background: linear-gradient(
+        100deg,
+        var(--color-accent) 0%,
+        var(--color-accent) 38%,
+        color-mix(in srgb, var(--color-accent) 88%, transparent) 52%,
+        color-mix(in srgb, var(--color-accent) 30%, transparent) 78%,
+        color-mix(in srgb, var(--color-accent) 0%, transparent) 100%
+      );
     }
   }
 
@@ -362,7 +386,11 @@ const hasHeroImage = Boolean(brand.heroImage);
     .brand-hero__content {
       padding: var(--sp-7) var(--page-gutter);
     }
-    .brand-hero__content > *:not(.brand-hero__ctas) {
+    /* Named selectors, not `> *` — see Hero.astro for why. */
+    .brand-hero__concept,
+    .brand-hero__wordmark,
+    .brand-hero__dek,
+    .brand-hero__meta {
       max-width: 32rem;
     }
   }
@@ -464,8 +492,9 @@ const hasHeroImage = Boolean(brand.heroImage);
     text-transform: uppercase;
     letter-spacing: var(--ls-caption);
     cursor: pointer;
-    transition: background var(--dur-fast) var(--ease-out),
-                border-color var(--dur-fast) var(--ease-out);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
   }
   .brand-hero__media-toggle:hover,
   .brand-hero__media-toggle:focus-visible {
@@ -476,9 +505,15 @@ const hasHeroImage = Boolean(brand.heroImage);
     display: inline-flex;
     line-height: 0;
   }
-  .brand-hero__media-toggle .brand-hero__media-toggle-icon--play { display: none; }
-  .brand-hero__media-toggle[aria-pressed="true"] .brand-hero__media-toggle-icon--pause { display: none; }
-  .brand-hero__media-toggle[aria-pressed="true"] .brand-hero__media-toggle-icon--play { display: inline-flex; }
+  .brand-hero__media-toggle .brand-hero__media-toggle-icon--play {
+    display: none;
+  }
+  .brand-hero__media-toggle[aria-pressed="true"] .brand-hero__media-toggle-icon--pause {
+    display: none;
+  }
+  .brand-hero__media-toggle[aria-pressed="true"] .brand-hero__media-toggle-icon--play {
+    display: inline-flex;
+  }
 
   @media (max-width: 559px) {
     .brand-hero__media-toggle-label {
@@ -500,105 +535,133 @@ const hasHeroImage = Boolean(brand.heroImage);
   /* Reduced motion: hide the autoplaying video and its control — poster
      persists as the permanent still. */
   @media (prefers-reduced-motion: reduce) {
-    .brand-hero__video { display: none; }
-    .brand-hero__media-toggle { display: none; }
+    .brand-hero__video {
+      display: none;
+    }
+    .brand-hero__media-toggle {
+      display: none;
+    }
   }
 
-  /* ---------- Behind the counter ---------- */
-  .behind-counter {
+  /* ---------- Story ---------- */
+  .story {
     padding: var(--sp-7) var(--page-gutter);
     background: var(--color-cream);
   }
 
-  .behind-counter__inner {
+  /* Source order is the phone order (heading, still, copy, facts). From
+     900px the copy stacks in a 7/12 column and the still takes 5/12, the two
+     centred against each other. */
+  .story__inner {
     max-width: var(--page-max);
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-5);
   }
 
-  .behind-counter__header {
-    margin-bottom: var(--sp-5);
-    max-width: var(--measure-prose);
+  .story__copy {
+    display: contents;
   }
 
-  .behind-counter__kicker {
+  .story__header {
+    order: 0;
+  }
+
+  .story__figure {
+    order: 1;
+    margin: 0; /* the UA gives <figure> 40px side margins */
+    max-width: 34rem;
+  }
+
+  .story__prose {
+    order: 2;
+  }
+
+  .story__facts {
+    order: 3;
+  }
+
+  @media (min-width: 900px) {
+    .story__inner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--sp-7);
+      align-items: center;
+    }
+
+    .story__copy {
+      display: block;
+    }
+
+    .story__prose,
+    .story__facts {
+      margin-top: var(--sp-5);
+    }
+
+    .story__figure {
+      order: 0;
+      max-width: none;
+    }
+  }
+
+  .story__kicker {
     color: var(--color-text-muted);
     margin-bottom: var(--sp-2);
   }
 
-  .behind-counter__heading {
+  .story__heading {
     font-size: clamp(var(--fs-600), 5vw, var(--fs-700));
     line-height: 1;
+    text-wrap: balance;
   }
 
-  .behind-counter__body {
+  .story__prose {
+    max-width: var(--measure-prose);
+  }
+
+  /* Facts: two columns of label/value pairs, each ruled in the brand colour. */
+  .story__facts {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-5);
-    align-items: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-4);
+    max-width: var(--measure-prose);
   }
 
-  @media (min-width: 900px) {
-    .behind-counter__body {
-      grid-template-columns: 1.2fr 1fr;
-      gap: var(--sp-6);
-    }
+  .story__fact {
+    border-top: 2px solid var(--color-accent);
+    padding-top: var(--sp-2);
   }
 
-  .behind-counter__media {
-    aspect-ratio: 4 / 5;
-    background: var(--color-paper);
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    display: grid;
-    place-items: center;
-    margin: 0;
+  .story__fact-label {
+    color: var(--color-text-muted);
+    margin-bottom: var(--sp-1);
   }
 
-  .behind-counter__video,
-  .behind-counter__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Brand-tinted placeholder so the slot reads as part of the brand identity
-     rather than a void. Renders denser hatch + brand-mix ground. */
-  .behind-counter__media-placeholder {
-    color: var(--color-accent);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--color-accent) 22%, transparent) 0,
-        color-mix(in srgb, var(--color-accent) 22%, transparent) 14px,
-        transparent 14px,
-        transparent 32px
-      ),
-      color-mix(in srgb, var(--color-accent, var(--color-canal)) 10%, var(--color-paper));
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-  }
-
-  .behind-counter__media-placeholder .t-caption {
-    background: var(--color-accent);
-    color: var(--color-accent-contrast);
-    padding: var(--sp-2) var(--sp-4);
-    border-radius: var(--r-pill);
-    font-size: var(--fs-200);
-  }
-
-  /* .visually-hidden lives globally in src/styles/reset.css */
-
-  .behind-counter__copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
-  }
-
-  .behind-counter__copy p {
+  .story__fact-value {
+    margin: 0; /* the UA indents <dd> by 40px */
+    font-family: var(--ff-body-stack);
+    font-weight: var(--fw-strong);
     font-size: var(--fs-300);
-    line-height: var(--lh-relaxed);
+    line-height: var(--lh-snug);
+  }
+
+  /* :global() pierces Astro Image's component-scoped class. Square: the
+     owner's footage is near-square, so the crop keeps the food whole. */
+  :global(.story__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+  }
+
+  .story__caption {
+    margin-top: var(--sp-3);
+    padding-top: var(--sp-2);
+    border-top: 2px solid var(--color-accent);
+    max-width: 32ch;
+    color: var(--color-text-muted);
   }
 
   /* ---------- Pitch card ---------- */

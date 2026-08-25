@@ -1,7 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import fleetPhoto from "../assets/photos/owner-fleet.jpg";
+
+// The fleet grid comes from the brands collection so it always matches the
+// homepage showcase — same order, same taglines, no hand-copied list.
+const fleet = (await getCollection("brands"))
+  .filter((b) => b.data.visible)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((b) => b.data);
+const countWords = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"];
+const fleetCount = countWords[fleet.length] ?? String(fleet.length);
 ---
 
 <Base
@@ -114,51 +124,25 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
     <section class="fleet" aria-labelledby="fleet-heading">
       <div class="fleet__inner">
         <header class="fleet__header">
-          <p class="t-caption">Four concepts, one parent</p>
+          <p class="t-caption">{fleetCount} concepts, one parent</p>
           <h2 id="fleet-heading" class="t-display fleet__heading">Meet the fleet.</h2>
         </header>
 
         <ul role="list" class="fleet__grid">
-          <li data-brand="falafel" class="fleet__item">
-            <a href="/falafel/" class="fleet__link">
-              <p class="t-caption">Simply</p>
-              <h3 class="t-display fleet__wordmark">Falafel</h3>
-              <p class="t-editorial t-editorial--italic fleet__dek">
-                Vegan Levantine. Where it all started.
-              </p>
-              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
-            </a>
-          </li>
-          <li data-brand="shawarma" class="fleet__item">
-            <a href="/shawarma/" class="fleet__link">
-              <p class="t-caption">Simply</p>
-              <h3 class="t-display fleet__wordmark">Shawarma</h3>
-              <p class="t-editorial t-editorial--italic fleet__dek">
-                Bold, traditional, late-night fast.
-              </p>
-              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
-            </a>
-          </li>
-          <li data-brand="burgers" class="fleet__item">
-            <a href="/burgers/" class="fleet__link">
-              <p class="t-caption">Simply</p>
-              <h3 class="t-display fleet__wordmark">Burgers</h3>
-              <p class="t-editorial t-editorial--italic fleet__dek">
-                Smash burgers, no compromise.
-              </p>
-              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
-            </a>
-          </li>
-          <li data-brand="lebanese" class="fleet__item">
-            <a href="/lebanese/" class="fleet__link">
-              <p class="t-caption">Simply</p>
-              <h3 class="t-display fleet__wordmark">Lebanese</h3>
-              <p class="t-editorial t-editorial--italic fleet__dek">
-                The family-table version of everything we do.
-              </p>
-              <span class="fleet__arrow" aria-hidden="true">Visit →</span>
-            </a>
-          </li>
+          {
+            fleet.map((b) => (
+              <li data-brand={b.slug} class="fleet__item">
+                <a href={`/${b.slug}/`} class="fleet__link">
+                  <p class="t-caption">Simply</p>
+                  <h3 class="t-display fleet__wordmark">{b.name.replace(/^Simply\s+/i, "")}</h3>
+                  <p class="t-editorial t-editorial--italic fleet__dek">{b.tagline}</p>
+                  <span class="fleet__arrow" aria-hidden="true">
+                    Visit →
+                  </span>
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </section>

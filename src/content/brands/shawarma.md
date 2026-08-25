@@ -7,12 +7,16 @@ introDek: >-
   signature sauces, and a queue that moves quickly.
 cuisine: Levantine shawarma
 voice: Fast, generous, late-night-friendly
+establishedYear: 2021
 visible: true
 primaryPitchSlug: merchant-square
 showcaseImage: ../../assets/placeholders/showcase-shawarma-card.jpg
 heroImage: ../../assets/placeholders/showcase-shawarma.jpg
 heroVideo: /videos/shawarma-truck.mp4
-behindCounterVideo: /videos/shawarma-truck.mp4
+storyHeading: Same team. Different cuisine.
+behindCounterImage: ../../assets/photos/shawarma-still.jpg
+behindCounterAlt: "Gloved hands building a shawarma wrap on the truck's prep bench — shaved meat, tomato and salad laid along a flatbread."
+behindCounterCaption: "Built in under ninety seconds. Simply Shawarma, Merchant Square."
 dietary:
   - halal
 order: 2

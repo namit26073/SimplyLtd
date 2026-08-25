@@ -14,7 +14,7 @@ Real food / truck / customer photography is **not available yet**. The owner wil
 - Getty / Shutterstock / Adobe Stock — paid services, not in v1 budget.
 - Google Images — most are copyrighted.
 - AI-generated food imagery (Midjourney, DALL·E, Stable Diffusion outputs) — the owner has explicitly rejected "AI-template" aesthetics, and AI food photos have an uncanny-valley vibe that hurts more than helps.
-- Photos of *competitors'* food (e.g. a Pasta Evangelists dish photo) — passing-off risk.
+- Photos of _competitors'_ food (e.g. a Pasta Evangelists dish photo) — passing-off risk.
 
 ## What to look for
 
@@ -80,17 +80,6 @@ Each tile = brand-coloured ground + full-bleed photo + brand-tinted gradient mas
 
 All Pexels licence — free for commercial, no attribution required. Swap one at a time as owner photography lands.
 
-### `burgers-behind-counter` — /burgers/ behind-the-counter still
-
-- **File:** `src/assets/placeholders/burgers-behind-counter.jpg` (2000×3555 portrait JPEG, 247 KB source)
-- **Source:** Pexels photo 36727276 — six smash patties cooking on commercial flat-top, steam rising, dark commercial-kitchen background
-- **URL:** https://www.pexels.com/photo/36727276/
-- **Licence:** Pexels licence — free for commercial, no attribution required
-- **Treatment:** Sits in the `behind-counter__media` slot (4:5 aspect, object-fit cover). Schema field `behindCounterImage` on the brand content collection; renders via Astro `<Image />` when no `behindCounterVideo` is set.
-- **Why placeholder:** No owner-shot Burgers truck footage yet (Falafel + Shawarma have owner videos; Burgers doesn't). This photo communicates "real volume / mid-service" rather than a styled food shot.
-- **Swap plan:** Replace with owner Burgers truck video when shot. Same `behindCounterImage` field can be removed once `behindCounterVideo` lands on burgers.md.
-- **Used on:** `/burgers/` behind-the-counter section
-
 ### `franchising-hero` — franchising page hero photograph (full-bleed)
 
 - **File:** `src/assets/placeholders/franchising-hero.jpg` (2400×1560 landscape JPEG, 253 KB source)
@@ -130,5 +119,18 @@ If you need a parent-brand wordmark, design one in code (CSS) using a heavy cond
 
 - `src/assets/placeholders/showcase-lebanese.jpg` — frame at 12 s from the owner's own `assets-inbox/videos/ShawarmaVid.mp4` (real kitchen footage, not stock)
   - Why placeholder: no Simply Lebanese photography yet; owner asked for the brand to be shown (2026-08-25)
-  - Swap plan: owner photography of the Lebanese offering; the `/lebanese/` hero + behind-counter reuse `shawarma-truck.mp4` for the same reason
+  - Swap plan: owner photography of the Lebanese offering; the `/lebanese/` hero reuses `shawarma-truck.mp4` for the same reason
   - Used on: /lebanese/ hero, brand showcase tile, About "Meet the fleet"
+
+### Brand-page story stills (`src/assets/photos/*-still.jpg`) — real, not stock
+
+The story section on each `/<brand>/` page (`behindCounterImage`) shows one still beside the brand's
+own copy. These are the owner's material, not placeholders, but they are low-resolution (frame grabs
+and an Instagram thumbnail), so they are the first things to swap when real photography lands:
+
+- `falafel-still.jpg` — frame at 13 s of `FalafelVid.mp4` (480×480): falafel wrap halves in a kraft bowl
+- `shawarma-still.jpg` — frame at 40 s of `ShawarmaVid.mp4` (640×732): hands building a wrap on the bench
+- `lebanese-still.jpg` — frame at 55 s of `ShawarmaVid.mp4` (640×732): takeaway box with wrap, falafel, sauce
+- `burgers-still.jpg` — square crop of the owner's Instagram reel cover (post DSHgBcYDXRn, 640×640): the double smash burger. The stock grill shot that used to sit here (Pexels 36727276) is still the Burgers hero/showcase image.
+
+Swap plan: one owner photo per brand, square or near-square, ≥1200px. Drop it in at the same path, update `behindCounterAlt` / `behindCounterCaption` in `src/content/brands/<slug>.md`, and re-run the design review on that page. The `/<brand>/` heroes keep the videos; the previous inline `<video controls>` player in this section was removed (it replayed the hero footage).

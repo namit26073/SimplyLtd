@@ -7,12 +7,16 @@ introDek: >-
   Vegan, plant-positive, no preaching.
 cuisine: Vegan and vegetarian Levantine
 voice: Warm, confident, plant-positive without being preachy
+establishedYear: 2019
 visible: true
 primaryPitchSlug: merchant-square
 showcaseImage: ../../assets/placeholders/showcase-falafel.jpg
 heroImage: ../../assets/placeholders/showcase-falafel.jpg
 heroVideo: /videos/falafel-truck.mp4
-behindCounterVideo: /videos/falafel-truck.mp4
+storyHeading: The original truck.
+behindCounterImage: ../../assets/photos/falafel-still.jpg
+behindCounterAlt: "Two halves of a falafel wrap stacked in a kraft bowl, cut to show the falafel, salad and tahini inside."
+behindCounterCaption: "The wrap that started it. Simply Falafel, Merchant Square."
 dietary:
   - vegan
   - vegetarian

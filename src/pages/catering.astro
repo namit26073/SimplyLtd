@@ -315,14 +315,13 @@ import logoChiswick from "../assets/clients/chiswick-park.png";
     .catering-hero__content {
       padding: var(--sp-7) var(--page-gutter);
     }
-    .catering-hero__content > * {
+    /* Named selectors, not `> *` — see Hero.astro for why. */
+    .catering-hero__kicker,
+    .catering-hero__heading {
       max-width: 22ch;
     }
     .catering-hero__dek {
       max-width: 38ch;
-    }
-    .catering-hero__cta {
-      max-width: none;
     }
   }
   .catering-hero__kicker {

@@ -149,6 +149,13 @@ const photoFor = (slot: Slot) => {
     aspect-ratio: 16 / 10;
   }
 
+  /* Tablets stack the three tiles full-width, so they go wide-and-short
+     rather than three 16:10 slabs of colour in a row. */
+  @media (min-width: 600px) {
+    .wte__card {
+      aspect-ratio: 21 / 9;
+    }
+  }
   @media (min-width: 900px) {
     .wte__card {
       aspect-ratio: 4 / 3;

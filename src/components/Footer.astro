@@ -61,7 +61,10 @@ const linkGroups = [
 
     {
       linkGroups.map((group) => (
-        <section class="site-footer__col" aria-labelledby={`footer-${group.heading.toLowerCase().replace(/ /g, "-")}`}>
+        <section
+          class="site-footer__col"
+          aria-labelledby={`footer-${group.heading.toLowerCase().replace(/ /g, "-")}`}
+        >
           <h2
             id={`footer-${group.heading.toLowerCase().replace(/ /g, "-")}`}
             class="t-caption site-footer__col-heading"
@@ -107,10 +110,14 @@ const linkGroups = [
 </footer>
 
 <style>
+  /* No top margin: every page's last section carries its own bottom padding,
+     and the old 120px gap left a stray cream band between the ink CTA bands
+     (About, Locations) and the footer. A hairline keeps the two ink blocks
+     legible as separate things. */
   .site-footer {
     background: var(--color-ink);
     color: var(--color-cream);
-    margin-top: var(--sp-8);
+    border-top: 1px solid color-mix(in srgb, var(--color-cream) 14%, transparent);
   }
 
   .site-footer__inner {

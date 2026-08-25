@@ -16,7 +16,7 @@ const eventTypeLabel: Record<(typeof EVENT_TYPES)[number], string> = {
   corporate: "Corporate",
   festival: "Festival",
   private: "Private party",
-  other: "Something else",
+  other: "Other",
 };
 
 const initialValues: CateringFormInput = {
