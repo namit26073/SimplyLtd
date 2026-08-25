@@ -27,47 +27,47 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
     {/* Origin story — heading + photo plate beside the prose ---------------- */}
     <section class="origin" aria-labelledby="origin-heading">
       <div class="origin__inner">
-        <div class="origin__aside">
+        <div class="origin__copy">
           <header class="origin__header">
             <p class="t-caption">The story</p>
             <h2 id="origin-heading" class="t-display origin__heading">How it grew.</h2>
           </header>
 
-          <figure class="origin__figure">
-            <Image
-              src={fleetPhoto}
-              alt="The owner of Simply standing with arms folded in front of the four Simply trucks — Shawarma, Falafel, Lebanese and Burgers — their signs lit up at dusk beside glass office buildings"
-              class="origin__img"
-              widths={[480, 720, 960, 1446]}
-              sizes="(min-width: 900px) 40vw, (min-width: 720px) 640px, 100vw"
-              loading="lazy"
-              quality={78}
-            />
-            <figcaption class="t-caption origin__caption">
-              The fleet, and the owner who started it with one truck.
-            </figcaption>
-          </figure>
+          <div class="t-prose origin__prose">
+            <p>
+              We started in 2019 with one food truck: <strong>Simply Falafel</strong>. The menu was
+              short. The queue grew before the marketing did.
+            </p>
+
+            <p>
+              In 2021 we added <strong>Simply Shawarma</strong> next to it. Same team, same standards,
+              different cuisine. Two queues on Merchant Square.
+            </p>
+
+            <p>
+              <strong>Simply Burgers</strong> came next, because people kept asking us for one. Smash
+              patties, melted American, soft brioche. It sits on Canal Side Walk, 250 metres east of the
+              other two trucks.
+            </p>
+
+            <p>Seven trucks, four concepts — and the standards are the same on every menu.</p>
+          </div>
         </div>
 
-        <div class="t-prose origin__prose">
-          <p>
-            We started in 2019 with one food truck: <strong>Simply Falafel</strong>. The menu was
-            short. The queue grew before the marketing did.
-          </p>
-
-          <p>
-            In 2021 we added <strong>Simply Shawarma</strong> next to it. Same team, same standards, different
-            cuisine. Two queues on Merchant Square.
-          </p>
-
-          <p>
-            <strong>Simply Burgers</strong> came next, because people kept asking us for one. Smash patties,
-            melted American, soft brioche. It sits on Canal Side Walk, 250 metres east of the other two
-            trucks.
-          </p>
-
-          <p>Seven trucks, four concepts — and the standards are the same on every menu.</p>
-        </div>
+        <figure class="origin__figure">
+          <Image
+            src={fleetPhoto}
+            alt="The owner of Simply standing with arms folded in front of the four Simply trucks — Shawarma, Falafel, Lebanese and Burgers — their signs lit up at dusk beside glass office buildings"
+            class="origin__img"
+            widths={[480, 720, 960, 1446]}
+            sizes="(min-width: 900px) 50vw, (min-width: 720px) 640px, 100vw"
+            loading="lazy"
+            quality={78}
+          />
+          <figcaption class="t-caption origin__caption">
+            The fleet, and the owner who started it with one truck.
+          </figcaption>
+        </figure>
       </div>
     </section>
 
@@ -217,27 +217,47 @@ import fleetPhoto from "../assets/photos/owner-fleet.jpg";
     background: var(--color-cream);
     border-top: 1px solid var(--color-line);
   }
+  /* Source order is the phone order (heading, photo, story). From 900px the
+     copy stacks in the left half and the plate takes the right half, centred
+     against it, so the two sides carry equal weight. */
   .origin__inner {
     max-width: var(--page-max);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-5);
+  }
+  /* On phones the copy wrapper dissolves so the photo can slot between the
+     heading and the story; from 900px it becomes one centred block. */
+  .origin__copy {
+    display: contents;
+  }
+  .origin__header {
+    order: 0;
+  }
+  .origin__figure {
+    order: 1;
+    /* Explicit margins: the UA gives <figure> 40px side margins by default. */
+    margin: 0;
+    max-width: 40rem;
+  }
+  .origin__prose {
+    order: 2;
   }
   @media (min-width: 900px) {
     .origin__inner {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      gap: var(--sp-7);
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--sp-7);
+      align-items: center;
     }
-  }
-  .origin__figure {
-    /* Explicit sides: the UA gives <figure> 40px side margins by default. */
-    margin: var(--sp-5) 0 0;
-    max-width: 40rem;
-  }
-  @media (min-width: 900px) {
+    .origin__copy {
+      display: block;
+    }
+    .origin__prose {
+      margin-top: var(--sp-5);
+    }
     .origin__figure {
+      order: 0;
       max-width: none;
     }
   }
