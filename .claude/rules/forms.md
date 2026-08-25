@@ -42,9 +42,9 @@ Implemented as React islands (`src/islands/forms/Catering.tsx`, `src/islands/for
 - Turnstile token (hidden)
 - `bot_field` honeypot (hidden)
 
-## Cloudflare Pages Function handlers
+## Worker endpoint handlers
 
-Each form has its own function in `functions/api/`. Responsibilities:
+Each form has its own Astro on-demand route in `src/pages/api/` (`prerender = false`), both delegating to the shared pipeline in `src/server/enquiry.ts`. Responsibilities:
 
 1. **Verify Turnstile token** with Cloudflare's verification endpoint before any side effects.
 2. **Validate payload** with Zod schemas (`src/schemas/<form>.ts`). Return 400 with a structured error on failure.
@@ -58,7 +58,7 @@ Logs go to `console.log` and surface in Cloudflare's dashboard. **Never log the 
 
 ## Testing
 
-Unit tests in `tests/schemas/` and `tests/functions/` (Vitest). Test:
+Unit tests in `tests/schemas/` and `tests/api/` (Vitest). Test:
 
 - Zod schemas: invalid input rejected, valid accepted, edge cases.
 - Functions: Turnstile-fail rejection, schema-fail rejection, honeypot rejection, Resend success path, Resend failure handling.

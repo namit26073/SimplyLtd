@@ -1,7 +1,7 @@
 # ADR 0010 — Forms backend: Pages Functions + Resend + Turnstile
 
 **Date:** 2026-05-17
-**Status:** Accepted
+**Status:** Amended 2026-08-25 — see bottom.
 
 ## Decision
 
@@ -46,3 +46,16 @@ Deferred to v1.1. Cloudflare KV-based rate limiter by `cf-connecting-ip` is the 
 ## Logging
 
 `console.log` is the only mechanism in v1; surfaces in the Cloudflare Pages dashboard. **Never log the email body** in production — submitter data is sensitive.
+
+## Amendment — 2026-08-25
+
+The site ships as a Cloudflare **Worker**, which never bundles Pages Functions — on the
+deployed site `POST /api/catering` returned 404, so the forms could not work. The handlers
+now live in `src/pages/api/{catering,franchising}.ts` as Astro on-demand routes
+(`prerender = false`) served by `@astrojs/cloudflare`, with the shared pipeline in
+`src/server/enquiry.ts`; `functions/` is deleted. Behaviour and env vars are unchanged,
+but secrets are set on the Worker with `wrangler secret put` (helper:
+`scripts/push-worker-secrets.mjs`), the Turnstile widget is now actually rendered by the
+islands (`useTurnstile`, explicit render — the public key is `PUBLIC_TURNSTILE_SITE_KEY`
+at build time), and logs surface via `npx wrangler tail simply`. Setup:
+`docs/runbooks/email-setup.md`.

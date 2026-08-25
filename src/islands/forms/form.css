@@ -67,8 +67,9 @@
   color: var(--color-ink);
   border: 1.5px solid var(--color-line);
   border-radius: var(--r-md);
-  transition: border-color var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
 }
 
 .form input:hover,
@@ -135,8 +136,9 @@
   border: 1.5px solid var(--color-line);
   border-radius: var(--r-md);
   cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
   font-size: var(--fs-200);
   font-weight: var(--fw-strong);
   letter-spacing: var(--ls-caption);
@@ -194,8 +196,9 @@
   text-transform: uppercase;
   letter-spacing: var(--ls-caption);
   border-radius: var(--r-pill);
-  transition: transform var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
 }
 
 .form__submit:hover:not(:disabled),
@@ -246,4 +249,13 @@
 .form-success__detail {
   margin-top: var(--sp-3);
   color: var(--color-text-muted);
+}
+
+/* Turnstile widget mount — hidden until the widget renders (no site key in dev). */
+.form__turnstile {
+  margin-top: var(--sp-4);
+  min-height: 0;
+}
+.form__turnstile:empty {
+  display: none;
 }

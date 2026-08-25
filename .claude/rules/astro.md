@@ -7,7 +7,7 @@ paths:
 
 # Astro rules
 
-Astro 6, static output, Cloudflare Pages target. Pages Functions in `functions/` are separate from Astro's pipeline.
+Astro 6, static output, deployed as a Cloudflare Worker (static assets + on-demand routes). API endpoints are Astro routes in `src/pages/api/` with `prerender = false`; shared handler logic lives in `src/server/`.
 
 ## Page conventions
 
@@ -36,8 +36,8 @@ Astro 6, static output, Cloudflare Pages target. Pages Functions in `functions/`
 
 ## Configuration
 
-- `astro.config.mjs` stays minimal. Adapters: none in v1 (static output; Pages Functions live outside Astro).
-- Site URL: `https://simplyltd.co.uk` (used for sitemap generation; the active deployment is a `*.pages.dev` preview until cutover).
+- `astro.config.mjs` stays minimal. Adapter: `@astrojs/cloudflare` with `imageService: "compile"` (static output; only `src/pages/api/*` opts into on-demand rendering).
+- Site URL: `https://simplyltd.co.uk` (used for sitemap generation; the active deployment is `simply.namit-garg.workers.dev` until cutover).
 - No `output: 'server'` or `output: 'hybrid'` — we stay fully static.
 
 ## Anti-patterns

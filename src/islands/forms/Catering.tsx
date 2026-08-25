@@ -1,9 +1,6 @@
 import { useId, useState, useRef, type JSX, type ReactNode } from "react";
-import {
-  cateringSchema,
-  EVENT_TYPES,
-  type CateringFormInput,
-} from "../../schemas/catering";
+import { useTurnstile } from "./useTurnstile";
+import { cateringSchema, EVENT_TYPES, type CateringFormInput } from "../../schemas/catering";
 import "./form.css";
 
 type SubmissionState =
@@ -42,6 +39,7 @@ export default function Catering(): JSX.Element {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submission, setSubmission] = useState<SubmissionState>({ kind: "idle" });
   const [botField, setBotField] = useState("");
+  const turnstile = useTurnstile(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -53,12 +51,7 @@ export default function Catering(): JSX.Element {
       return;
     }
 
-    // Turnstile widget integration is wired to the page chrome; in dev
-    // (no key configured) we pass a dev sentinel that the function will
-    // accept when TURNSTILE_SECRET_KEY is unset.
-    const turnstileToken =
-      (window as unknown as { turnstile?: { getResponse(): string | undefined } })
-        .turnstile?.getResponse() ?? "dev-bypass";
+    const turnstileToken = turnstile.getToken();
 
     const parsed = cateringSchema.safeParse({
       ...values,
@@ -92,6 +85,7 @@ export default function Catering(): JSX.Element {
       });
 
       if (!response.ok) {
+        turnstile.reset();
         const body = (await response.json().catch(() => ({}))) as {
           errors?: FieldErrors;
           message?: string;
@@ -120,20 +114,14 @@ export default function Catering(): JSX.Element {
   if (submission.kind === "success") {
     return (
       <div className="form-success" role="status">
-        <h2
-          ref={successHeadingRef}
-          className="t-display form-success__heading"
-          tabIndex={-1}
-        >
+        <h2 ref={successHeadingRef} className="t-display form-success__heading" tabIndex={-1}>
           Enquiry received.
         </h2>
         <p className="t-editorial t-editorial--italic form-success__dek">
           Thanks for getting in touch. Someone from the team will reply within two working days. If
           your event is in the next 14 days, give us a call instead.
         </p>
-        <p className="t-caption form-success__detail">
-          We replied to {values.email}
-        </p>
+        <p className="t-caption form-success__detail">We replied to {values.email}</p>
       </div>
     );
   }
@@ -161,12 +149,7 @@ export default function Catering(): JSX.Element {
       </div>
 
       <div className="form__grid">
-        <Field
-          id={`${formId}-name`}
-          label="Your name"
-          required
-          error={errors.name}
-        >
+        <Field id={`${formId}-name`} label="Your name" required error={errors.name}>
           <input
             id={`${formId}-name`}
             type="text"
@@ -178,12 +161,7 @@ export default function Catering(): JSX.Element {
           />
         </Field>
 
-        <Field
-          id={`${formId}-email`}
-          label="Email"
-          required
-          error={errors.email}
-        >
+        <Field id={`${formId}-email`} label="Email" required error={errors.email}>
           <input
             id={`${formId}-email`}
             type="email"
@@ -195,11 +173,7 @@ export default function Catering(): JSX.Element {
           />
         </Field>
 
-        <Field
-          id={`${formId}-phone`}
-          label="Phone (optional)"
-          error={errors.phone}
-        >
+        <Field id={`${formId}-phone`} label="Phone (optional)" error={errors.phone}>
           <input
             id={`${formId}-phone`}
             type="tel"
@@ -227,11 +201,7 @@ export default function Catering(): JSX.Element {
           />
         </Field>
 
-        <Field
-          id={`${formId}-event-date`}
-          label="Event date"
-          error={errors.eventDate}
-        >
+        <Field id={`${formId}-event-date`} label="Event date" error={errors.eventDate}>
           <input
             id={`${formId}-event-date`}
             type="date"
@@ -321,6 +291,7 @@ export default function Catering(): JSX.Element {
         </div>
       )}
 
+      <div ref={turnstile.ref} className="form__turnstile" />
       <div className="form__actions">
         <button
           type="submit"

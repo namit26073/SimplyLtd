@@ -50,20 +50,28 @@ Instagram user token (60 days).
 - **If it has already expired**, refresh returns an error: generate a new token via
   the App Dashboard steps above.
 
-## Automated refresh — currently broken, follow-up pending
+## Automated refresh — `.github/workflows/deploy.yml`
 
-`.github/workflows/rebuild-instagram.yml` calls the Cloudflare **Pages** API for a
-project that doesn't exist (the site deploys as a **Worker** named `simply`, via
-`npm run deploy`). It has never refreshed anything. Rewriting it to build in GitHub
-Actions and `wrangler deploy` needs these repository secrets:
+Once the branch is merged, GitHub Actions rebuilds and deploys the `simply` Worker on
+every push to `main` and every 6 hours. The credentials live in Cloudflare KV
+(namespace `simply-config`, id `93dd79c0c56a42458290fab826ed2368`, keys `IG_USER_ID`
+and `IG_ACCESS_TOKEN`), not on any laptop. Each run calls Meta's
+`refresh_access_token` (one success per 24 h, each granting 60 more days) and writes
+the new token back to KV — so **nobody needs to mint a token by hand** as long as the
+workflow keeps running. If a build ever falls back to placeholders, the run shows a
+warning annotation.
 
-- `IG_USER_ID`, `IG_ACCESS_TOKEN` — from above.
-- `CLOUDFLARE_ACCOUNT_ID` — `772357e2ba3af2f83f3837f040113069`.
-- `CLOUDFLARE_API_TOKEN` — Cloudflare dashboard → My Profile → API Tokens → Create
-  Token → "Edit Cloudflare Workers" template.
+Required once, in GitHub → Settings → Secrets and variables → Actions:
 
-Until that's done, "refreshing the grid" = renewing the token if needed and running
-`npm run deploy` from a machine with `.env.local`.
+- Secret `CLOUDFLARE_API_TOKEN` — Cloudflare dashboard → My Profile → API Tokens →
+  Create Token → "Edit Cloudflare Workers" template (includes Workers KV edit).
+- Secret `CLOUDFLARE_ACCOUNT_ID` — `772357e2ba3af2f83f3837f040113069`.
+- Variable `PUBLIC_TURNSTILE_SITE_KEY` — see `docs/runbooks/email-setup.md`.
+
+If the token is ever *invalidated* (Instagram password change, app revoked), generate
+a new one via the App Dashboard steps above and store it:
+`npx wrangler kv key put --namespace-id 93dd79c0c56a42458290fab826ed2368 --remote IG_ACCESS_TOKEN --path <file-containing-token>`.
+Local `npm run deploy` still reads `.env.local` and works as a manual fallback.
 
 ## Replacing the fallback set with real screenshots
 

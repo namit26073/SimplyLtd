@@ -1,4 +1,5 @@
 import { useId, useState, useRef, type JSX, type ReactNode } from "react";
+import { useTurnstile } from "./useTurnstile";
 import {
   franchisingSchema,
   INVESTMENT_RANGES,
@@ -35,6 +36,7 @@ export default function Franchising(): JSX.Element {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submission, setSubmission] = useState<SubmissionState>({ kind: "idle" });
   const [botField, setBotField] = useState("");
+  const turnstile = useTurnstile(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -45,9 +47,7 @@ export default function Franchising(): JSX.Element {
       return;
     }
 
-    const turnstileToken =
-      (window as unknown as { turnstile?: { getResponse(): string | undefined } })
-        .turnstile?.getResponse() ?? "dev-bypass";
+    const turnstileToken = turnstile.getToken();
 
     const parsed = franchisingSchema.safeParse({
       ...values,
@@ -81,6 +81,7 @@ export default function Franchising(): JSX.Element {
       });
 
       if (!response.ok) {
+        turnstile.reset();
         const body = (await response.json().catch(() => ({}))) as {
           errors?: FieldErrors;
           message?: string;
@@ -106,11 +107,7 @@ export default function Franchising(): JSX.Element {
   if (submission.kind === "success") {
     return (
       <div className="form-success" role="status">
-        <h2
-          ref={successHeadingRef}
-          className="t-display form-success__heading"
-          tabIndex={-1}
-        >
+        <h2 ref={successHeadingRef} className="t-display form-success__heading" tabIndex={-1}>
           We&apos;ve got your enquiry.
         </h2>
         <p className="t-editorial t-editorial--italic form-success__dek">
@@ -223,12 +220,7 @@ export default function Franchising(): JSX.Element {
           </select>
         </Field>
 
-        <Field
-          id={`${formId}-timeline`}
-          label="Timeline"
-          required
-          error={errors.timeline}
-        >
+        <Field id={`${formId}-timeline`} label="Timeline" required error={errors.timeline}>
           <select
             id={`${formId}-timeline`}
             required
@@ -268,6 +260,7 @@ export default function Franchising(): JSX.Element {
         </div>
       )}
 
+      <div ref={turnstile.ref} className="form__turnstile" />
       <div className="form__actions">
         <button
           type="submit"

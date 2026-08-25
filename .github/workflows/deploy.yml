@@ -1,0 +1,82 @@
+name: Deploy simply (build + Instagram refresh)
+
+# Deploys the `simply` Worker from main, and re-runs every 6 hours so the
+# homepage Instagram grid stays fresh. The Instagram token lives in Cloudflare
+# KV (namespace `simply-config`) and is rolled forward here automatically —
+# Meta permits one refresh per 24 h, each granting 60 more days — so nobody
+# has to mint tokens by hand as long as this workflow keeps running.
+#
+# Required repository secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+# Optional repository variable: PUBLIC_TURNSTILE_SITE_KEY (enables the
+# Turnstile widget in the built forms). See docs/runbooks/instagram-setup.md
+# and docs/runbooks/email-setup.md.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-simply
+  cancel-in-progress: false
+
+env:
+  KV_NAMESPACE_ID: 93dd79c0c56a42458290fab826ed2368
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Load Instagram credentials from KV
+        run: |
+          set -euo pipefail
+          uid=$(npx wrangler kv key get --namespace-id "$KV_NAMESPACE_ID" --remote IG_USER_ID | tail -n1)
+          tok=$(npx wrangler kv key get --namespace-id "$KV_NAMESPACE_ID" --remote IG_ACCESS_TOKEN | tail -n1)
+          echo "::add-mask::$tok"
+          echo "IG_USER_ID=$uid" >> "$GITHUB_ENV"
+          echo "IG_ACCESS_TOKEN=$tok" >> "$GITHUB_ENV"
+
+      - name: Roll the Instagram token forward (60-day rolling refresh)
+        run: |
+          set -uo pipefail
+          resp=$(curl -fsS "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${IG_ACCESS_TOKEN}" || true)
+          new=$(printf '%s' "$resp" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{process.stdout.write(JSON.parse(s).access_token||"")}catch{}})')
+          if [[ -n "$new" ]]; then
+            echo "::add-mask::$new"
+            printf '%s' "$new" > "$RUNNER_TEMP/ig_token"
+            npx wrangler kv key put --namespace-id "$KV_NAMESPACE_ID" --remote IG_ACCESS_TOKEN --path "$RUNNER_TEMP/ig_token"
+            echo "IG_ACCESS_TOKEN=$new" >> "$GITHUB_ENV"
+            echo "Instagram token refreshed and stored in KV."
+          else
+            echo "::notice::Instagram token not refreshed this run (Meta allows one refresh per 24h, or the stored token is invalid). Using the stored token."
+          fi
+
+      - name: Build (fetches the latest Instagram posts)
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee build.log
+          if grep -q "using fallback set" build.log; then
+            echo "::warning::Instagram fetch fell back to placeholder posts — check the token (docs/runbooks/instagram-setup.md)."
+          fi
+
+      - name: Deploy the simply Worker
+        run: npx wrangler deploy
