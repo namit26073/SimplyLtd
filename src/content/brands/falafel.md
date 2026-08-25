@@ -1,7 +1,7 @@
 ---
 slug: falafel
 name: Simply Falafel
-tagline: Vegan and vegetarian Levantine. Where it all started.
+tagline: Vegan & veggie Levantine. Where it all started.
 introDek: >-
   Where Simply began. Hand-made falafel, fresh wraps, halloumi when you want it, home-made tahini.
   Vegan, plant-positive, no preaching.
