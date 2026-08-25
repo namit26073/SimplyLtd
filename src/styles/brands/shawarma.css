@@ -1,7 +1,10 @@
 [data-brand="shawarma"] {
-  --color-accent: #e8b83a;
-  --color-accent-contrast: var(--color-ink);
-  --color-accent-soft: color-mix(in srgb, #e8b83a 18%, var(--color-cream));
+  /* Deep gold (was #e8b83a): the bright yellow only reaches 1.6:1 against cream, so its
+     cards needed ink text while every other brand used cream — the owner wanted them
+     consistent. #8a6000 carries cream at 4.9:1 (WCAG AA) and keeps the brand warm. */
+  --color-accent: #8a6000;
+  --color-accent-contrast: var(--color-cream);
+  --color-accent-soft: color-mix(in srgb, #8a6000 14%, var(--color-cream));
   /* Shawarma placeholder photo has the wrap at ~30-65% of its height,
      with dark counter/reflection at 65-100%. Default 85% positioning
      shows the dark band which fades through near-black into the yellow

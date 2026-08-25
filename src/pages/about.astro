@@ -1,10 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
+import { Image } from "astro:assets";
+import fleetPhoto from "../assets/photos/owner-fleet.jpg";
 ---
 
 <Base
   title="About"
   description="Simply Ltd — the story of how a single falafel truck on Paddington Basin became a fleet."
+  ogImage="/og-about.jpg"
 >
   <article class="about">
     {/* Hero ----------------------------------------------------------------- */}
@@ -19,6 +22,25 @@ import Base from "../layouts/Base.astro";
           trucks, four concepts, and a queue that doesn't stop. The standards haven't moved.
         </p>
       </div>
+    </section>
+
+    {/* The fleet, in one frame ---------------------------------------------- */}
+    <section class="about-photo" aria-label="The Simply fleet">
+      <figure class="about-photo__figure">
+        <Image
+          src={fleetPhoto}
+          alt="The owner of Simply standing with arms folded in front of the four Simply trucks — Shawarma, Falafel, Lebanese and Burgers — their signs lit up at dusk beside glass office buildings"
+          class="about-photo__img"
+          widths={[640, 1024, 1440, 1920, 2400]}
+          sizes="(min-width: 1280px) 1200px, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          quality={78}
+        />
+        <figcaption class="t-caption about-photo__caption">
+          The fleet, and the owner who started it with one truck.
+        </figcaption>
+      </figure>
     </section>
 
     {/* Origin story --------------------------------------------------------- */}
@@ -188,6 +210,26 @@ import Base from "../layouts/Base.astro";
     font-size: var(--fs-400);
     max-width: 56ch;
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+
+  /* Fleet photo */
+  .about-photo {
+    padding: 0 var(--page-gutter) var(--sp-6);
+    background: var(--color-cream);
+  }
+  .about-photo__figure {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  :global(.about-photo__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-lg);
+  }
+  .about-photo__caption {
+    margin-top: var(--sp-3);
+    color: var(--color-text-muted);
   }
 
   /* Origin */

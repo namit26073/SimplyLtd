@@ -36,3 +36,11 @@
 - Per Q3 (locked), Lebanese and Pasta brands are `visible: false` in v1; their accent tokens still exist in the schema so flipping them on later is a one-line change.
 - **Canal grey is fill-only.** `#7A7E78` on cream is 3.6:1 — fails small-text AA. The accessibility-auditor caught this in Slice 1 review. Use `--color-text-muted` for any muted body text instead. Canal can still be used as a background fill (with ink-on-canal for text overlays, which clears 5.84:1).
 - **Falafel accent margin:** `#3F7A3A` on cream is 4.52:1 — passes AA but with very little headroom. When used as text-on-photo in the Falafel sub-brand page (Slice 6), supply an overlay or text-shadow to widen the margin.
+
+## Amendment — 2026-08-25
+
+Simply Shawarma's accent moves from `#E8B83A` (ink text) to **`#8A6000` deep gold with cream
+text**. The bright yellow only reaches 1.6:1 against cream, which forced ink text on its cards
+while every other brand used cream — the owner flagged the inconsistency. The deep gold gives
+cream 4.9:1 (WCAG AA for the small kicker/meta/CTA text) and keeps the brand warm; it applies
+everywhere the accent is used (showcase card, brand page hero, About and catering tiles).
