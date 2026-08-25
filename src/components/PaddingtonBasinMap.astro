@@ -132,8 +132,6 @@ const center =
 </style>
 
 <script>
-  import L from "leaflet";
-
   interface Pin {
     lat: number;
     lng: number;
@@ -144,10 +142,10 @@ const center =
     directions: string;
   }
 
-  function initBasinMap() {
-    const container = document.getElementById("basin-map");
-    if (!(container instanceof HTMLElement) || container.dataset.ready) return;
-    container.dataset.ready = "true";
+  // Leaflet (~46 KiB) and the OSM tiles only load once the map is about to
+  // scroll into view, so they never compete with the page's LCP text.
+  async function buildMap(container: HTMLElement) {
+    const { default: L } = await import("leaflet");
 
     const pins = JSON.parse(container.dataset.pins ?? "[]") as Pin[];
     const center = JSON.parse(container.dataset.center ?? "[51.519, -0.1748]") as [number, number];
@@ -179,6 +177,26 @@ const center =
             `<a class="basin-directions" href="${p.directions}" target="_blank" rel="noopener noreferrer">Get directions ↗</a>`,
         );
     }
+  }
+
+  function initBasinMap() {
+    const container = document.getElementById("basin-map");
+    if (!(container instanceof HTMLElement) || container.dataset.ready) return;
+    container.dataset.ready = "true";
+
+    if (!("IntersectionObserver" in window)) {
+      void buildMap(container);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        void buildMap(container);
+      },
+      { rootMargin: "320px 0px" },
+    );
+    io.observe(container);
   }
 
   initBasinMap();
