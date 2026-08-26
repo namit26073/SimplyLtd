@@ -1,8 +1,10 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import PaddingtonBasinMap from "../components/PaddingtonBasinMap.astro";
 import { directionsUrl } from "../lib/directions";
+import { brandLogos } from "../lib/brandLogos";
 
 const locations = await getCollection("locations");
 const brands = await getCollection("brands");
@@ -14,10 +16,13 @@ const orderedLocations = locations.sort((a, b) =>
   a.data.slug === "merchant-square" ? -1 : b.data.slug === "merchant-square" ? 1 : 0,
 );
 
-const brandNamesByLocation = Object.fromEntries(
+// Slug + name per pitch: the map puts the logos on the pins, the popup names them.
+const brandsByLocation = Object.fromEntries(
   orderedLocations.map((l) => [
     l.data.slug,
-    l.data.brandsOnPitch.map((slug) => brandNameBySlug[slug]).filter(Boolean),
+    l.data.brandsOnPitch
+      .filter((slug) => brandNameBySlug[slug])
+      .map((slug) => ({ slug, name: brandNameBySlug[slug] })),
   ]),
 );
 ---
@@ -45,7 +50,7 @@ const brandNamesByLocation = Object.fromEntries(
       <div class="locations-map__inner">
         <PaddingtonBasinMap
           locations={orderedLocations.map((l) => l.data)}
-          brandNamesBySlug={brandNamesByLocation}
+          brandsBySlug={brandsByLocation}
         />
       </div>
     </section>
@@ -69,6 +74,21 @@ const brandNamesByLocation = Object.fromEntries(
               return (
                 <li class="location-card" data-brand={accentBrand}>
                   <header class="location-card__header">
+                    <ul role="list" class="location-card__logos" aria-hidden="true">
+                      {location.data.brandsOnPitch.map((slug) => (
+                        <li>
+                          <Image
+                            src={brandLogos[slug]}
+                            alt=""
+                            class="location-card__logo"
+                            width={112}
+                            height={112}
+                            loading="lazy"
+                            quality={82}
+                          />
+                        </li>
+                      ))}
+                    </ul>
                     <p class="t-caption location-card__brands">{brandNames.join(" · ")}</p>
                     <h3 class="t-display location-card__name">{location.data.name}</h3>
                   </header>
@@ -227,6 +247,23 @@ const brandNamesByLocation = Object.fromEntries(
 
   .location-card__header {
     margin-bottom: var(--sp-1);
+  }
+
+  /* The trucks on this pitch, as the same logo tiles the map pins use. */
+  .location-card__logos {
+    display: flex;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+  }
+
+  :global(.location-card__logo) {
+    display: block;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-md);
+    background: #fff;
+    border: 1px solid var(--color-line);
+    object-fit: cover;
   }
 
   .location-card__brands {

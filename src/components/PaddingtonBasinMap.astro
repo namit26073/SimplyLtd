@@ -1,34 +1,54 @@
 ---
 /**
- * Interactive map of Paddington Basin via Leaflet + OpenStreetMap tiles.
+ * Interactive map of Paddington Basin via Leaflet + CARTO tiles.
  * No API key, no billing, no Google branding.
  *
  * Pins come from the `locations` content collection (single source of truth)
  * — coordinates are postcode centroids verified against postcodes.io on
- * 2026-08-25. Each popup offers a "Get directions" hand-off by address.
+ * 2026-08-25. Each pin shows the logos of the trucks on that pitch, so a
+ * visitor can see which truck is where without reading anything; the popup
+ * offers a "Get directions" hand-off by address.
  */
 import type { CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
 import { directionsUrl } from "../lib/directions";
+import { brandLogos, type BrandLogoSlug } from "../lib/brandLogos";
 
 interface Props {
   locations: CollectionEntry<"locations">["data"][];
-  /** Brand display names per location slug, e.g. { "merchant-square": ["Simply Falafel", …] }. */
-  brandNamesBySlug: Record<string, string[]>;
+  /** Brands per location slug, e.g. { "merchant-square": [{ slug: "falafel", name: "Simply Falafel" }, …] }. */
+  brandsBySlug: Record<string, { slug: string; name: string }[]>;
 }
 
-const { locations, brandNamesBySlug } = Astro.props;
+const { locations, brandsBySlug } = Astro.props;
 
 const ACCENT: Record<string, string> = {
   "merchant-square": "green",
   "canal-side-walk": "red",
 };
 
+// Logo tiles render at 60px; 160px covers 2× screens with room to spare.
+const logoSrc: Partial<Record<BrandLogoSlug, string>> = {};
+for (const [slug, image] of Object.entries(brandLogos)) {
+  const optimised = await getImage({
+    src: image,
+    width: 160,
+    height: 160,
+    format: "webp",
+    quality: 82,
+  });
+  logoSrc[slug as BrandLogoSlug] = optimised.src;
+}
+
 const pins = locations.map((loc) => ({
   lat: loc.coordinates[1],
   lng: loc.coordinates[0],
   label: loc.name,
   accent: ACCENT[loc.slug] ?? "ink",
-  brands: (brandNamesBySlug[loc.slug] ?? []).join(" + "),
+  brands: (brandsBySlug[loc.slug] ?? []).map((b) => ({
+    name: b.name,
+    logo: logoSrc[b.slug as BrandLogoSlug] ?? null,
+  })),
   postcode: loc.postcode,
   directions: directionsUrl(loc.addressLines, loc.postcode),
 }));
@@ -53,7 +73,7 @@ const center =
   >
   </div>
   <p class="basin-map__caption t-caption">
-    {pins.length} pitches on Paddington Basin, about 250 metres apart. Tap a pin for directions.
+    {pins.length} pitches on Paddington Basin, about 250 metres apart. Tap a truck for directions.
   </p>
 </div>
 
@@ -61,14 +81,21 @@ const center =
   .basin-map {
     width: 100%;
   }
+  /* Portrait on phones so two logo pins 250 m apart both fit with air
+     around them; widescreen from tablets up. */
   .basin-map__canvas {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 4 / 5;
     max-height: 560px;
     border-radius: var(--r-lg);
     overflow: hidden;
     background: var(--color-paper);
     border: 1px solid var(--color-line);
+  }
+  @media (min-width: 600px) {
+    .basin-map__canvas {
+      aspect-ratio: 16 / 9;
+    }
   }
   @media (min-width: 900px) {
     .basin-map__canvas {
@@ -80,27 +107,91 @@ const center =
     color: var(--color-text-muted);
   }
 
-  /* Brand-coloured pin styles via Leaflet's divIcon. */
+  /* Pins (Leaflet divIcon): the truck logos in a white tray, the pitch name
+     as a coloured tag beneath, and a nub pointing at the coordinate. The
+     whole thing hangs above the point — translate(-50%, -100%) puts the nub's
+     tip on it. Pin colours match the pitch cards' left rules. */
   :global(.basin-pin) {
-    background: var(--color-ink);
+    --pin-accent: var(--color-ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    transform: translate(-50%, -100%);
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.22));
+  }
+  :global(.basin-pin--green) {
+    --pin-accent: #3f7a3a;
+  }
+  :global(.basin-pin--red) {
+    --pin-accent: #c03020;
+  }
+  :global(.basin-pin__logos) {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: #fff;
+    border: 2px solid var(--pin-accent);
+    border-radius: 18px;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  :global(.basin-pin__logo) {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #fff;
+  }
+  :global(.basin-pin__label) {
+    margin-top: -2px;
+    padding: 5px 10px;
+    background: var(--pin-accent);
     color: var(--color-cream);
     font-family: var(--ff-body-stack);
     font-weight: var(--fw-strong);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    line-height: 1;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    padding: var(--sp-1) var(--sp-3);
-    border-radius: var(--r-pill);
-    border: 2px solid var(--color-cream);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     white-space: nowrap;
-    transform: translate(-50%, -100%);
+    border-radius: var(--r-pill);
   }
-  :global(.basin-pin--green) {
-    background: #3f7a3a;
+  :global(.basin-pin::after) {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-top-color: var(--pin-accent);
+    margin-top: -2px;
   }
-  :global(.basin-pin--red) {
-    background: #c03020;
+  /* Compact pins on phones: 44px logos, smaller tag. */
+  @media (max-width: 599px) {
+    :global(.basin-pin__logos) {
+      gap: 3px;
+      padding: 3px;
+      border-radius: 14px;
+    }
+    :global(.basin-pin__logo) {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+    }
+    :global(.basin-pin__label) {
+      font-size: 0.62rem;
+      padding: 4px 8px;
+    }
+  }
+  :global(.leaflet-marker-icon:hover .basin-pin__logos),
+  :global(.leaflet-marker-icon:focus-visible .basin-pin__logos) {
+    transform: translateY(-2px);
+  }
+  :global(.leaflet-marker-icon:focus-visible) {
+    outline: none;
+  }
+  :global(.leaflet-marker-icon:focus-visible .basin-pin__logos) {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
   }
 
   /* Leaflet popup overrides to match brand. */
@@ -137,12 +228,14 @@ const center =
     lng: number;
     label: string;
     accent: string;
-    brands: string;
+    brands: { name: string; logo: string | null }[];
     postcode: string;
     directions: string;
   }
 
-  // Leaflet (~46 KiB) and the OSM tiles only load once the map is about to
+  const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  // Leaflet (~46 KiB) and the tiles only load once the map is about to
   // scroll into view, so they never compete with the page's LCP text.
   async function buildMap(container: HTMLElement) {
     const { default: L } = await import("leaflet");
@@ -169,18 +262,46 @@ const center =
     }).addTo(map);
 
     for (const p of pins) {
+      const logos = p.brands
+        .filter((b) => b.logo)
+        .map(
+          (b) =>
+            `<img class="basin-pin__logo" src="${b.logo}" alt="" width="60" height="60" decoding="async">`,
+        )
+        .join("");
+      const names = p.brands.map((b) => escapeHtml(b.name)).join(" + ");
       const icon = L.divIcon({
         className: "",
-        html: `<span class="basin-pin basin-pin--${p.accent}">${p.label}</span>`,
+        html:
+          `<div class="basin-pin basin-pin--${p.accent}">` +
+          `<span class="basin-pin__logos">${logos}</span>` +
+          `<span class="basin-pin__label">${escapeHtml(p.label)}</span></div>`,
         iconSize: [0, 0],
         iconAnchor: [0, 0],
       });
-      L.marker([p.lat, p.lng], { icon })
-        .addTo(map)
-        .bindPopup(
-          `<strong>${p.label}</strong>${p.brands}<br/>${p.postcode}<br/>` +
-            `<a class="basin-directions" href="${p.directions}" target="_blank" rel="noopener noreferrer">Get directions ↗</a>`,
-        );
+      const marker = L.marker([p.lat, p.lng], { icon, alt: `${p.label} — ${names}` }).addTo(map);
+      // The pin hangs above its coordinate, so lift the popup by the pin's
+      // rendered height — otherwise it opens on top of the logos.
+      const pinHeight =
+        marker.getElement()?.querySelector<HTMLElement>(".basin-pin")?.offsetHeight ?? 100;
+      marker.bindPopup(
+        `<strong>${escapeHtml(p.label)}</strong>${names}<br/>${escapeHtml(p.postcode)}<br/>` +
+          `<a class="basin-directions" href="${p.directions}" target="_blank" rel="noopener noreferrer">Get directions ↗</a>`,
+        { offset: [0, -(pinHeight + 2)] },
+      );
+    }
+
+    // Frame both pitches with room for the pins, which hang above their
+    // coordinates (~105px tall on desktop, ~85px on phones, and up to ~150px
+    // wide). On a phone that lands at zoom 16 rather than pushing a pin off
+    // the edge or onto its neighbour.
+    if (pins.length > 1) {
+      const phone = container.clientWidth < 600;
+      map.fitBounds(L.latLngBounds(pins.map((p) => [p.lat, p.lng] as [number, number])), {
+        paddingTopLeft: phone ? [60, 110] : [90, 140],
+        paddingBottomRight: phone ? [60, 30] : [90, 40],
+        maxZoom: 17,
+      });
     }
   }
 

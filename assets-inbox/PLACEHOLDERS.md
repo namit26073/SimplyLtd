@@ -117,6 +117,12 @@ The owner's raster logos have a cartoon-mascot style (chef characters, food char
 
 If you need a parent-brand wordmark, design one in code (CSS) using a heavy condensed sans (Anton, Druk, Knockout, Tungsten — Anton is free). "SIMPLY." in poster-display caps is the safest interpretation.
 
+Where the logos _do_ earn their place is recognition: they are what is painted on the trucks, so
+they identify a truck at a glance. `src/assets/logos/<slug>.png` (480×480, white ground) are
+straight crops from the two raster files above — `scripts`-free, done with sharp: extract, trim
+white, pad to square — not redrawn. Used on the Locations map pins and pitch cards (via
+`src/lib/brandLogos.ts`). If the owner supplies vector logos, replace the PNGs at the same paths.
+
 - `src/assets/placeholders/showcase-lebanese.jpg` — frame at 12 s from the owner's own `assets-inbox/videos/ShawarmaVid.mp4` (real kitchen footage, not stock)
   - Why placeholder: no Simply Lebanese photography yet; owner asked for the brand to be shown (2026-08-25)
   - Swap plan: owner photography of the Lebanese offering; the `/lebanese/` hero reuses `shawarma-truck.mp4` for the same reason
