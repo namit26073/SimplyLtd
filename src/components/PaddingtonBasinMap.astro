@@ -251,14 +251,21 @@ const center =
       attributionControl: true,
     });
 
-    // CARTO Voyager: clean, familiar cartography (no key, no cookies), and it
-    // keeps us off OpenStreetMap's own tile servers, whose usage policy
-    // discourages production sites. {r} serves @2x tiles on retina screens.
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    // OpenStreetMap's own raster tiles: free, no key, no cookies.
+    //
+    // We were on CARTO Voyager until 2026-09-03, when CARTO began stamping
+    // "API KEY REQUIRED" across tiles served without a key — verified with a
+    // plain curl carrying a browser User-Agent and Referer, so it is a policy
+    // change and not rate limiting. OSM's tile usage policy permits low-volume
+    // sites like this one; if traffic grows, move to a keyed provider
+    // (MapTiler's free tier covers 100k tiles/month) rather than leaning on
+    // OSMF's donated infrastructure. OSM serves 256px tiles only — no {r}
+    // retina variant — which also trims bytes on phones.
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: "abcd",
-      maxZoom: 20,
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: "abc",
+      maxZoom: 19,
     }).addTo(map);
 
     for (const p of pins) {
