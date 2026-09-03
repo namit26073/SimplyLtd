@@ -10,11 +10,13 @@ coordinates: [-0.173326, 51.518829]
 brandsOnPitch:
   - burgers
 openingHours:
-  mon: 11:30 – 15:00
-  tue: 11:30 – 15:00
-  wed: 11:30 – 15:00
-  thu: 11:30 – 21:00
-  fri: 11:30 – 21:00
+  mon: 11:30 – 19:30
+  tue: 11:30 – 19:30
+  wed: 11:30 – 19:30
+  thu: 11:30 – 19:30
+  fri: 11:30 – 19:30
+  sat: 11:30 – 19:30
+  sun: 11:30 – 19:30
 notes: |
-  Late service Thursdays and Fridays. Hours subject to weather and events; check Instagram for live updates.
+  Hours subject to weather and events; check Instagram for live updates.
 ---
