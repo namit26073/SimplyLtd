@@ -11,7 +11,7 @@ Specifically:
 
 - Page title pattern: `<Page> · Simply Ltd` (e.g. "Catering · Simply Ltd", "Simply Falafel · Simply Ltd")
 - Footer: `© 2026 Simply Ltd` (current year, dynamic)
-- Email displayed: `info@simplyltd.co.uk` (provisional; confirm with client)
+- Email displayed: `info@simplyfalafel.co.uk` (confirmed by owner 2026-08-26 as his contact inbox; the provisional `info@simplyltd.co.uk` never existed as a mailbox)
 - Email used by dev forms (`CATERING_EMAIL`, `FRANCHISE_EMAIL` env vars): `namitg26@gmail.com` until cutover
 - OG site_name: `Simply Ltd`
 - Twitter / X meta: not set unless the client provides a handle
