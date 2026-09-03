@@ -47,6 +47,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
     <meta name="twitter:card" content="summary_large_image" />
 
+    {
+      /* Editorial is deliberately not preloaded: it is the LCP element on the
+        pages that open with a dek, but preloading it measured as a wash
+        (locations 81–86 either way, about/falafel unchanged) while adding a
+        third request to the critical path. */
+    }
     <Font cssVariable="--ff-display" preload />
     <Font cssVariable="--ff-editorial" />
     <Font cssVariable="--ff-body" preload />
