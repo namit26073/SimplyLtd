@@ -1,5 +1,6 @@
 import { defineConfig, fontProviders } from "astro/config";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 
 import cloudflare from "@astrojs/cloudflare";
 
@@ -7,7 +8,15 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   site: "https://simplyltd.co.uk",
   output: "static",
-  integrations: [react()],
+  // public/robots.txt points crawlers at /sitemap-index.xml, so this
+  // integration has to stay. `/internal/*` is noindex review-only scaffolding
+  // and is excluded to match the robots.txt Disallow.
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => !page.includes("/internal/"),
+    }),
+  ],
 
   fonts: [
     {

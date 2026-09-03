@@ -20,7 +20,15 @@ const env = Object.fromEntries(
     .filter((line) => line && !line.startsWith("#") && line.includes("="))
     .map((line) => {
       const i = line.indexOf("=");
-      return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+      // Strip surrounding quotes: values containing spaces (e.g. the
+      // "Simply Ltd <enquiries@…>" from-address) must be quoted in the file so
+      // `set -a; . ./.env.local` can source it for wrangler, but the quotes
+      // are shell syntax and must not reach the secret.
+      const value = line
+        .slice(i + 1)
+        .trim()
+        .replace(/^(['"])(.*)\1$/, "$2");
+      return [line.slice(0, i).trim(), value];
     }),
 );
 
