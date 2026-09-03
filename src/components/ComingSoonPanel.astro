@@ -3,11 +3,10 @@ import { Image } from "astro:assets";
 import logo from "../assets/smash-me-up-logo.jpg";
 
 interface Props {
-  /** Pre-cutover this points at the pages.dev preview; the cutover runbook flips it to smashmeup.com. */
   href?: string;
 }
 
-const { href = "https://smashmeup.namit-garg.workers.dev" } = Astro.props;
+const { href = "https://smashmeup.com" } = Astro.props;
 ---
 
 <a href={href} target="_blank" rel="noopener noreferrer" class="coming-panel">
